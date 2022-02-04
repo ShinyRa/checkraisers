@@ -1,2 +1,14 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<script lang="ts">
+    const message: string = "enabled"
+</script>
+
+<h1>Poker app</h1>
+
+<h3>Typescript is: {message}</h3>
+<h3>Scss styling is enabled!</h3>
+
+<style lang="scss">
+    h3 {
+        color: green;
+    }
+</style>

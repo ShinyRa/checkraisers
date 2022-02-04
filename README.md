@@ -1,1 +1,1 @@
-# Portfolio website built with Svelte
+# Poker app built with Svelte

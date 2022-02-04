@@ -3,13 +3,15 @@ import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
-	// Consult https://github.com/sveltejs/svelte-preprocess
-	// for more information about preprocessors
+	// Use svelte's preprocessor for html, css, scss and typescript. More info https://github.com/sveltejs/svelte-preprocess
 	preprocess: preprocess(),
 
 	kit: {
-		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
-		target: '#svelte'
+		/**
+		 * Adapter config for Github pages, rework to use Gitlab pages
+		 * adapter: adapter({ pages: 'build', assets: 'build', fallback: null })
+		 */
+		adapter: adapter()
 	}
 };
 
