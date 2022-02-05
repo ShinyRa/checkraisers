@@ -11,7 +11,8 @@ const config = {
 		 * Adapter config for Github / Gitlab pages
 		 */
 		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
-		paths: { base: '/pokerapp' }
+		paths: { base: '/pokerapp' },
+		appDir: 'app'
 	}
 };
 
