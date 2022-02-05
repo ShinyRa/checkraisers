@@ -1,14 +1,9 @@
-<script context="module">
-	export const prerender = true;
-	export async function load({ params: { userid } }) {
-		return { props: { userid } };
-	}
-</script>
-
 <script lang="ts">
+	import { page } from '$app/stores';
 	import Card from "./_Card.svelte";
 
-	export let userid;
+	export let userid = $page.params.userid;
+	
 
 	let tasks = []
 	let todo: string;
