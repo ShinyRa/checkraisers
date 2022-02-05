@@ -9,6 +9,7 @@ pages:
     - npm run build
     - mv build public
     - sed -i "s|/pokerapp/|./pokerapp/|g" public/index.html
+    - svelte-kit dev
   artifacts:
     paths:
       - public
