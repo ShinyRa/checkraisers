@@ -8,6 +8,7 @@ pages:
     - npm install
     - npm run build
     - mv build public
+    - sed -i "s|/_app/|./_app/|g" public\index.html
   artifacts:
     paths:
       - public
