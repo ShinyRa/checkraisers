@@ -6,7 +6,7 @@ pages:
     - npm run build
   artifacts:
     paths:
-      - public
+      - hva
   tags:
     - development
   only:
