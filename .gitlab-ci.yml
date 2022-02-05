@@ -1,13 +1,17 @@
-image: node:latest
+image:
+  name: node:latest
+  entrypoint: ['']
+
 pages:
   stage: deploy
   script:
     - npm install
     - npm run build
+    - mv build public
   artifacts:
     paths:
-      - build
+      - public
   tags:
-    - hva
+    - docker
   only:
     - gitlab_pages
