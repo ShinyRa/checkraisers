@@ -14,7 +14,13 @@ const config = {
 		 */
 		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
 		paths: { base: dev ? '' : '/pokerapp' },
-		appDir: 'app'
+		appDir: 'app',
+		prerender: {
+			crawl: true,
+			enabled: true,
+			force: true,
+			createIndexFiles: true
+		}
 	}
 };
 
