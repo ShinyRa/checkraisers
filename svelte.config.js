@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -10,7 +10,11 @@ const config = {
 		/**
 		 * Adapter config for Github / Gitlab pages
 		 */
-		adapter: adapter({ pages: 'build', assets: 'build', fallback: null })
+		// adapter: adapter({ pages: 'build', assets: 'build', fallback: null })
+		adapter: adapter({
+			out: 'build',
+			precompress: false
+		})
 	}
 };
 
