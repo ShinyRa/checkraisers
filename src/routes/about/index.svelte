@@ -1,13 +1,6 @@
-<script context="module">
-	export async function load({ params: { userid } }) {
-		return { props: { userid } };
-	}
-</script>
-
 <script lang="ts">
 	import Card from "./_Card.svelte";
 
-	export let userid;
 
 	let tasks = []
 	let todo: string;
@@ -19,7 +12,7 @@
 
 </script>
 
-<h1>About {userid}!</h1>
+<h1>About!</h1>
 
 <input bind:value={todo} />
 <button on:click={add}>Click</button>
