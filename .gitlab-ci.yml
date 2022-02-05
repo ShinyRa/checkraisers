@@ -7,5 +7,7 @@ pages:
   artifacts:
     paths:
       - public
+  tags:
+    - development
   only:
     - gitlab_pages
