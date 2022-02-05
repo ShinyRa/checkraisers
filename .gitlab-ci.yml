@@ -6,8 +6,8 @@ pages:
     - npm run build
   artifacts:
     paths:
-      - hva
+      - public
   tags:
-    - development
+    - hva
   only:
     - gitlab_pages
