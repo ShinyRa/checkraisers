@@ -2,7 +2,6 @@ image: node:latest
 pages:
   stage: deploy
   script:
-    - npm install
     - yarn install
     - yarn build
   artifacts:
