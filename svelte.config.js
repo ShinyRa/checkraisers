@@ -8,10 +8,9 @@ const config = {
 
 	kit: {
 		/**
-		 * Adapter config for Github pages, rework to use Gitlab pages
-		 * adapter: adapter({ pages: 'build', assets: 'build', fallback: null })
+		 * Adapter config for Github / Gitlab pages
 		 */
-		adapter: adapter()
+		adapter: adapter({ pages: 'build', assets: 'build', fallback: null })
 	}
 };
 
