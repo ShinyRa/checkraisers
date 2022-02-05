@@ -18,7 +18,7 @@ const config = {
 		prerender: {
 			crawl: true,
 			enabled: true,
-			createIndexFiles: true
+			entries: ['*']
 		}
 	}
 };
