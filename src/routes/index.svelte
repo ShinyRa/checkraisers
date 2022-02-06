@@ -1,5 +1,5 @@
 <script lang="ts">
-    const message: string = "enabled"
+	const message: string = 'enabled';
 </script>
 
 <h1>Poker app</h1>
@@ -12,7 +12,7 @@
 <a href="./poker">Static route (prerenderable)</a>
 
 <style lang="scss">
-    h3 {
-        color: green;
-    }
+	h3 {
+		color: green;
+	}
 </style>

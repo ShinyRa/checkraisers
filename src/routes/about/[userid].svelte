@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { page } from '$app/stores';
-	import Card from "./_Card.svelte";
+	import Card from './_Card.svelte';
 
 	export let userid = $page.params.userid;
-	
 
-	let tasks = []
-	let todo: string;
+	let tasks = [];
+	let todo;
 
 	const add = () => {
-		tasks = [...tasks, todo]
-		todo = ""
-	}
-
+		tasks = [...tasks, todo];
+		todo = '';
+	};
 </script>
 
 <h1>About {userid}!</h1>
@@ -24,7 +22,7 @@
 
 <div class="tasks">
 	{#each tasks as task}
-		<Card task={task} />
+		<Card {task} />
 	{/each}
 </div>
 
@@ -33,4 +31,3 @@
 		padding: 25px;
 	}
 </style>
-
