@@ -1,0 +1,34 @@
+<script lang="ts">
+	import { page } from '$app/stores';
+	import Card from "./_Card.svelte";
+
+	export let userid = $page.params.userid;
+	
+
+	let tasks = []
+	let todo: string;
+
+	const add = () => {
+		tasks = [...tasks, todo]
+		todo = ""
+	}
+
+</script>
+
+<h1>About {userid}!</h1>
+
+<input bind:value={todo} />
+<button on:click={add}>Click</button>
+
+<div class="tasks">
+	{#each tasks as task}
+		<Card task={task} />
+	{/each}
+</div>
+
+<style lang="scss">
+	.tasks {
+		padding: 25px;
+	}
+</style>
+

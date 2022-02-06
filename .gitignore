@@ -8,9 +8,6 @@ node_modules
 /.svelte-kit
 /package
 
-# Github pages deployment script
-gh-pages.ts
-
 # Secrets
 .env
 .env.*

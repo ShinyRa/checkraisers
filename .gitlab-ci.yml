@@ -1,0 +1,18 @@
+image:
+  name: node:latest
+  entrypoint: ['']
+
+pages:
+  stage: deploy
+  script:
+    - npm install
+    - npm run build
+    - mv build public
+    - sed -i 's;href="/pokerapp/;href="./;g' public/index.html
+  artifacts:
+    paths:
+      - public
+  tags:
+    - docker
+  only:
+    - development
