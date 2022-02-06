@@ -15,4 +15,4 @@ pages:
   tags:
     - docker
   only:
-    - gitlab_pages
+    - development
