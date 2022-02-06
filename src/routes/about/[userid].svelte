@@ -17,6 +17,8 @@
 
 <h1>About {userid}!</h1>
 
+<h3>This page does not work after refresh</h3>
+
 <input bind:value={todo} />
 <button on:click={add}>Click</button>
 
