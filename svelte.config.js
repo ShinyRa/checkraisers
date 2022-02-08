@@ -13,8 +13,8 @@ const config = {
 		 * Build command which is only ran while compiling to static HTML site in Gitlab pipeline
 		 */
 		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
-		paths: { base: dev ? '' : '/pokerapp' },
-		appDir: 'app',
+		paths: { base: dev ? '' : '/pokerapp' }, // If building on Gitlab, set base url to /pokerapp repository
+		appDir: 'app', // Don't use standard _app structure as this is hidden to the sveltekit router
 		prerender: {
 			crawl: true,
 			enabled: true,
@@ -22,7 +22,7 @@ const config = {
 		},
 		files: {
 			template: './static/app.html',
-			routes: './client'
+			routes: './client' // Client folder as routing entry point
 		}
 	}
 };
