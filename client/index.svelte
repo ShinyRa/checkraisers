@@ -20,7 +20,7 @@
 </section>
 {#if loaded}
 	<section class="container" in:fly={{ x: -500, duration: 1250 }} >
-		<img src="static/logo.png" alt="Logo" class="logo"/>
+		<img src="./logo.png" alt="Logo" class="logo"/>
 		<p in:fly={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
 	</section>
 {/if}
