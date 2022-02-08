@@ -1,3 +1,7 @@
+cache:
+  paths:
+    - node_modules
+
 image:
   name: node:latest
   entrypoint: ['']
