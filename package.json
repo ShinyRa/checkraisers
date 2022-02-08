@@ -2,7 +2,8 @@
 	"name": "poker-app",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
+		"dev": "yarn combine && svelte-kit dev",
+		"combine": "rm -rf app && mkdir app && cp -r ./server ./app && mv ./app/server ./app/api && cp -r ./client/* ./app",
 		"build": "svelte-kit build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
@@ -30,6 +31,8 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@sveltejs/adapter-auto": "^1.0.0-next.18",
+		"concurrently": "^7.0.0",
 		"dotenv": "^14.2.0",
 		"node-sass": "^7.0.1",
 		"sass": "^1.49.7"

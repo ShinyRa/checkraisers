@@ -4,6 +4,7 @@
 
 node_modules
 
+/app
 /build
 /.svelte-kit
 /package
