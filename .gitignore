@@ -8,6 +8,7 @@ node_modules
 /build
 /.svelte-kit
 /package
+/coverage
 
 # Secrets
 .env
