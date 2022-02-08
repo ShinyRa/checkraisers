@@ -21,7 +21,7 @@ const config = {
 			entries: ['*']
 		},
 		files: {
-			template: './client/app.html',
+			template: './static/app.html',
 			routes: './app'
 		}
 	}
