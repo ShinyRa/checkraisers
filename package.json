@@ -2,9 +2,9 @@
 	"name": "poker-app",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "yarn combine && svelte-kit dev",
+		"dev": "svelte-kit dev",
 		"combine": "rm -rf app && mkdir app && cp -r ./server ./app && mv ./app/server ./app/api && cp -r ./client/* ./app",
-		"build": "yarn combine && svelte-kit build",
+		"build": "svelte-kit build",
 		"package": "svelte-kit package",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",

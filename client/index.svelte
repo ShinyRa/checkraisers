@@ -1,18 +1,56 @@
 <script lang="ts">
-	const message: string = 'enabled';
+	import { onMount } from 'svelte';
+	import { fly } from 'svelte/transition';
+
+	let loaded = false;
+	onMount(() => {
+		loaded = true
+	})
 </script>
 
-<h1>Poker app</h1>
-
-<h3>Typescript is: {message}</h3>
-<h3>Scss styling is enabled!</h3>
-
-<a href="./about/1">Dynamic route</a>
-<br />
-<a href="./poker">Static route (prerenderable)</a>
+<section class="hero">
+  <div class="hero-body">
+    <p class="title">
+      Poker app
+    </p>
+    <p class="subtitle">
+      By Auke & Tijs
+    </p>
+  </div>
+</section>
+{#if loaded}
+	<section class="container" in:fly={{ x: -500, duration: 1250 }} >
+		<img src="static/logo.png" alt="Logo" class="logo"/>
+		<p in:fly={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
+	</section>
+{/if}
 
 <style lang="scss">
-	h3 {
-		color: green;
+	$svelte: #FF3E00;
+	.hero {
+		background-color: $svelte;
+		p {
+			color: white;
+		}
+	}
+
+	.container {
+		margin-top: 120px;
+		text-align: center;
+	}
+	
+	.logo {
+		height: 300px;
+		width: 300px;
+		animation: 2.5s infinite spin forwards;
+	}
+
+	@keyframes spin {
+		0% {
+			transform: rotate(0deg)
+		}
+		100% {
+			transform: rotate(360deg)
+		}
 	}
 </style>
