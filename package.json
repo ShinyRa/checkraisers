@@ -36,6 +36,8 @@
 	"dependencies": {
 		"dotenv": "^14.2.0",
 		"firebase": "^9.6.6",
+		"firebase-admin": "^10.0.2",
+		"global": "^4.4.0",
 		"sass": "^1.49.7"
 	}
 }

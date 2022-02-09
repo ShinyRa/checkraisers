@@ -1,15 +1,32 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import {db} from '../firebase/firebase';
-
+	import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+	import { db } from '../firebase/firebase';
+	import { fly } from 'svelte/transition';
+	
 	let loaded = false;
+	let player;
 	let players = [];
 	onMount(() => {
 		loaded = true;
-		db.collection("poker").orderBy("chips", "desc").onSnapshot( snapData => {
-			players = snapData.docs
+
+		const pokerRef = collection(db, "poker")
+
+		const unsubscribe = onSnapshot(pokerRef, (querySnapshot) => {
+			players = []
+			querySnapshot.forEach((doc) => {
+				players = [...players, doc.data().name]
+			});
 		});
 	});
+
+	const add = async() => {
+		await setDoc(doc(db, "poker", new Date().toString()), {
+			chips: 1000,
+			name: player
+		});
+	};
+
 </script>
 
 <section class="hero">
@@ -19,10 +36,15 @@
 	</div>
 </section>
 
-<div>
+<div class="container">
+	<input bind:value={player} /><br>
+	<button on:click={add}>add player</button>
+</div>
+
+<div class="container">
 	<ul>
 		{#each players as player }
-			<li>{player.data().name}</li>
+			<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{player}</p>
 		{/each}
 	</ul>
 </div>
@@ -34,5 +56,9 @@
 		p {
 			color: white;
 		}
+	}
+	.container {
+		text-align: center;
+		font-size: 40px;
 	}
 </style>
