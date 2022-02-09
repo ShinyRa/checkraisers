@@ -7,6 +7,7 @@
 	let loaded = false;
 	let player;
 	let players = [];
+
 	onMount(() => {
 		loaded = true;
 
