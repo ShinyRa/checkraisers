@@ -6,7 +6,7 @@ import { getFirestore } from 'firebase/firestore';
 // Your web app's Firebase configuration
 //dotenv.config()
 const firebaseConfig = {
-  apiKey: "AIzaSyCffpPM2gtK7CKLgB0Dq4A0BV0zbjqmpGc",
+  apiKey: "APIKEY",
   authDomain: "pokerapp-a4302.firebaseapp.com",
   projectId: "pokerapp-a4302",
   storageBucket: "pokerapp-a4302.appspot.com",
