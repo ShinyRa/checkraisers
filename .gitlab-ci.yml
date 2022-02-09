@@ -19,4 +19,4 @@ pages:
   tags:
     - docker
   only:
-    - development
+    - Firebase
