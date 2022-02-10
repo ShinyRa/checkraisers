@@ -16,7 +16,7 @@
 	class:faceup={faceUp}
 	in:fly={{ y: 50, duration: 325 }}
 >
-	<img src="../Cards/cardback.png" alt="Cardback" class="face" />
+	<img src="../alien.gif" alt="Cardback" class="face" />
 	<img
 		src="../Cards/{valueName}_of_{suitName}.png"
 		alt="${valueName} of ${suitName}"
@@ -34,6 +34,8 @@
 		-moz-user-select: none;
 		-webkit-user-select: none;
 		user-select: none;
+		height: 100%;
+		width: 100%;
 	}
 
 	.playingcard {
