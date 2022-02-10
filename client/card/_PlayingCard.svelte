@@ -30,7 +30,7 @@
 		alt="${valueName} of ${suitName}"
 		class="face foreground"
 	/>
-	<img src="../Cards/back.png" alt="Cardback" class="face back" />
+	<img src="../Cards/cardback.png" alt="Cardback" class="face back" />
 </div>
 
 <style lang="scss">
