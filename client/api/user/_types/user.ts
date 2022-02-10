@@ -1,4 +1,7 @@
 export type User = {
-    name: string,
-    age: number
-}
+	username: string;
+	name: string;
+	surname: string;
+	dateOfBirth: Date;
+	totalChips: number;
+};
