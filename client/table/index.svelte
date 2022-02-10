@@ -24,10 +24,10 @@
 		});
 	});
 
-	const adduser = async() => {
-		await userAPI.addUser({name: player, age: 20}).then((res) => {
+	const adduser = () => {
+		userAPI.addUser({name: player, age: 20}).then((res)=> {
 			console.log(res)
-		})
+		});
 	}
 	
 </script>
