@@ -9,7 +9,6 @@
 			to enforce using \`import type\` instead of \`import\` for Types.
 			*/
 		"importsNotUsedAsValues": "preserve",
-		"noUnusedLocals": false,
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		/**

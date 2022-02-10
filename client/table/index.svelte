@@ -21,12 +21,7 @@
 	});
 
 	const adduser = () => {
-		userAPI.addUser({
-						username: player, 
-						name: player,
-						surname: player,
-						dateOfBirth: new Date(),
-						totalChips: 1000
+		userAPI.addUser({username: player, name: player,surname: player,dateOfBirth: new Date(),totalChips: 1000
 						}).then((res)=> {
 			console.log(res)
 		});

@@ -2,11 +2,10 @@
 	"name": "poker-app",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-check --tsconfig ./tsconfig.json && svelte-kit dev",
+		"dev": "svelte-check && svelte-kit dev",
 		"build": "tsc --noEmit && svelte-kit build",
 		"clean": "rm -rf node_modules && rm -rf .svelte-kit",
 		"preview": "svelte-kit preview",
-		"check": "svelte-check --tsconfig ./tsconfig.json",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"test": "jest client --passWithNoTests && jest server --passWithNoTests",
