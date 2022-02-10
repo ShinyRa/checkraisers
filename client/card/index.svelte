@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { API } from '../api/client';
+	import { deckAPI } from '../api/deck/shuffle';
 	import { onMount } from 'svelte';
 	import PlayingCard from './_PlayingCard.svelte';
 
-	let shuffled;
+	let shuffled: Array<string>;
 	let shown = [];
 
-	onMount(async () => {
-		const { data } = await API.shuffledDeck();
+	onMount(() => {
+		const { data } = deckAPI.shuffledDeck();
 		shuffled = data;
 	});
 
