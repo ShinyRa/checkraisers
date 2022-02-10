@@ -1,22 +1,18 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
+	import { collection, onSnapshot } from "firebase/firestore";
 	import { db } from '../firebase/firebase';
 	import { userAPI } from '../api/user/index'
 	import { fly } from 'svelte/transition';
-	import { post } from '../api/deck/index'
 	
-	let loaded = false;
 	let player: string;
 	let players = [];
 
 	onMount(() => {
-		
-		loaded = true;
 
-		const pokerRef = collection(db, "poker")
+		const pokerRef = collection(db, "user")
 
-		const unsubscribe = onSnapshot(pokerRef, (querySnapshot) => {
+		onSnapshot(pokerRef, (querySnapshot) => {
 			players = []
 			querySnapshot.forEach((doc) => {
 				players = [...players, doc.data().name]
@@ -25,12 +21,21 @@
 	});
 
 	const adduser = () => {
-		userAPI.addUser({name: player, age: 20}).then((res)=> {
+		userAPI.addUser({
+						username: player, 
+						name: player,
+						surname: player,
+						dateOfBirth: new Date(),
+						totalChips: 1000
+						}).then((res)=> {
 			console.log(res)
 		});
 	}
 	
 </script>
+
+
+
 
 <section class="hero">
 	<div class="hero-body">
@@ -51,6 +56,9 @@
 		{/each}
 	</ul>
 </div>
+
+
+
 
 <style lang="scss">
 	$svelte: #ff3e00;

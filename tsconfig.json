@@ -8,7 +8,8 @@
 			svelte-preprocess cannot figure out whether you have a value or a type, so tell TypeScript
 			to enforce using \`import type\` instead of \`import\` for Types.
 			*/
-		"importsNotUsedAsValues": "error",
+		"importsNotUsedAsValues": "preserve",
+		"noUnusedLocals": false,
 		"isolatedModules": true,
 		"resolveJsonModule": true,
 		/**
@@ -27,5 +28,11 @@
 			"$lib/*": ["src/lib/*"]
 		}
 	},
-	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte", "client/global.d.ts"]
+	"include": [
+		"client/**/*.d.ts",
+		"client/**/*.js",
+		"client/**/*.ts",
+		"client/**/*.svelte",
+		"client/global.d.ts"
+	]
 }

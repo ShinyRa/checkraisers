@@ -2,8 +2,8 @@
 	"name": "poker-app",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev",
-		"build": "svelte-kit build",
+		"dev": "svelte-check --tsconfig ./tsconfig.json && svelte-kit dev",
+		"build": "tsc --noEmit && svelte-kit build",
 		"clean": "rm -rf node_modules && rm -rf .svelte-kit",
 		"preview": "svelte-kit preview",
 		"check": "svelte-check --tsconfig ./tsconfig.json",
