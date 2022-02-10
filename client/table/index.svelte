@@ -2,13 +2,16 @@
 	import { onMount } from 'svelte';
 	import { collection, doc, onSnapshot, setDoc } from "firebase/firestore";
 	import { db } from '../firebase/firebase';
+	import { userAPI } from '../api/user/index'
 	import { fly } from 'svelte/transition';
+	import { post } from '../api/deck/index'
 	
 	let loaded = false;
-	let player;
+	let player: string;
 	let players = [];
 
 	onMount(() => {
+		
 		loaded = true;
 
 		const pokerRef = collection(db, "poker")
@@ -21,13 +24,12 @@
 		});
 	});
 
-	const add = async() => {
-		await setDoc(doc(db, "poker", new Date().toString()), {
-			chips: 1000,
-			name: player
-		});
-	};
-
+	const adduser = async() => {
+		await userAPI.addUser({name: player, age: 20}).then((res) => {
+			console.log(res)
+		})
+	}
+	
 </script>
 
 <section class="hero">
@@ -39,7 +41,7 @@
 
 <div class="container">
 	<input bind:value={player} /><br>
-	<button on:click={add}>add player</button>
+	<button on:click={adduser}>add player</button>
 </div>
 
 <div class="container">
