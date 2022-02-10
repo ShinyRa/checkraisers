@@ -26,7 +26,7 @@
 	in:fly={{ y: 50, duration: 325 }}
 >
 	<img
-		src="./Cards/{valueName}_of_{suitName}.png"
+		src="../Cards/{valueName}_of_{suitName}.png"
 		alt="${valueName} of ${suitName}"
 		class="face foreground"
 	/>
