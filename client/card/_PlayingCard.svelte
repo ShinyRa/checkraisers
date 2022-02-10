@@ -1,36 +1,27 @@
 <script lang="ts">
 	import { fly } from 'svelte/transition';
-	import { CardValue } from './CardValue';
-	import { CardSuit } from './CardSuit';
-	import { onMount } from 'svelte';
 
-	export let suit: number;
-	export let value: number;
+	export let suit: string;
+	export let value: string;
 
 	let faceUp = false;
 
-	let valueName = CardValue[value].toLowerCase();
-	let suitName = CardSuit[suit].toLowerCase();
-
-	onMount(() => {
-		setInterval(() => {
-			faceUp = !faceUp;
-		}, Math.floor(Math.random() * 7000 + 750));
-	});
+	let suitName = suit?.toLowerCase();
+	let valueName = value?.toLowerCase();
 </script>
 
 <div
 	class="playingcard"
 	on:click={() => (faceUp = !faceUp)}
-	class:faceup={faceUp === true}
+	class:faceup={faceUp}
 	in:fly={{ y: 50, duration: 325 }}
 >
+	<img src="../Cards/cardback.png" alt="Cardback" class="face" />
 	<img
 		src="../Cards/{valueName}_of_{suitName}.png"
 		alt="${valueName} of ${suitName}"
-		class="face foreground"
+		class="face front"
 	/>
-	<img src="../Cards/cardback.png" alt="Cardback" class="face back" />
 </div>
 
 <style lang="scss">
@@ -58,7 +49,7 @@
 			backface-visibility: hidden;
 		}
 
-		.back {
+		.front {
 			transform: rotateY(180deg);
 		}
 	}

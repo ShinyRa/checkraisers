@@ -1,13 +1,20 @@
 <script lang="ts">
+	import { API } from '../api/client';
 	import { onMount } from 'svelte';
 	import PlayingCard from './_PlayingCard.svelte';
-	import { CardSuit } from './CardSuit';
-	import { CardValue } from './CardValue';
 
-	let loaded = false;
-	onMount(() => {
-		loaded = true;
+	let shuffled;
+	let shown = [];
+
+	onMount(async () => {
+		const { data } = await API.shuffledDeck();
+		shuffled = data;
 	});
+
+	const draw = () => {
+		shown.push(shuffled.pop());
+		shown = [...shown];
+	};
 </script>
 
 <section class="hero">
@@ -16,13 +23,11 @@
 	</div>
 </section>
 <section class="preview">
-	{#if loaded}
-		{#each Object.values(CardSuit).filter((suit) => isNaN(Number(suit))) as suit}
-			{#each Object.values(CardValue).filter((value) => isNaN(Number(value))) as value}
-				<PlayingCard suit={CardSuit[suit]} value={CardValue[value]} />
-			{/each}
-		{/each}
-	{/if}
+	{#each shown as card}
+		{@const [value, suit] = card.split('_OF_')}
+		<PlayingCard {suit} {value} />
+	{/each}
+	<button class="button is-primary is-large" on:click={draw}>Draw</button>
 </section>
 
 <style lang="scss">
@@ -38,7 +43,6 @@
 	.preview {
 		background-color: #e3e3e3;
 		height: 88vh;
-		// padding-top: 125px;
 		display: grid;
 		grid-template-columns: repeat(13, 1fr);
 	}
