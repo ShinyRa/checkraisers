@@ -9,6 +9,7 @@
 	onMount(() => {
 		const { data } = deckAPI.shuffledDeck();
 		shuffled = data;
+		[1, 2, 3].forEach(draw);
 	});
 
 	const draw = () => {
@@ -23,10 +24,12 @@
 	</div>
 </section>
 <section class="preview">
-	{#each shown as card}
-		{@const [value, suit] = card.split('_OF_')}
-		<PlayingCard {suit} {value} />
-	{/each}
+	<section class="cards">
+		{#each shown as card}
+			{@const [value, suit] = card.split('_OF_')}
+			<PlayingCard {suit} {value} />
+		{/each}
+	</section>
 	<button class="button is-primary is-large" on:click={draw}>Draw</button>
 </section>
 
@@ -39,11 +42,14 @@
 			color: white;
 		}
 	}
-
 	.preview {
 		background-color: #e3e3e3;
 		height: 88vh;
+		padding: 50px;
+	}
+	.cards {
 		display: grid;
-		grid-template-columns: repeat(13, 1fr);
+		grid-template-columns: repeat(10, 1fr);
+		gap: 15px;
 	}
 </style>

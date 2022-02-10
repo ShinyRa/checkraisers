@@ -39,8 +39,8 @@
 	}
 
 	.playingcard {
-		height: 430px;
-		width: 300px;
+		height: 280px;
+		width: 190px;
 		border-radius: 25px;
 		transform-style: preserve-3d;
 		transition: transform 0.25s ease-out;
