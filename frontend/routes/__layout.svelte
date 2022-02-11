@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 
 	const routes = [
@@ -19,7 +20,7 @@
 		<ul class="menu-list">
 			{#each routes as { title, route }}
 				<li>
-					<a href={null} on:click={() => goto(route)}>{title}</a>
+					<a href={null} on:click={() => goto(`${base}/${route}`)}>{title}</a>
 				</li>
 			{/each}
 		</ul>
