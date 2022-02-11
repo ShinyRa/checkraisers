@@ -1,7 +1,7 @@
-import type { User } from './_types/user';
-import { HttpCode } from '../_HttpCode';
+import type { User } from '../../entities/user/User';
+import { HttpCode } from '../../utils/HttpCode';
 import { doc, setDoc } from 'firebase/firestore';
-import { db } from '../firebase/firebase';
+import { db } from '../../utils/Firebase';
 
 const genID = (length: number) => {
 	let result = '';

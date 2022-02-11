@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { collection, onSnapshot } from 'firebase/firestore';
-	import { db } from '$lib/firebase/firebase';
-	import { userAPI } from '$lib/user';
+	import { db } from '$lib/utils/Firebase';
+	import { userAPI } from '$lib/api/user';
 	import { fly } from 'svelte/transition';
 
 	let player: string;

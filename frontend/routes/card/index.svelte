@@ -1,14 +1,15 @@
 <script lang="ts">
-	import { deckAPI } from '$lib/deck/shuffle';
 	import { onMount } from 'svelte';
+	import { deckAPI } from '$lib/api/deck';
+	import { Card } from '$lib/entities/deck/card/Card';
 	import PlayingCard from './_PlayingCard.svelte';
 
-	let shuffled: Array<string>;
-	let shown = [];
+	let shuffled: Array<Card>;
+	let shown = Array<Card>();
 
 	onMount(() => {
-		const { data } = deckAPI.shuffledDeck();
-		shuffled = data;
+		const { deck } = deckAPI.shuffleDeck();
+		shuffled = deck;
 		[1, 2, 3].forEach(draw);
 	});
 
@@ -26,8 +27,7 @@
 <section class="preview">
 	<section class="cards">
 		{#each shown as card}
-			{@const [value, suit] = card.split('_OF_')}
-			<PlayingCard {suit} {value} />
+			<PlayingCard {card} />
 		{/each}
 	</section>
 	<button class="button is-primary is-large" on:click={draw}>Draw</button>

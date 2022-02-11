@@ -1,27 +1,37 @@
 <script lang="ts">
+	import { assets } from '$app/paths';
+	import { Card } from '$lib/entities/deck/card/Card';
+	import { CardSuit } from '$lib/entities/deck/card/CardSuit';
+	import { CardValue } from '$lib/entities/deck/card/CardValue';
+
 	import { fly } from 'svelte/transition';
 
-	export let suit: string;
-	export let value: string;
+	export let card: Card;
 
+	// If card is facing up or down
 	let faceUp = false;
 
-	let suitName = suit?.toLowerCase();
-	let valueName = value?.toLowerCase();
+	// If card face has been revealed
+	let known = false;
+
+	let suitName = CardSuit[card.suit];
+	let valueName = CardValue[card.value];
 </script>
 
 <div
 	class="playingcard"
-	on:click={() => (faceUp = !faceUp)}
+	on:click={() => ((faceUp = !faceUp), (known = true))}
 	class:faceup={faceUp}
 	in:fly={{ y: 50, duration: 325 }}
 >
 	<img src="../alien.gif" alt="Cardback" class="face" />
-	<img
-		src="../Cards/{valueName}_of_{suitName}.png"
-		alt="${valueName} of ${suitName}"
-		class="face front"
-	/>
+	{#if known}
+		<img
+			src="{assets}/cards/{valueName}_of_{suitName}.png"
+			alt="${valueName} of ${suitName}"
+			class="face front"
+		/>
+	{/if}
 </div>
 
 <style lang="scss">

@@ -22,8 +22,9 @@ const config = {
 		},
 		files: {
 			lib: './backend',
+			assets: './static',
 			template: './static/app.html',
-			routes: './frontend/client' // Client folder as routing entry point
+			routes: './frontend/routes' // /frontend/routes folder as routing entry point
 		}
 	}
 };

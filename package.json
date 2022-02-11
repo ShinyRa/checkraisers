@@ -3,7 +3,7 @@
 	"version": "0.0.1",
 	"scripts": {
 		"dev": "svelte-check && svelte-kit dev",
-		"build": "tsc --noEmit && svelte-kit build",
+		"build": "svelte-kit build",
 		"clean": "rm -rf node_modules && rm -rf .svelte-kit",
 		"preview": "svelte-kit preview",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
