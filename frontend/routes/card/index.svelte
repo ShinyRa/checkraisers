@@ -14,8 +14,10 @@
 	});
 
 	const draw = () => {
-		shown.push(shuffled.pop());
-		shown = [...shown];
+		if (shuffled.length > 1) {
+			shown.push(shuffled.pop());
+			shown = [...shown];
+		}
 	};
 </script>
 
