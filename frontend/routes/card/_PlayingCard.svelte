@@ -28,7 +28,7 @@
 	{#if known}
 		<img
 			src="{assets}/cards/{valueName}_of_{suitName}.png"
-			alt="${valueName} of ${suitName}"
+			alt="{valueName} of {suitName}"
 			class="face front"
 		/>
 	{/if}
