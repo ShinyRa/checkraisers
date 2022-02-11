@@ -3,7 +3,7 @@
 	import { goto } from '$app/navigation';
 
 	const routes = [
-		{ title: 'Home', route: '/' },
+		{ title: 'Home', route: '' },
 		{ title: 'Draw cards', route: 'card' },
 		{ title: 'Firebase todo-list', route: 'table' }
 	];
