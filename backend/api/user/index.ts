@@ -1,5 +1,5 @@
 import type { User } from '../../entities/user/User';
-import { HttpCode } from '../../utils/HttpCode';
+import { HttpStatusCode } from '../../utils/HttpStatusCode';
 import { doc, setDoc } from 'firebase/firestore';
 import { db } from '../../utils/Firebase';
 
@@ -14,12 +14,12 @@ const genID = (length: number) => {
 };
 
 export const userAPI = {
-	async addUser(user: User): Promise<Record<string, HttpCode>> {
+	async addUser(user: User): Promise<Record<string, HttpStatusCode>> {
 		try {
 			await setDoc(doc(db, 'user', genID(20)), user);
-			return { status: HttpCode.SUCCESS };
+			return { status: HttpStatusCode.SUCCESS };
 		} catch (error) {
-			return { status: HttpCode.SERVER_ERROR, message: error };
+			return { status: HttpStatusCode.SERVER_ERROR, message: error };
 		}
 	}
 };
