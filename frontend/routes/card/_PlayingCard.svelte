@@ -14,8 +14,8 @@
 	// If card face has been revealed
 	let known = false;
 
-	let suitName = CardSuit[card.suit];
-	let valueName = CardValue[card.value];
+	let suitName = CardSuit[card.suit].toLowerCase();
+	let valueName = CardValue[card.value].toLowerCase();
 </script>
 
 <div
