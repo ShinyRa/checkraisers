@@ -1,5 +1,5 @@
-import { CardValue } from '../../../frontend/client/card/CardValue';
-import { CardSuit } from '../../../frontend/client/card/CardSuit';
+import { CardValue } from './CardValue';
+import { CardSuit } from './CardSuit';
 
 export const deckAPI = {
 	shuffledDeck(): Record<string, Array<string>> {

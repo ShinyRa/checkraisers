@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { deckAPI } from '../../../lib/backend/deck/shuffle';
+	import { deckAPI } from '$lib/deck/shuffle';
 	import { onMount } from 'svelte';
 	import PlayingCard from './_PlayingCard.svelte';
 

@@ -21,6 +21,7 @@ const config = {
 			entries: ['*']
 		},
 		files: {
+			lib: './backend',
 			template: './static/app.html',
 			routes: './frontend/client' // Client folder as routing entry point
 		}

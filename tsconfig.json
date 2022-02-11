@@ -23,8 +23,8 @@
 		"allowJs": true,
 		"checkJs": true,
 		"paths": {
-			"$lib": ["src/lib"],
-			"$lib/*": ["src/lib/*"]
+			"$lib": ["./backend"],
+			"$lib/*": ["./backend/*"]
 		}
 	},
 	"include": [
@@ -33,5 +33,5 @@
 		"frontend/client/**/*.ts",
 		"frontend/client/**/*.svelte",
 		"frontend/client/global.d.ts"
-	]
+, "backend/deck/CardValue.ts", "backend/deck/CardSuit.ts"	]
 }
