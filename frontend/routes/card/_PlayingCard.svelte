@@ -24,7 +24,7 @@
 	class:faceup={faceUp}
 	in:fly={{ y: 50, duration: 325 }}
 >
-	<img src="../alien.gif" alt="Cardback" class="face" />
+	<img src="{assets}/alien.gif" alt="Cardback" class="face" />
 	{#if known}
 		<img
 			src="{assets}/cards/{valueName}_of_{suitName}.png"
