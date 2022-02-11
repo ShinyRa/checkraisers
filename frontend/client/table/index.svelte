@@ -1,37 +1,37 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { collection, onSnapshot } from 'firebase/firestore';
-	import { db } from '../firebase/firebase';
-	import { userAPI } from '../api/user/index';
+	// import { db } from '../../../backend/firebase/firebase';
+	//import { userAPI } from '../../../backend/user';
 	import { fly } from 'svelte/transition';
 
 	let player: string;
 	let players = [];
 
 	onMount(() => {
-		const pokerRef = collection(db, 'user');
+		// const pokerRef = collection(db, 'user');
 
-		onSnapshot(pokerRef, (querySnapshot) => {
-			players = [];
-			querySnapshot.forEach((doc) => {
-				players = [...players, doc.data().name];
-			});
-		});
+		// onSnapshot(pokerRef, (querySnapshot) => {
+		// 	players = [];
+		// 	querySnapshot.forEach((doc) => {
+		// 		players = [...players, doc.data().name];
+		// 	});
+		// });
 	});
 
-	const adduser = () => {
-		userAPI
-			.addUser({
-				username: player,
-				name: player,
-				surname: player,
-				dateOfBirth: new Date(),
-				totalChips: 1000
-			})
-			.then((res) => {
-				console.log(res);
-			});
-	};
+	// const adduser = () => {
+	// 	userAPI
+	// 		.addUser({
+	// 			username: player,
+	// 			name: player,
+	// 			surname: player,
+	// 			dateOfBirth: new Date(),
+	// 			totalChips: 1000
+	// 		})
+	// 		.then((res) => {
+	// 			console.log(res);
+	// 		});
+	// };
 </script>
 
 <section class="hero">
@@ -43,14 +43,14 @@
 
 <div class="container">
 	<input bind:value={player} /><br />
-	<button on:click={adduser}>add player</button>
+	<!-- <button on:click={adduser}>add player</button> -->
 </div>
 
 <div class="container">
 	<ul>
-		{#each players as player}
+		<!-- {#each players as player}
 			<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{player}</p>
-		{/each}
+		{/each} -->
 	</ul>
 </div>
 
