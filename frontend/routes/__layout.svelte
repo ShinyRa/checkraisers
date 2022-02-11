@@ -4,8 +4,8 @@
 
 	const routes = [
 		{ title: 'Home', route: '' },
-		{ title: 'Draw cards', route: 'card' },
-		{ title: 'Firebase todo-list', route: 'table' }
+		{ title: 'Draw cards', route: '/card' },
+		{ title: 'Firebase todo-list', route: '/table' }
 	];
 </script>
 
@@ -20,7 +20,7 @@
 		<ul class="menu-list">
 			{#each routes as { title, route }}
 				<li>
-					<a href={null} on:click={() => goto(`${base}/${route}`)}>{title}</a>
+					<a href={null} on:click={() => goto(`${base}${route}`)}>{title}</a>
 				</li>
 			{/each}
 		</ul>
