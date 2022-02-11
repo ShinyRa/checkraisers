@@ -19,11 +19,6 @@
 	};
 </script>
 
-<section class="hero">
-	<div class="hero-body">
-		<p class="title">Card preview</p>
-	</div>
-</section>
 <section class="preview">
 	<section class="cards">
 		{#each shown as card}
@@ -34,14 +29,6 @@
 </section>
 
 <style lang="scss">
-	$svelte: #ff3e00;
-
-	.hero {
-		background-color: $svelte;
-		p {
-			color: white;
-		}
-	}
 	.preview {
 		background-color: #e3e3e3;
 		height: 88vh;

@@ -33,33 +33,24 @@
 	};
 </script>
 
-<section class="hero">
-	<div class="hero-body">
-		<p class="title">Poker app</p>
-		<p class="subtitle">By Auke & Tijs</p>
+<section>
+	<div class="container">
+		<input bind:value={player} /><br />
+		<button on:click={adduser}>add player</button>
+	</div>
+
+	<div class="container">
+		<ul>
+			{#each players as player}
+				<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{player}</p>
+			{/each}
+		</ul>
 	</div>
 </section>
 
-<div class="container">
-	<input bind:value={player} /><br />
-	<button on:click={adduser}>add player</button>
-</div>
-
-<div class="container">
-	<ul>
-		{#each players as player}
-			<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{player}</p>
-		{/each}
-	</ul>
-</div>
-
 <style lang="scss">
-	$svelte: #ff3e00;
-	.hero {
-		background-color: $svelte;
-		p {
-			color: white;
-		}
+	section {
+		margin: 0 auto;
 	}
 	.container {
 		text-align: center;
