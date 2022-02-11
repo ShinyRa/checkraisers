@@ -22,7 +22,7 @@ const config = {
 		},
 		files: {
 			template: './static/app.html',
-			routes: './client' // Client folder as routing entry point
+			routes: './frontend/client' // Client folder as routing entry point
 		}
 	}
 };
