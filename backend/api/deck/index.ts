@@ -13,7 +13,9 @@ export const deckAPI = {
 		});
 
 		// Sort array semi-randomly
-		shuffled.sort(() => 0.5 - Math.random());
+		[1, 2, 3, 4, 5].forEach(() => {
+			shuffled.sort(() => 0.5 - Math.random());
+		});
 
 		return {
 			deck: shuffled

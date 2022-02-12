@@ -14,19 +14,29 @@
 	// If card face has been revealed
 	let known = false;
 
+	// If card is animating in any way
+	let animating = false;
+
 	let suitName = CardSuit[card.suit].toLowerCase();
 	let valueName = CardValue[card.value].toLowerCase();
 
 	const reveal = () => {
+		if (animating) {
+			return;
+		}
+
+		animating = true;
 		faceUp = !faceUp;
 		known = true;
+		setInterval(() => (animating = false), 500);
 	};
 </script>
 
 <div
 	class="card playingcard"
+	on:mouseenter={reveal}
+	on:click={reveal}
 	on:focus={reveal}
-	on:mouseover={reveal}
 	class:faceup={faceUp}
 	in:fly={{ y: -40, x: 8, duration: 250 }}
 >
@@ -44,10 +54,9 @@
 	.playingcard {
 		height: 268px;
 		width: 185px;
-		border-radius: 8px;
+		border-radius: 15px;
 		transform-style: preserve-3d;
 		transition: transform 0.25s linear;
-		position: relative;
 
 		.face {
 			position: absolute;
@@ -58,14 +67,15 @@
 
 		.front {
 			transform: rotateY(180deg);
-			outline: 3px solid white;
-			outline-offset: -2px;
+			padding: 5px;
+			outline: 5px solid white;
+			outline-offset: -7px;
 		}
 	}
 	img {
 		height: 100%;
 		width: 100%;
-		border-radius: 8px;
+		border-radius: 15px;
 		pointer-events: none;
 		-moz-user-select: none;
 		-webkit-user-select: none;
