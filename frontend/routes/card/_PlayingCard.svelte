@@ -25,7 +25,7 @@
 
 <div
 	class="card playingcard"
-	on:click={reveal}
+	on:mouseover={reveal}
 	class:faceup={faceUp}
 	in:fly={{ y: -40, x: 8, duration: 250 }}
 >
