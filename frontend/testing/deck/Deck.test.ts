@@ -1,4 +1,4 @@
-import CardDeck from '../../../backend/entities/deck/CardDeck';
+import CardDeck from '$lib/entities/deck/CardDeck';
 
 let deck: CardDeck;
 
