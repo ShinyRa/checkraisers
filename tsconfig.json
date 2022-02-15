@@ -28,11 +28,11 @@
 		}
 	},
 	"include": [
-		"frontend/routes/**/*.d.ts",
-		"frontend/routes/**/*.js",
-		"frontend/routes/**/*.ts",
-		"frontend/routes/**/*.svelte",
-		"frontend/routes/global.d.ts",
+		"frontend/**/*.d.ts",
+		"frontend/**/*.js",
+		"frontend/**/*.ts",
+		"frontend/**/*.svelte",
+		"frontend/global.d.ts",
 		"backend/entities/deck/card/CardValue.ts",
 		"backend/entities/deck/card/CardSuit.ts"
 	]
