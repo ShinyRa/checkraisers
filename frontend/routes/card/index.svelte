@@ -3,6 +3,7 @@
 	import { deckAPI } from '$lib/api/deck';
 	import { Card } from '$lib/entities/deck/card/Card';
 	import PlayingCard from './_PlayingCard.svelte';
+	import { CardState } from '$lib/entities/deck/card/CardState';
 
 	let deck = Array<Card>();
 	let shown = Array<Card>();
@@ -33,7 +34,11 @@
 	};
 
 	const deal = (deck: Array<Card>, player) => {
-		player.hand.push(deck.pop());
+		let card = deck.pop();
+		if (player.name === 'Tijs') {
+			card.state = CardState.REVEALED;
+		}
+		player.hand.push(card);
 		return player.hand;
 	};
 </script>

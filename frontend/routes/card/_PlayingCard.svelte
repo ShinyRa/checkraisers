@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { assets } from '$app/paths';
 	import { Card } from '$lib/entities/deck/card/Card';
+	import { CardState } from '$lib/entities/deck/card/CardState';
 	import { CardSuit } from '$lib/entities/deck/card/CardSuit';
 	import { CardValue } from '$lib/entities/deck/card/CardValue';
 
@@ -8,11 +9,8 @@
 
 	export let card: Card;
 
-	// If card is facing up or down
-	let faceUp = false;
-
 	// If card face has been revealed
-	let known = false;
+	let known = card.state === CardState.REVEALED;
 
 	// If card is animating in any way
 	let animating = false;
@@ -20,22 +18,25 @@
 	let suitName = CardSuit[card.suit].toLowerCase();
 	let valueName = CardValue[card.value].toLowerCase();
 
-	const reveal = () => {
+	const flip = () => {
 		if (animating) {
 			return;
 		}
 
 		animating = true;
-		faceUp = !faceUp;
+
+		card.state === CardState.REVEALED
+			? (card.state = CardState.HIDDEN)
+			: (card.state = CardState.REVEALED);
 		known = true;
-		setInterval(() => (animating = false), 500);
+		setInterval(() => (animating = false), 375);
 	};
 </script>
 
 <div
 	class="card playingcard"
-	on:click={reveal}
-	class:faceup={faceUp}
+	on:click={flip}
+	class:faceup={card.state === CardState.REVEALED}
 	in:fly={{ y: -40, x: 8, duration: 250 }}
 >
 	<img src="{assets}/cards/cardback.png" alt="Cardback" class="face" />

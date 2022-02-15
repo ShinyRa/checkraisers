@@ -1,6 +1,7 @@
 import { CardValue } from '../../entities/deck/card/CardValue';
 import { CardSuit } from '../../entities/deck/card/CardSuit';
 import type { Card } from '../../entities/deck/card/Card';
+import { CardState } from '../../entities/deck/card/CardState';
 
 export const deckAPI = {
 	shuffleDeck(): Record<string, Array<Card>> {
@@ -9,7 +10,9 @@ export const deckAPI = {
 		const shuffled = Array<Card>();
 
 		suits.forEach((suit) => {
-			values.forEach((value) => shuffled.push({ value: CardValue[value], suit: CardSuit[suit] }));
+			values.forEach((value) =>
+				shuffled.push({ value: CardValue[value], suit: CardSuit[suit], state: CardState.HIDDEN })
+			);
 		});
 
 		// Sort array semi-randomly
