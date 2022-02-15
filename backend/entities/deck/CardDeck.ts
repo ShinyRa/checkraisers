@@ -9,10 +9,18 @@ export type Deck = {
 class CardDeck implements Deck {
 	cards: PlayingCard[];
 
+	/**
+	 * Create new card deck.
+	 */
 	constructor() {
 		this.cards = [];
 	}
 
+	/**
+	 * Populate deck with 52 playingcards.
+	 *
+	 * @returns self
+	 */
 	populate = (): CardDeck => {
 		const suits = Object.values(CardSuit).filter((suit) => isNaN(Number(suit)));
 		const values = Object.values(CardValue).filter((value) => isNaN(Number(value)));
@@ -24,6 +32,11 @@ class CardDeck implements Deck {
 		return this;
 	};
 
+	/**
+	 * Shuffle deck.
+	 *
+	 * @returns self
+	 */
 	shuffle = (): CardDeck => {
 		// Sort array semi-randomly
 		[1, 2, 3, 4, 5].forEach(() => {
@@ -33,16 +46,32 @@ class CardDeck implements Deck {
 		return this;
 	};
 
-	draw = (): PlayingCard => {
-		if (this.cards.length > 1) {
-			return this.cards.pop();
-		}
-	};
+	/**
+	 * Draw card from deck.
+	 *
+	 * @returns PlayingCard | undefined
+	 */
+	draw = (): PlayingCard | undefined => this.cards.pop();
 
-	peek = (): PlayingCard => this.cards[this.cards.length - 1];
+	/**
+	 * Peek next card in deck.
+	 *
+	 * @returns PlayingCard | undefined
+	 */
+	peek = (): PlayingCard | undefined => this.cards[this.cards.length - 1];
 
+	/**
+	 * If deck is empty.
+	 *
+	 * @returns boolean
+	 */
 	isEmpty = (): boolean => this.cards.length == 0;
 
+	/**
+	 * Print deck to string.
+	 *
+	 * @returns string
+	 */
 	print = (): string => this.cards.map((card) => card.print()).join();
 }
 

@@ -1,21 +1,20 @@
 <script lang="ts">
 	import { assets as assetsPath } from '$app/paths';
-
 	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
 
 	export let card: PlayingCard;
 
 	// If card face has been revealed
-	let known = card.isRevealed();
+	let faceIsKnown = card.isRevealed();
 
 	const flip = () => {
-		known = true;
+		faceIsKnown = true;
 		card = card.flip();
 	};
 </script>
 
 <div class="playingcard" on:click={flip} class:faceup={card.isRevealed()}>
-	{#if known}
+	{#if faceIsKnown}
 		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
 	{/if}
 	<img src="{assetsPath}/cards/cardback.png" alt="cardback" class="face" />

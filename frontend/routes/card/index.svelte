@@ -37,7 +37,7 @@
 		deck: CardDeck,
 		player: { name: string; hand: PlayingCardData[] }
 	): PlayingCardData[] => {
-		let card = deck.draw();
+		const card = deck.draw();
 		if (player.name === 'Tijs') {
 			card.reveal();
 		}
@@ -56,7 +56,7 @@
 		</section>
 	{/each}
 	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length === 5} on:click={drawCard}
+		<button class="button is-large is-primary" disabled={shown.length >= 5} on:click={drawCard}
 			>Draw</button
 		>
 		{#each shown as card}
@@ -79,29 +79,31 @@
 		width: 100%;
 		padding: 50px;
 		row-gap: 125px;
-	}
 
-	.player {
-		grid-area: 'player';
-		display: flex;
-		justify-content: center;
-	}
-	.you {
-		grid-area: you;
-		grid-column-start: 1;
-		grid-column-end: 4;
-		justify-content: center;
-	}
+		.player {
+			grid-area: 'player';
+			display: flex;
+			justify-content: center;
+		}
 
-	.cards {
-		grid-column-start: 1;
-		grid-column-end: 4;
-		display: grid;
-		grid-template-columns: repeat(6, 1fr);
-		gap: 15px;
-	}
-	button {
-		height: 100%;
-		width: 100%;
+		.you {
+			grid-area: you;
+			grid-column-start: 1;
+			grid-column-end: 4;
+			justify-content: center;
+		}
+
+		.cards {
+			grid-column-start: 1;
+			grid-column-end: 4;
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			gap: 15px;
+
+			button {
+				height: 100%;
+				width: 100%;
+			}
+		}
 	}
 </style>
