@@ -31,12 +31,19 @@
 				console.log(res);
 			});
 	};
+
+	const removeuser = () => {
+		userAPI.removeUser(player).then((res) => {
+				console.log(res);
+			});
+	}
 </script>
 
 <section>
 	<div class="container">
 		<input bind:value={player} /><br />
 		<button on:click={adduser}>add player</button>
+		<button on:click={removeuser}>remove player</button>
 	</div>
 
 	<div class="container">
