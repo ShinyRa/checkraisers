@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { assets } from '$app/paths';
+	import { assets as assetsPath } from '$app/paths';
 	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
 	import { CardState } from '$lib/entities/deck/card/CardState';
 	import { fly } from 'svelte/transition';
@@ -31,9 +31,9 @@
 	class:faceup={card.state === CardState.REVEALED}
 	in:fly={{ y: -40, x: 8, duration: 250 }}
 >
-	<img src="{assets}/cards/cardback.png" alt="Cardback" class="face" />
+	<img src="{assetsPath}/cards/cardback.png" alt="Cardback" class="face" />
 	{#if known}
-		<img src="{assets}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
+		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
 	{/if}
 </div>
 
