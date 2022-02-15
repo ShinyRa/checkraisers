@@ -5,15 +5,15 @@
 	import { userAPI } from '$lib/api/user';
 	import { fly } from 'svelte/transition';
 
-	let player: string;
-	let players = [];
+	let user: string;
+	let users = [];
 
 	onMount(() => {
 		const pokerRef = collection(db, 'user');
 		onSnapshot(pokerRef, (querySnapshot) => {
-			players = [];
+			users = [];
 			querySnapshot.forEach((doc) => {
-				players = [...players, doc.data().name];
+				users = [...users, doc.data().name];
 			});
 		});
 	});
@@ -21,9 +21,9 @@
 	const adduser = () => {
 		userAPI
 			.addUser({
-				username: player,
-				name: player,
-				surname: player,
+				username: user,
+				name: user,
+				surname: user,
 				dateOfBirth: new Date(),
 				totalChips: 1000
 			})
@@ -32,24 +32,31 @@
 			});
 	};
 
-	const removeuser = () => {
-		userAPI.removeUser(player).then((res) => {
+	const removeUser = () => {
+		userAPI.removeUser(user).then((res) => {
 				console.log(res);
 			});
+	}
+
+	const getUser = () => {
+		userAPI.getUsers().then((res) => {
+			console.log(res);
+		})
 	}
 </script>
 
 <section>
 	<div class="container">
-		<input bind:value={player} /><br />
-		<button on:click={adduser}>add player</button>
-		<button on:click={removeuser}>remove player</button>
+		<input bind:value={user} /><br />
+		<button on:click={adduser}>add user</button>
+		<button on:click={removeUser}>remove user</button>
+		<button on:click={getUser}>get all user</button>
 	</div>
 
 	<div class="container">
 		<ul>
-			{#each players as player}
-				<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{player}</p>
+			{#each users as user}
+				<p in:fly={{ x: -100, duration: 250, delay: 0 }}>{user}</p>
 			{/each}
 		</ul>
 	</div>
