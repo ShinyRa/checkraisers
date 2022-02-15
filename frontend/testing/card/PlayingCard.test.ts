@@ -18,6 +18,10 @@ describe('Playingcard unit tests', () => {
 		expect(card.print()).toBe('ace of clubs');
 	});
 
+	it('should not be known to the user before revealed', () => {
+		expect(screen.queryByAltText(card.assetName())).toBeFalsy();
+	});
+
 	it('should flip to reveal its face', () => {
 		card.flip();
 		expect(card.state).toEqual(CardState.REVEALED);
