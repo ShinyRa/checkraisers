@@ -10,5 +10,7 @@
 		"^.+\\.ts$": "ts-jest",
 		"^.+\\.js$": "babel-jest"
 	},
-	"moduleFileExtensions": ["js", "ts", "svelte"]
+	"moduleFileExtensions": ["js", "ts", "svelte"],
+	"moduleDirectories": ["node_modules", "frontend", "backend"],
+	"moduleNameMapper": { "^\\$lib/(.*)": "<rootDir>/backend/$1" }
 }
