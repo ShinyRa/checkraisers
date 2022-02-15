@@ -3,13 +3,13 @@ import { HttpStatusCode } from '../../utils/HttpStatusCode';
 import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '../../utils/Firebase';
 
-const getUsername = async(user: User["username"]) => {
-	const ref = doc(db, 'user', user);
+const getUsername = async(username: User["username"]) => {
+	const ref = doc(db, 'user', username);
 	return await getDoc(ref);
 }
 
-const usernameExist = async(user: User["username"]): Promise<boolean> => {
-	const docUsername = await getUsername(user);
+const usernameExist = async(username: User["username"]): Promise<boolean> => {
+	const docUsername = await getUsername(username);
 	if (docUsername.exists()) {
 		return true;
 	} else {
