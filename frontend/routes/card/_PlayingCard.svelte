@@ -1,40 +1,24 @@
 <script lang="ts">
 	import { assets as assetsPath } from '$app/paths';
+
 	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
-	import { CardState } from '$lib/entities/deck/card/CardState';
-	import { fly } from 'svelte/transition';
 
 	export let card: PlayingCard;
 
 	// If card face has been revealed
-	let known = card.state === CardState.REVEALED;
-
-	// If card is animating in any way
-	let animating = false;
+	let known = card.isRevealed();
 
 	const flip = () => {
-		if (animating) {
-			return;
-		}
-
-		animating = true;
 		known = true;
 		card = card.flip();
-
-		setInterval(() => (animating = false), 375);
 	};
 </script>
 
-<div
-	class="card playingcard"
-	on:click={flip}
-	class:faceup={card.state === CardState.REVEALED}
-	in:fly={{ y: -40, x: 8, duration: 250 }}
->
-	<img src="{assetsPath}/cards/cardback.png" alt="Cardback" class="face" />
+<div class="playingcard" on:click={flip} class:faceup={card.isRevealed()}>
 	{#if known}
 		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
 	{/if}
+	<img src="{assetsPath}/cards/cardback.png" alt="cardback" class="face" />
 </div>
 
 <style lang="scss">
@@ -49,7 +33,6 @@
 			position: absolute;
 			-webkit-backface-visibility: hidden;
 			backface-visibility: hidden;
-			background-color: transparent;
 		}
 
 		.front {
@@ -58,16 +41,17 @@
 			outline: 5px solid white;
 			outline-offset: -7px;
 		}
+		img {
+			height: 100%;
+			width: 100%;
+			border-radius: 15px;
+			pointer-events: none;
+			-moz-user-select: none;
+			-webkit-user-select: none;
+			user-select: none;
+		}
 	}
-	img {
-		height: 100%;
-		width: 100%;
-		border-radius: 15px;
-		pointer-events: none;
-		-moz-user-select: none;
-		-webkit-user-select: none;
-		user-select: none;
-	}
+
 	.playingcard:hover {
 		cursor: pointer;
 	}

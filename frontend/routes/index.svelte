@@ -3,16 +3,14 @@
 	import { assets as assetsPath } from '$app/paths';
 	import { fly } from 'svelte/transition';
 
-	let loaded = false;
-	onMount(() => {
-		loaded = true;
-	});
+	let load;
+	onMount(() => (load = true));
 </script>
 
-{#if loaded}
-	<section class="container" in:fly={{ x: -500, duration: 1250 }}>
+{#if load}
+	<section class="container" in:fly|local={{ x: -500, duration: 1250 }}>
 		<img src="{assetsPath}/logo.png" alt="Logo" class="logo" />
-		<p in:fly={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
+		<p in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
 	</section>
 {/if}
 

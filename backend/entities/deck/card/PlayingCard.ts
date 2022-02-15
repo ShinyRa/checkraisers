@@ -19,25 +19,25 @@ class PlayingCard implements Card {
 		this.state = state ? state : CardState.REVEALED;
 	}
 
-	flip(): PlayingCard {
+	flip = (): PlayingCard => {
 		this.state === CardState.REVEALED
 			? (this.state = CardState.HIDDEN)
 			: (this.state = CardState.REVEALED);
 
 		return this;
-	}
+	};
 
-	reveal(): void {
+	reveal = (): void => {
 		this.state = CardState.REVEALED;
-	}
+	};
 
-	assetName(): string {
-		return `${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`;
-	}
+	isRevealed = (): boolean => this.state === CardState.REVEALED;
 
-	print(): string {
-		return CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
-	}
+	assetName = (): string =>
+		`${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`;
+
+	print = (): string =>
+		CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
 }
 
 export default PlayingCard;

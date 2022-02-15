@@ -13,7 +13,7 @@ class CardDeck implements Deck {
 		this.cards = [];
 	}
 
-	populate(): CardDeck {
+	populate = (): CardDeck => {
 		const suits = Object.values(CardSuit).filter((suit) => isNaN(Number(suit)));
 		const values = Object.values(CardValue).filter((value) => isNaN(Number(value)));
 
@@ -22,34 +22,28 @@ class CardDeck implements Deck {
 		});
 
 		return this;
-	}
+	};
 
-	shuffle(): CardDeck {
+	shuffle = (): CardDeck => {
 		// Sort array semi-randomly
 		[1, 2, 3, 4, 5].forEach(() => {
 			this.cards.sort(() => 0.5 - Math.random());
 		});
 
 		return this;
-	}
+	};
 
-	draw(): PlayingCard {
+	draw = (): PlayingCard => {
 		if (this.cards.length > 1) {
 			return this.cards.pop();
 		}
-	}
+	};
 
-	peek(): PlayingCard {
-		return this.cards[this.cards.length - 1];
-	}
+	peek = (): PlayingCard => this.cards[this.cards.length - 1];
 
-	isEmpty(): boolean {
-		return this.cards.length == 0;
-	}
+	isEmpty = (): boolean => this.cards.length == 0;
 
-	print(): string {
-		return this.cards.map((card) => card.print()).join();
-	}
+	print = (): string => this.cards.map((card) => card.print()).join();
 }
 
 export default CardDeck;
