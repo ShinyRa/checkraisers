@@ -1,5 +1,9 @@
 import { render, screen } from '@testing-library/svelte';
-// import Card from './about/_Card.svelte';
+import PlayingCard from '../../routes/card/_PlayingCard.svelte';
+
+// beforeAll(() => {
+// 	const
+// })
 
 test('says fishing', () => {
 	// render(Card, { props: { task: 'Fishing' } });

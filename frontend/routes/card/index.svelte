@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { deckAPI } from '$lib/api/deck';
-	import { Card } from '$lib/entities/deck/card/Card';
-	import PlayingCard from './_PlayingCard.svelte';
-	import { CardState } from '$lib/entities/deck/card/CardState';
+	import CardDeck from '$lib/entities/deck/CardDeck';
+	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
 
-	let deck = Array<Card>();
-	let shown = Array<Card>();
+	import PlayingCard from './_PlayingCard.svelte';
+
+	let deck: CardDeck;
+	let shown: Array<PlayingCardData> = [];
 
 	const players = [
 		{ hand: [], name: 'Tijs' },
@@ -27,16 +28,18 @@
 	});
 
 	const drawCard = () => {
-		if (deck.length > 1 && shown.length < 5) {
-			shown.push(deck.pop());
-			shown = [...shown];
+		if (shown.length < 5 && !deck.isEmpty()) {
+			shown = [...shown, deck.draw()];
 		}
 	};
 
-	const deal = (deck: Array<Card>, player) => {
-		let card = deck.pop();
+	const deal = (
+		deck: CardDeck,
+		player: { name: string; hand: PlayingCardData[] }
+	): PlayingCardData[] => {
+		let card = deck.draw();
 		if (player.name === 'Tijs') {
-			card.state = CardState.REVEALED;
+			card.reveal();
 		}
 		player.hand.push(card);
 		return player.hand;
@@ -88,9 +91,6 @@
 		grid-column-start: 1;
 		grid-column-end: 4;
 		justify-content: center;
-	}
-	.communitycards {
-		grid-area: cards;
 	}
 
 	.cards {

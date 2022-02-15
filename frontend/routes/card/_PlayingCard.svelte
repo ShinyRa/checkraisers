@@ -1,13 +1,10 @@
 <script lang="ts">
 	import { assets } from '$app/paths';
-	import { Card } from '$lib/entities/deck/card/Card';
+	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
 	import { CardState } from '$lib/entities/deck/card/CardState';
-	import { CardSuit } from '$lib/entities/deck/card/CardSuit';
-	import { CardValue } from '$lib/entities/deck/card/CardValue';
-
 	import { fly } from 'svelte/transition';
 
-	export let card: Card;
+	export let card: PlayingCard;
 
 	// If card face has been revealed
 	let known = card.state === CardState.REVEALED;
@@ -15,20 +12,15 @@
 	// If card is animating in any way
 	let animating = false;
 
-	let suitName = CardSuit[card.suit].toLowerCase();
-	let valueName = CardValue[card.value].toLowerCase();
-
 	const flip = () => {
 		if (animating) {
 			return;
 		}
 
 		animating = true;
-
-		card.state === CardState.REVEALED
-			? (card.state = CardState.HIDDEN)
-			: (card.state = CardState.REVEALED);
 		known = true;
+		card = card.flip();
+
 		setInterval(() => (animating = false), 375);
 	};
 </script>
@@ -41,11 +33,7 @@
 >
 	<img src="{assets}/cards/cardback.png" alt="Cardback" class="face" />
 	{#if known}
-		<img
-			src="{assets}/cards/{valueName}_of_{suitName}.png"
-			alt="{valueName} of {suitName}"
-			class="face front"
-		/>
+		<img src="{assets}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
 	{/if}
 </div>
 
