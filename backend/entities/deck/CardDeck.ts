@@ -18,7 +18,7 @@ class CardDeck implements Deck {
 		const values = Object.values(CardValue).filter((value) => isNaN(Number(value)));
 
 		suits.forEach((suit) => {
-			values.forEach((value) => this.cards.push(new PlayingCard(CardValue[value], CardSuit[suit])));
+			values.forEach((value) => this.cards.push(new PlayingCard(CardSuit[suit], CardValue[value])));
 		});
 
 		return this;
@@ -39,8 +39,16 @@ class CardDeck implements Deck {
 		}
 	}
 
+	peek(): PlayingCard {
+		return this.cards[this.cards.length - 1];
+	}
+
 	isEmpty(): boolean {
 		return this.cards.length == 0;
+	}
+
+	print(): string {
+		return this.cards.map((card) => card.print()).join();
 	}
 }
 

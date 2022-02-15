@@ -13,7 +13,7 @@ class PlayingCard implements Card {
 	suit: CardSuit;
 	state: CardState;
 
-	constructor(value: CardValue, suit: CardSuit, state: CardState = CardState.HIDDEN) {
+	constructor(suit: CardSuit, value: CardValue, state: CardState = CardState.HIDDEN) {
 		this.value = value;
 		this.suit = suit;
 		this.state = state ? state : CardState.REVEALED;
@@ -33,6 +33,10 @@ class PlayingCard implements Card {
 
 	assetName(): string {
 		return `${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`;
+	}
+
+	print(): string {
+		return CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
 	}
 }
 
