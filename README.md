@@ -105,7 +105,7 @@ Explain who has contributed to the repository. You can say it has been part of a
 
 Link to your methods and techniques document: [MT.md](MT.md)
 
-# Moscow tables of user stories
+# Moscow tables of Job stories
 
 ## Must have
 | **Player**                                                                                                               | **Table**                                                                                                          | **User**                                                                                                           |
