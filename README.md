@@ -121,24 +121,20 @@ Link to your methods and techniques document: [MT.md](MT.md)
 | When I’m playing, I want to see each opponent’s profile picture,  so I know which opponent is which.                     |                                                                                                                    |                                                                                                                    |
 | When I’m playing, I want to see each opponent’s role  (big /small blind and dealer), so I know in what position I am in. |                                                                                                                    |                                                                                                                    |
 | When the round is finished, I want to see who has the winning hand,  so I can see who won the hand                       |                                                                                                                    |                                                                                                                    |
-<br />
 ## Should have
 | Player                                                                                            | Table (Match)                                                                                                | User                                                                                                                     |
 |---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
 | When I’m playing, I want to see each  opponent's chip amount, so I know how many chips they have. | When I make a table, I want to create and share an invitation, so I can invite other people to play with me. | While browsing my profile settings, I want to be able to upload a profile picture, so I can identify myself to everyone. |
 |                                                                                                   | When I have received an invite link, I want to be able  to join a table, so I can play with my friends.      |                                                                                                                          |
-<br />
 
 ## Could have
 | Player | Table (Match)                                                                                         | User |
 |--------|-------------------------------------------------------------------------------------------------------|------|
 |        | When I want to watch others play, I want to be able to spectate  a table, so I can learn from others. |      |
 |        |                                                                                                       |      |
-<br />
 
 ## Won't have  
 | Player | Table (Match) | User |
 |--------|---------------|------|
 |        |               |      |
 |        |               |      |
-</br>
