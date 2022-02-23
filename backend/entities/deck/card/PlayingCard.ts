@@ -12,6 +12,7 @@ class PlayingCard implements Card {
 	value: CardValue;
 	suit: CardSuit;
 	state: CardState;
+	known: boolean;
 
 	/**
 	 * Create a new playingcard
@@ -24,6 +25,7 @@ class PlayingCard implements Card {
 		this.value = value;
 		this.suit = suit;
 		this.state = state ? state : CardState.REVEALED;
+		this.known = false;
 	}
 
 	/**
@@ -32,9 +34,14 @@ class PlayingCard implements Card {
 	 * @returns self
 	 */
 	flip = (): PlayingCard => {
-		this.state === CardState.REVEALED
-			? (this.state = CardState.HIDDEN)
-			: (this.state = CardState.REVEALED);
+		if (this.state === CardState.REVEALED) {
+			this.state = CardState.HIDDEN;
+		}
+
+		if (this.state === CardState.HIDDEN) {
+			this.state = CardState.REVEALED;
+			this.setAsKnown();
+		}
 
 		return this;
 	};
@@ -56,7 +63,23 @@ class PlayingCard implements Card {
 	isRevealed = (): boolean => this.state === CardState.REVEALED;
 
 	/**
-	 * Get asset name of card.
+	 * If card is known.
+	 *
+	 * @returns boolean
+	 */
+	isKnown = (): boolean => this.known;
+
+	/**
+	 * Set known
+	 *
+	 * @returns
+	 */
+	setAsKnown = (): void => {
+		this.known = true;
+	};
+
+	/**
+	 * Get asset name of card if it is known.
 	 *
 	 * template
 	 * 	 *value*_of_*suit*.png
@@ -66,7 +89,9 @@ class PlayingCard implements Card {
 	 * @returns string
 	 */
 	assetName = (): string =>
-		`${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`;
+		this.isKnown()
+			? `${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`
+			: `Cardback.png`;
 
 	/**
 	 * print card details to string.

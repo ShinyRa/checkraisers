@@ -3,21 +3,11 @@
 	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
 
 	export let card: PlayingCard;
-
-	// If card face has been revealed
-	let faceIsKnown = card.isRevealed();
-
-	const flip = () => {
-		faceIsKnown = true;
-		card = card.flip();
-	};
 </script>
 
-<div class="playingcard" on:click={flip} class:faceup={card.isRevealed()}>
-	{#if faceIsKnown}
-		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
-	{/if}
-	<img src="{assetsPath}/cards/cardback.png" alt="cardback" class="face" />
+<div class="playingcard" on:click={() => (card = card.flip())} class:faceup={card.isRevealed()}>
+	<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
+	<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
 </div>
 
 <style lang="scss">
