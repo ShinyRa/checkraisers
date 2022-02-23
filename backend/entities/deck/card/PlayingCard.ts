@@ -25,7 +25,7 @@ class PlayingCard implements Card {
 		this.value = value;
 		this.suit = suit;
 		this.state = state ? state : CardState.REVEALED;
-		this.known = false;
+		this.known = this.state === CardState.REVEALED ? true : false;
 	}
 
 	/**
@@ -53,6 +53,7 @@ class PlayingCard implements Card {
 	 */
 	reveal = (): void => {
 		this.state = CardState.REVEALED;
+		this.setAsKnown();
 	};
 
 	/**

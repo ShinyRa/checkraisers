@@ -6,7 +6,7 @@
 </script>
 
 <div class="playingcard" on:click={() => (card = card.flip())} class:faceup={card.isRevealed()}>
-	<img src="{assetsPath}/cards/{card.assetName()}" alt={card.assetName()} class="face front" />
+	<img src="{assetsPath}/cards/{card.assetName()}" alt={card.print()} class="face front" />
 	<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
 </div>
 
