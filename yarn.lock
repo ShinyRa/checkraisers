@@ -1747,6 +1747,13 @@
   resolved "https://registry.yarnpkg.com/@socket.io/base64-arraybuffer/-/base64-arraybuffer-1.0.2.tgz#568d9beae00b0d835f4f8c53fd55714986492e61"
   integrity sha512-dOlCBKnDw4iShaIsH/bxujKTM18+2TOAsYz+KSc11Am38H4q5Xw8Bbz97ZYdrVNM+um3p7w86Bvvmcn9q+5+eQ==
 
+"@sveltejs/adapter-node@^1.0.0-next.69":
+  version "1.0.0-next.69"
+  resolved "https://registry.yarnpkg.com/@sveltejs/adapter-node/-/adapter-node-1.0.0-next.69.tgz#b1bec2f88bfc90a7819914f652f1f8cecb6e83a8"
+  integrity sha512-tVKwJ8vYG4NGFJ5L+tRuyRglGPaJ1khNqTKq4bYIUahk/pjXIu9USbMmFtNHd6IyDdxjPtRoVwHubAYfTQLTpg==
+  dependencies:
+    tiny-glob "^0.2.9"
+
 "@sveltejs/adapter-static@^1.0.0-next.26":
   version "1.0.0-next.26"
   resolved "https://registry.npmjs.org/@sveltejs/adapter-static/-/adapter-static-1.0.0-next.26.tgz"

@@ -1,5 +1,6 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
+import { Server } from 'socket.io';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -12,7 +13,7 @@ const config = {
 		/**
 		 * Build command which is only ran while compiling to static HTML site in Gitlab pipeline
 		 */
-		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
+		adapter: adapter(),
 		paths: { base: dev ? '' : '/2122/ivse2/IVSE2-MUCKERS/pokerapp' }, // If building on Gitlab, set base url to /pokerapp repository
 		appDir: 'app', // Don't use standard _app structure as this is hidden to the sveltekit router
 		prerender: {
@@ -25,7 +26,21 @@ const config = {
 			assets: './static',
 			template: './static/app.html',
 			routes: './frontend/routes' // /frontend/routes folder as routing entry point
-		}
+		},	
+        vite: {
+            plugins: [
+                {
+                    name: 'socket-io',
+                    configureServer(server) {
+                        const io = new Server(server.httpServer);
+
+                        // Socket.IO stuff goes here                
+
+                        console.log('SocketIO injected');
+                    }
+                }
+            ]
+        }
 	}
 };
 
