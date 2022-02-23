@@ -3,61 +3,58 @@
 	import { deckAPI } from '$lib/api/deck';
 	import CardDeck from '$lib/entities/deck/CardDeck';
 	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
+	import Player from '$lib/entities/user/Player';
+	import Evaluation from '$lib/utils/hand/Evaluation';
 
 	import PlayingCard from './_PlayingCard.svelte';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
 
-	const players = [
-		{ hand: [], name: 'Tijs' },
-		{ hand: [], name: 'Auke' },
-		{ hand: [], name: 'Kimberley' },
-		{ hand: [], name: 'Danny' }
+	let players = [
+		new Player().mock(),
+		new Player().mock(),
+		new Player().mock(),
+		new Player().mock()
 	];
 
 	onMount(() => {
 		const data = deckAPI.shuffleDeck();
 		deck = data.deck;
-		players.forEach((player, index) => {
-			let hand = [];
-			[1, 2].forEach(() => (hand = deal(deck, player)));
-			players[index].hand = hand;
+		players.forEach((player) => {
+			[1, 2].forEach(() => player.hand.deal(deck.draw()));
+			if (player.username === 'Tijs') {
+				player.hand.reveal();
+			}
 		});
+		players = players;
+
 		[1, 2, 3].forEach(drawCard);
 	});
 
 	const drawCard = () => {
 		if (shown.length < 5 && !deck.isEmpty()) {
-			shown = [...shown, deck.draw()];
+			const newCard = deck.draw();
+			newCard.reveal();
+			shown = [...shown, newCard];
+		} else {
+			Evaluation.findScore(players[0].hand, shown);
 		}
-	};
-
-	const deal = (
-		deck: CardDeck,
-		player: { name: string; hand: PlayingCardData[] }
-	): PlayingCardData[] => {
-		const card = deck.draw();
-		if (player.name === 'Tijs') {
-			card.reveal();
-		}
-		player.hand.push(card);
-		return player.hand;
 	};
 </script>
 
 <section class="board">
 	{#each players as player}
-		<section class="player" class:you={player.name === 'Tijs'}>
+		<section class="player" class:you={player.name === players[0].name}>
 			<h1>{player.name}</h1>
-			{#each player.hand as card}
+			{#each player.hand.cards as card}
 				<PlayingCard {card} />
 			{/each}
 		</section>
 	{/each}
 	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length >= 5} on:click={drawCard}
-			>Draw</button
+		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={drawCard}
+			>{shown.length >= 5 ? 'Evaluate' : 'Draw'}</button
 		>
 		{#each shown as card}
 			<PlayingCard {card} />

@@ -95,7 +95,7 @@ class PlayingCard implements Card {
 			: `Cardback.png`;
 
 	/**
-	 * print card details to string.
+	 * Pint card details to string.
 	 *
 	 * template
 	 * 	 *value* of *suit*
@@ -106,6 +106,21 @@ class PlayingCard implements Card {
 	 */
 	print = (): string =>
 		CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
+
+	/**
+	 * Get value of card
+	 *
+	 * @returns string
+	 */
+	getValue = (): string => CardValue[this.value];
+
+	compareTo = (playingcard: PlayingCard): number => {
+		if (this.value === playingcard.value) {
+			return 0;
+		} else {
+			return this.value - playingcard.value;
+		}
+	};
 }
 
 export default PlayingCard;
