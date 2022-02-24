@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
-import { Server } from 'socket.io';
+import { SocketServer } from '$lib/SocketServer';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -32,11 +32,7 @@ const config = {
                 {
                     name: 'socket-io',
                     configureServer(server) {
-                        const io = new Server(server.httpServer);
-
-                        // Socket.IO stuff goes here                
-
-                        console.log('SocketIO injected');
+						console.log(SocketServer.initServer(server))
                     }
                 }
             ]
