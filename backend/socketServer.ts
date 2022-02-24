@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 
-class SocketServer {
+export class SocketServer {
     private io: Server;
 
     public initServer(server): boolean {
@@ -12,5 +12,3 @@ class SocketServer {
         }
     }            
 }
-
-export default SocketServer
