@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
-import SocketServer from 'backend/socketServer';
+import { initServer, io } from './backend/socketServer.js';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -33,7 +33,8 @@ const config = {
                     name: 'socket-io',
                     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
                     configureServer(server) {
-						SocketServer.initServer(server)
+						initServer(server);
+						console.log(io);
                     }
                 }
             ]
