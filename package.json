@@ -4,7 +4,7 @@
 	"scripts": {
 		"dev": "svelte-check && svelte-kit dev",
 		"build": "svelte-kit build",
-		"clean": "rm -rf node_modules && rm -rf .svelte-kit",
+		"clean": "rm -rf node_modules && rm -rf .svelte-kit && rm -rf build",
 		"preview": "svelte-kit preview",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
