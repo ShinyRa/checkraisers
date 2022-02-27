@@ -34,6 +34,7 @@
 		"frontend/**/*.svelte",
 		"frontend/global.d.ts",
 		"backend/entities/deck/card/CardValue.ts",
-		"backend/entities/deck/card/CardSuit.ts"
+		"backend/entities/deck/card/CardSuit.ts",
+		"backend/socketServer.js"
 	]
 }
