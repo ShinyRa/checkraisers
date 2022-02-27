@@ -1,8 +1,9 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
-import { initServer, io } from './backend/socketServer.js';
+import { initServer } from './backend/utils/socketServer.js';
+import { mongoDB_client } from './backend/utils/mongodb.js';
 
-const dev = process.env.NODE_ENV === 'development';
+//const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -10,9 +11,6 @@ const config = {
 	preprocess: preprocess({ typescript: { tsconfigFile: './tsconfig.json' } }),
 
 	kit: {
-		/**
-		 * Build command which is only ran while compiling to static HTML site in Gitlab pipeline
-		 */
 		adapter: adapter(),
 		files: {
 			lib: './backend',
@@ -27,9 +25,23 @@ const config = {
                     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
                     configureServer(server) {
 						initServer(server);
-						console.log(io);
                     }
-                }
+                },
+				{
+					name: 'mongo-DB',
+					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+					configureServer() {
+						let testing = mongoDB_client
+						
+						testing.collection("users").find({}).toArray()
+						.then(r => {
+							console.log(r);
+						}).catch(e => {
+							console.error(`ERROR:`,e);
+						})
+						
+					}
+				}
             ]
         }
 	}
