@@ -12,5 +12,10 @@
 	},
 	"moduleFileExtensions": ["js", "ts", "svelte"],
 	"moduleDirectories": ["node_modules", "frontend", "backend"],
-	"moduleNameMapper": { "^\\$lib/(.*)": "<rootDir>/backend/$1" }
+	"moduleNameMapper": { 
+		"^\\$app(.*)$": [
+			"<rootDir>/.svelte-kit/runtime/app$1"
+		],
+		"^\\$lib/(.*)": "<rootDir>/backend/$1"
+	 }
 }

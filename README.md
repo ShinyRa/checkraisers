@@ -104,3 +104,37 @@ For example this document used these resources:
 Explain who has contributed to the repository. You can say it has been part of a class you've taken at the University of Applied Sciences Amsterdam.
 
 Link to your methods and techniques document: [MT.md](MT.md)
+
+# Moscow tables of Job stories
+
+## Must have
+| **Player**                                                                                                               | **Table**                                                                                                          | **User**                                                                                                           |
+|--------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------|
+| When I’m playing, each turn I want to be dealt new cards,  so I can play the game.                                       | When I want to play poker, I want to create a table,  so I can invite people to play with me.                      | When entering the site for the first time,  I want to create an account, so I can participate in a game.           |
+| When I’m playing, each turn I want to be able to “check”  my opponents, so I can play the game.                          | When a table is created, I want to be able to find  it in my list of tables, so I can start it at some other time. | When I have created an account, I want to log into my account,  so I can participate in a game.                    |
+| When I’m playing, each turn I want to be able to “fold”  to my opponents, so I can play the game.                        | When I want to play with others,  I want to browse online tables, so I can join others.                            | While browsing my profile settings, I want to link my mobile  device to my account, so I can use it during a game. |
+| When I’m playing, each turn I want to be able to “raise” my opponents, so I can play the game.                           | When I have created a table, I want to be able to start it,  so I can begin to play.                               |                                                                                                                    |
+| When I’m playing, each turn I want to be able to go “all-in”, so  I can play the game.                                   | When I’m in a match, I want to be able to end the table,  so I can stop playing.                                   |                                                                                                                    |
+| When I’m playing, I want to be able to see the cards on the table,  so I know what my hand is worth.                     |                                                                                                                    |                                                                                                                    |
+| When I’m playing, I want to see the status of each opponent and  the move that they made, so I can play the game.        |                                                                                                                    |                                                                                                                    |
+| When I’m playing, I want to see each opponent’s name, so I know  which opponent is which.                                |                                                                                                                    |                                                                                                                    |
+| When I’m playing, I want to see each opponent’s profile picture,  so I know which opponent is which.                     |                                                                                                                    |                                                                                                                    |
+| When I’m playing, I want to see each opponent’s role  (big /small blind and dealer), so I know in what position I am in. |                                                                                                                    |                                                                                                                    |
+| When the round is finished, I want to see who has the winning hand,  so I can see who won the hand                       |                                                                                                                    |                                                                                                                    |
+## Should have
+| Player                                                                                            | Table (Match)                                                                                                | User                                                                                                                     |
+|---------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------|
+| When I’m playing, I want to see each  opponent's chip amount, so I know how many chips they have. | When I make a table, I want to create and share an invitation, so I can invite other people to play with me. | While browsing my profile settings, I want to be able to upload a profile picture, so I can identify myself to everyone. |
+|                                                                                                   | When I have received an invite link, I want to be able  to join a table, so I can play with my friends.      |                                                                                                                          |
+
+## Could have
+| Player | Table (Match)                                                                                         | User |
+|--------|-------------------------------------------------------------------------------------------------------|------|
+|        | When I want to watch others play, I want to be able to spectate  a table, so I can learn from others. |      |
+|        |                                                                                                       |      |
+
+## Won't have  
+| Player | Table (Match) | User |
+|--------|---------------|------|
+|        |               |      |
+|        |               |      |
