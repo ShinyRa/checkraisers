@@ -13,13 +13,14 @@
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",
+		"@sveltejs/adapter-node": "^1.0.0-next.70",
 		"@sveltejs/adapter-static": "^1.0.0-next.26",
-		"@sveltejs/kit": "next",
+		"@sveltejs/kit": "@sveltejs/kit@1.0.0-next.287",
 		"@testing-library/svelte": "^3.0.3",
+		"@testing-library/user-event": "^13.5.0",
 		"@types/jest": "^27.4.0",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
-		"@testing-library/user-event": "^13.5.0",
 		"depcheck": "^1.4.3",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -39,6 +40,7 @@
 		"firebase": "^9.6.6",
 		"firebase-admin": "^10.0.2",
 		"global": "^4.4.0",
-		"sass": "^1.49.7"
+		"sass": "^1.49.7",
+		"socket.io": "^4.4.1"
 	}
 }
