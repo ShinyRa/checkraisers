@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
-import { Server } from 'socket.io';
+import { initServer, io } from './backend/socketServer.js';
 
 const dev = process.env.NODE_ENV === 'development';
 
@@ -14,12 +14,6 @@ const config = {
 		 * Build command which is only ran while compiling to static HTML site in Gitlab pipeline
 		 */
 		adapter: adapter(),
-		appDir: 'app', // Don't use standard _app structure as this is hidden to the sveltekit router
-		prerender: {
-			crawl: true,
-			enabled: true,
-			entries: ['*']
-		},
 		files: {
 			lib: './backend',
 			assets: './static',
@@ -32,11 +26,8 @@ const config = {
                     name: 'socket-io',
                     // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
                     configureServer(server) {
-                        const io = new Server(server.httpServer);
-
-                        // Socket.IO stuff goes here                
-
-                        console.log('SocketIO injected: ', io);
+						initServer(server);
+						console.log(io);
                     }
                 }
             ]
