@@ -31,6 +31,6 @@ describe('Playingcard unit tests', () => {
 		expect(card.assetName()).toEqual('ace_of_clubs.png');
 		render(PlayingCard, { props: { card: card } });
 
-		expect(screen.getByAltText(card.assetName()).getAttribute('src')).toContain('ace_of_clubs.png');
+		expect(screen.getByAltText(card.print()).getAttribute('src')).toContain('ace_of_clubs.png');
 	});
 });

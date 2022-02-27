@@ -9,6 +9,7 @@
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"test": "jest frontend --passWithNoTests && jest backend --passWithNoTests",
+		"test:coverage": "jest --passWithNoTests --coverage",
 		"depcheck": "depcheck"
 	},
 	"devDependencies": {

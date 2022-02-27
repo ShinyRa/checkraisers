@@ -1,32 +1,31 @@
-#Sprint X | Week Y
-
-
+#Sprint 0 | Week 4
 
 ### Self Evaluation
 
-|               | CODE    |TEST   |DEVOPS  | User stories worked on                           |
-|---------------|---------|-------|--------|---------------------------------------------------|
-| Name Student1  |  😀  |  👎   |   👎     |- [As a A I want to B so that C](link-to-relevant-commit) <br> - [As a A I want to B so that C](link-to-relevant-commit) |
-| Name Student2  |  😀  |  😀   |   😀     | - [As a A I want to B so that C](link-to-relevant-commit) <br> - [As a A I want to B so that C](link-to-relevant-commit) | 
+|                | CODE | TEST | DEVOPS | User stories worked on                                                                                                   |
+|----------------|------|------|--------|--------------------------------------------------------------------------------------------------------------------------|
+| Tijs de Graaff | 😀   | 🤩   | 🏃     | - [When I’m playing, each turn I want to be dealt new cards, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/14) <br> - [When I’m playing, I want to be able to see the cards on the table, so I know what my hand is worth](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/19) |
+| Auke Steenman | | | | - [As a A I want to B so that C](link-to-relevant-commit) <br> - [As a A I want to B so that C](link-to-relevant-commit) |
 
 ### MT-Coach Feedback
 
 |               | CODE |TEST | DEVOPS   |OVERALL   |
 |---------------|------|-----|----------|--------------------|
-| Name Student1  |  👎  | 👎 |   😎    | 😀 |
+| Tijs de Graaff  | | | | |
 
 #### What went well:
- - Master of operations!
+ - 93.61% test coverage
+ - Svelte(kit) develops quickly
+ - Workable MVP!
+ - Code quality, very nice and compact code with very little dependencies
 
 #### (Even) better if:
-- camelCase code convention would be used.
-- you would test your logic and not test getters and setters.
-- read the rubric!
+- We keep on schedule and don't get stuck on the details
 
 
 |               | CODE |TEST | DEVOPS   |OVERALL   |
 |---------------|------|-----|----------|--------------------|
-| Name Student2  |  😎  | 😀 |    😀   | 😀 |
+| Auke Steenman  | | | | |
 
 ### What went well:
  - Great use of sonarlint to enhance of code quality.
@@ -34,4 +33,4 @@
 ### (Even) better if:
 - tests are run at every push
 - SOLID design principles would be better explained.
-                          |
+
