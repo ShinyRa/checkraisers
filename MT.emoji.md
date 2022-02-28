@@ -4,14 +4,14 @@
 
 |                | CODE | TEST | DEVOPS | User stories worked on                                                                                                   |
 |----------------|------|------|--------|--------------------------------------------------------------------------------------------------------------------------|
-| Tijs de Graaff | 😀   | 🤩   | 🤩     | - [When I’m playing, each turn I want to be dealt new cards, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/14) <br> - [When I’m playing, I want to be able to see the cards on the table, so I know what my hand is worth](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/19) |
-| Auke Steenman |😄 | 😞|😍| - [When entering the site for the first time, I want to create an account, so I can participate in a game]([link-to-relevant-commit](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/1)) |
+| Tijs de Graaff | 😄   | 😄   | 😄     | - [When I’m playing, each turn I want to be dealt new cards, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/14) <br> - [When I’m playing, I want to be able to see the cards on the table, so I know what my hand is worth](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/19) |
+| Auke Steenman |😄 | 😞|😄| - [When entering the site for the first time, I want to create an account, so I can participate in a game]([link-to-relevant-commit](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/1)) |
 
 ### MT-Coach Feedback
 
 |               | CODE |TEST | DEVOPS   |OVERALL   |
 |---------------|------|-----|----------|--------------------|
-| Tijs de Graaff  | 😀 | 😀 | 🙂 | 😀 |
+| Tijs de Graaff  | 😄 | 😄 | 🙂 | 😄 |
 
 #### What went well:
  - 93.61% test coverage
