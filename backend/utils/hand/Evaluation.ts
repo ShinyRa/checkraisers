@@ -3,34 +3,47 @@ import { CardValue } from '../../entities/deck/card/CardValue';
 import PlayingCard from '../../entities/deck/card/PlayingCard';
 import PlayerHand from '../../entities/hand/PlayerHand';
 import { HandRank } from '../../entities/hand/evaluation/HandRank';
+import { High, Pair } from '../../entities/hand/evaluation/ranks';
 
-abstract class HandEvaluation {
-	static findScore = (tableCards: PlayingCard[], ...hands: PlayerHand[]) => {
-		// const allCards = [...hand.cards, ...tableCards];
-		// allCards.sort((card1, card2) => card1.compareTo(card2));
-		// const highCard = allCards[allCards.length - 1];
-		// let rank = HandRank.HIGH;
+class HandEvaluation {
+	static findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {
+		const allCards = [...hand.cards, ...tableCards];
+		allCards.sort((card1, card2) => card1.compareTo(card2));
 
-		// const valueScoring = this.createScoringArray(CardValue);
-		// allCards.forEach((card) => valueScoring[card.value - 2]++);
+		const valueScoring = this.createScoringArray(CardValue);
 
-		// const suitScoring = this.createScoringArray(CardSuit);
-		// allCards.forEach((card) => suitScoring[card.suit - 1]++);
+		allCards.forEach(
+			(card) => (valueScoring[card.value - 2] = [...valueScoring[card.value - 2], card])
+		);
 
-		// let amountOfPairs = 0;
-		// let amountOfTrips = 0;
-		// let amountOfQuads = 0;
-		// valueScoring.forEach((value) => {
-		// 	if (value === 2) {
-		// 		amountOfPairs++;
-		// 	}
-		// 	if (value === 3) {
-		// 		amountOfTrips++;
-		// 	}
-		// 	if (value === 4) {
-		// 		amountOfQuads++;
-		// 	}
-		// });
+		const suitScoring = this.createScoringArray(CardValue);
+		allCards.forEach(
+			(card) => (suitScoring[card.suit - 1] = [...suitScoring[card.suit - 1], card])
+		);
+
+		let pairs = 0;
+		let trips = 0;
+		let quads = 0;
+
+		valueScoring.forEach((value) => {
+			if (value.length === 2) {
+				pairs++;
+			}
+			if (value.length === 3) {
+				trips++;
+			}
+			if (value.length === 4) {
+				quads++;
+			}
+		});
+
+		console.log(pairs);
+
+		if (pairs === 1) {
+			return new Pair(hand, valueScoring.filter(()));
+		}
+
+		return new High(hand);
 
 		// const isFlush = suitScoring.find((suit) => suit >= 5) > 0;
 
@@ -64,9 +77,9 @@ abstract class HandEvaluation {
 		return;
 	};
 
-	private static createScoringArray = (enumObject): number[] =>
+	private static createScoringArray = (enumObject): Array<Array<PlayingCard | null>> =>
 		new Array(Object.keys(enumObject).filter((key) => !isNaN(Number(enumObject[key]))).length).fill(
-			0
+			[]
 		);
 }
 

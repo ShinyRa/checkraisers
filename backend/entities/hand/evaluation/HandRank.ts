@@ -3,16 +3,16 @@ import PlayerHand, { Rankable } from '../PlayerHand';
 import { HandScore } from './HandScore';
 
 export abstract class HandRank implements Rankable<HandRank, HandScore> {
-	cards: PlayingCard[];
 	kickers: PlayingCard[];
 	score: HandScore;
 
-	constructor(hand: PlayerHand, playingCards: PlayingCard[]) {
-		this.cards = playingCards;
+	constructor(hand: PlayerHand) {
 		this.kickers = hand.cards;
 	}
 
 	abstract solve(): void;
+
+	abstract print(): string;
 
 	beats = (rank: HandRank): boolean => this.score - rank.score > 0;
 

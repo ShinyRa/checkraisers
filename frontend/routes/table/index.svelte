@@ -34,9 +34,9 @@
 
 	const removeuser = () => {
 		userAPI.removeUser(player).then((res) => {
-				console.log(res);
-			});
-	}
+			console.log(res);
+		});
+	};
 </script>
 
 <section>

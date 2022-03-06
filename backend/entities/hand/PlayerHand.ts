@@ -1,3 +1,4 @@
+import HandEvaluation from '../../utils/hand/Evaluation';
 import PlayingCard from '../deck/card/PlayingCard';
 import { HandRank } from './evaluation/HandRank';
 
@@ -37,6 +38,10 @@ class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
 	 */
 	reveal = (): void => {
 		this.cards.forEach((card) => card.reveal());
+	};
+
+	estimate = (tableCards: PlayingCard[]): void => {
+		this.score = HandEvaluation.findScore(tableCards, this);
 	};
 
 	beats = (hand: PlayerHand): boolean => {
