@@ -7,7 +7,7 @@ export type Hand = {
 };
 
 export interface Rankable<H, R> {
-	beats: (obj: H) => boolean;
+	beats: (obj: H) => number;
 	score: R;
 }
 
@@ -44,7 +44,7 @@ class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
 		this.score = HandEvaluation.findScore(tableCards, this);
 	};
 
-	beats = (hand: PlayerHand): boolean => {
+	beats = (hand: PlayerHand): number => {
 		return this.score.beats(hand.score);
 	};
 

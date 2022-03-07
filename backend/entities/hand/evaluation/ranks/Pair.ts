@@ -3,24 +3,28 @@ import PlayerHand, { Rankable } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
-export class Pair extends HandRank implements Rankable<HandRank, HandScore> {
-	pairCard;
+export class Pair extends HandRank implements Rankable<Pair, HandScore> {
+	pairCards: PlayingCard[] = [];
 
-	constructor(hand: PlayerHand, pairCard: PlayingCard) {
+	constructor(hand: PlayerHand, pairCards: PlayingCard[]) {
 		super(hand);
-		this.pairCard = pairCard;
-		this.solve();
+		this.score = HandScore.PAIR;
+		this.pairCards = pairCards;
 	}
 
-	solve = (): void => {
-		this.score = HandScore.PAIR;
-	};
+	solve(opponent: Pair): number {
+		return this.pairCards[0].compareTo(opponent.pairCards[0]);
+	}
 
-	beats = (hand: HandRank): boolean => {
-		return super.beats(hand);
+	beats = (opponent: HandRank): number => {
+		if (opponent instanceof Pair) {
+			return this.solve(opponent);
+		}
+
+		return super.beats(opponent);
 	};
 
 	print = (): string => {
-		return `Pair card: ${this.pairCard.print()}`;
+		return `Pair: ${this.pairCards.map((card) => card.print()).join(' and ')}`.trim();
 	};
 }

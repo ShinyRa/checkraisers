@@ -10,12 +10,13 @@ export abstract class HandRank implements Rankable<HandRank, HandScore> {
 		this.kickers = hand.cards;
 	}
 
-	abstract solve(): void;
-
 	abstract print(): string;
 
-	beats = (rank: HandRank): boolean => this.score - rank.score > 0;
+	beats(rank: HandRank): number {
+		return this.score - rank.score;
+	}
 
-	sort = (playingCards: PlayingCard[]): PlayingCard[] =>
-		playingCards.sort((card1, card2) => card1.compareTo(card2));
+	sort(playingCards: PlayingCard[]): PlayingCard[] {
+		return playingCards.sort((card1, card2) => card1.compareTo(card2));
+	}
 }

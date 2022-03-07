@@ -1,9 +1,10 @@
-import { CardSuit } from '../../entities/deck/card/CardSuit';
 import { CardValue } from '../../entities/deck/card/CardValue';
 import PlayingCard from '../../entities/deck/card/PlayingCard';
 import PlayerHand from '../../entities/hand/PlayerHand';
 import { HandRank } from '../../entities/hand/evaluation/HandRank';
 import { High, Pair } from '../../entities/hand/evaluation/ranks';
+import { TwoPair } from '../../entities/hand/evaluation/ranks/TwoPair';
+import { Trips } from '../../entities/hand/evaluation/ranks/Trips';
 
 class HandEvaluation {
 	static findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {
@@ -37,25 +38,25 @@ class HandEvaluation {
 			}
 		});
 
-		console.log(pairs);
-
 		if (pairs === 1) {
-			return new Pair(hand, valueScoring.filter(()));
+			return new Pair(hand, this.findPair(valueScoring));
 		}
 
-		return new High(hand);
+		if (pairs === 2) {
+			const [lowPair, highPair] = this.findTwoPair(valueScoring);
+			return new TwoPair(hand, highPair, lowPair);
+		}
+
+		if (trips === 1) {
+			return new Trips(hand, this.findTrips(valueScoring));
+		}
+
+		const flat = valueScoring.flat();
+
+		return new High(hand, flat[flat.length - 1]);
 
 		// const isFlush = suitScoring.find((suit) => suit >= 5) > 0;
 
-		// if (amountOfPairs === 1) {
-		// 	rank = HandRank.PAIR;
-		// }
-		// if (amountOfPairs === 2) {
-		// 	rank = HandRank.TWO_PAIR;
-		// }
-		// if (amountOfTrips === 1) {
-		// 	rank = HandRank.THREE_OF_A_KIND;
-		// }
 		// if (amountOfPairs === 1 && amountOfTrips === 1) {
 		// 	rank = HandRank.FULL_HOUSE;
 		// }
@@ -76,6 +77,15 @@ class HandEvaluation {
 		// allCards.forEach((card) => console.log(card.print()));
 		return;
 	};
+
+	private static findPair = (valueScoring): PlayingCard[] =>
+		valueScoring.filter((value) => value.length === 2)[0];
+
+	private static findTwoPair = (valueScoring): PlayingCard[][] =>
+		valueScoring.filter((value) => value.length === 2);
+
+	private static findTrips = (valueScoring): PlayingCard[] =>
+		valueScoring.filter((value) => value.length === 3)[0];
 
 	private static createScoringArray = (enumObject): Array<Array<PlayingCard | null>> =>
 		new Array(Object.keys(enumObject).filter((key) => !isNaN(Number(enumObject[key]))).length).fill(
