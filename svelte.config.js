@@ -31,15 +31,7 @@ const config = {
 					name: 'mongo-DB',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer() {
-						let testing = mongoDB_client
-						
-						testing.collection("users").find({}).toArray()
-						.then(r => {
-							console.log(r);
-						}).catch(e => {
-							console.error(`ERROR:`,e);
-						})
-						
+						mongoDB_client
 					}
 				}
             ]
