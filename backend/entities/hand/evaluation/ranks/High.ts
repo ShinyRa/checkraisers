@@ -12,10 +12,6 @@ export class High extends HandRank implements Rankable<High, HandScore> {
 		this.score = HandScore.HIGH;
 	}
 
-	solve(opponent: High): number {
-		return this.highCard.compareTo(opponent.highCard);
-	}
-
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof High) {
 			return this.solve(opponent);
@@ -23,6 +19,10 @@ export class High extends HandRank implements Rankable<High, HandScore> {
 
 		return super.beats(opponent);
 	};
+
+	private solve(opponent: High): number {
+		return this.highCard.compareTo(opponent.highCard);
+	}
 
 	print = (): string => {
 		return `High card: ${this.highCard.print()}`;

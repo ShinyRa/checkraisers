@@ -12,10 +12,6 @@ export class Straight extends HandRank implements Rankable<Straight, HandScore> 
 		this.score = HandScore.STRAIGHT;
 	}
 
-	solve(opponent: Straight): number {
-		return this.getHighCard().compareTo(opponent.getHighCard());
-	}
-
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof Straight) {
 			return this.solve(opponent);
@@ -23,6 +19,10 @@ export class Straight extends HandRank implements Rankable<Straight, HandScore> 
 
 		return super.beats(opponent);
 	};
+
+	private solve(opponent: Straight): number {
+		return this.getHighCard().compareTo(opponent.getHighCard());
+	}
 
 	print = (): string => {
 		return `Straight: ${this.straightCards.map((card) => card.print()).join(' and ')}`.trim();

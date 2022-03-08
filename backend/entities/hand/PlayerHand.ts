@@ -25,12 +25,12 @@ class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
 	}
 
 	/**
-	 * Deal a card to player hand
+	 * Deal a set of cards to player hand
 	 *
-	 * @param card PlayingCard
+	 * @param cards PlayingCard[]
 	 */
-	deal = (card: PlayingCard): void => {
-		this.cards.push(card);
+	deal = (...cards: PlayingCard[]): void => {
+		cards.forEach((card) => this.cards.push(card));
 	};
 
 	/**
@@ -40,8 +40,8 @@ class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
 		this.cards.forEach((card) => card.reveal());
 	};
 
-	estimate = (tableCards: PlayingCard[]): void => {
-		this.score = HandEvaluation.findScore(tableCards, this);
+	estimate = (board: PlayingCard[]): void => {
+		this.score = HandEvaluation.findScore(board, this);
 	};
 
 	beats = (hand: PlayerHand): number => {
