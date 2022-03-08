@@ -1,7 +1,7 @@
-import { CardState } from './CardState';
-import { CardSuit } from './CardSuit';
-import { CardValue } from './CardValue';
-import { CardIdentity } from './CardIdentity';
+import { CardState } from './state/CardState';
+import { CardSuit } from './identity/CardSuit';
+import { CardValue } from './identity/CardValue';
+import { CardIdentity } from './identity/CardIdentity';
 
 export type Card = {
 	state: CardState;

@@ -1,12 +1,20 @@
-import { CardValue } from '../../entities/deck/card/CardValue';
+import {
+	FullHouse,
+	High,
+	Pair,
+	Quads,
+	Straight,
+	TwoPair,
+	Trips,
+	Flush
+} from '../../entities/hand/evaluation/ranks';
+
 import PlayingCard from '../../entities/deck/card/PlayingCard';
 import PlayerHand from '../../entities/hand/PlayerHand';
 import { HandRank } from '../../entities/hand/evaluation/HandRank';
-import { FullHouse, High, Pair, Quads, Straight } from '../../entities/hand/evaluation/ranks';
-import { TwoPair } from '../../entities/hand/evaluation/ranks/TwoPair';
-import { Trips } from '../../entities/hand/evaluation/ranks/Trips';
-import { Flush } from '../../entities/hand/evaluation/ranks/Flush';
-import { CardSuit } from '../../entities/deck/card/CardSuit';
+
+import { CardSuit } from '../../entities/deck/card/identity/CardSuit';
+import { CardValue } from '../../entities/deck/card/identity/CardValue';
 
 class HandEvaluation {
 	static findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {
