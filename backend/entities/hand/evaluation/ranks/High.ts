@@ -7,14 +7,18 @@ export class High extends HandRank implements Rankable<High, HandScore> {
 	highCard: PlayingCard;
 
 	constructor(hand: PlayerHand, high: PlayingCard) {
-		super(hand);
+		super(hand.cards);
 		this.highCard = high;
 		this.score = HandScore.HIGH;
 	}
 
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof High) {
-			return this.solve(opponent);
+			if (this.solve(opponent) === 0) {
+				return this.beatsKickers(opponent)
+			} else {
+				return this.solve(opponent);
+			}
 		}
 
 		return super.beats(opponent);

@@ -7,7 +7,7 @@ export class Trips extends HandRank implements Rankable<Trips, HandScore> {
 	trips: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, trips: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.trips = trips;
 		this.score = HandScore.THREE_OF_A_KIND;
 	}

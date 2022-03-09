@@ -8,7 +8,7 @@ export class TwoPair extends HandRank implements Rankable<TwoPair, HandScore> {
 	lowPair: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, topPair: PlayingCard[], lowPair: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.topPair = topPair;
 		this.lowPair = lowPair;
 		this.score = HandScore.TWO_PAIR;

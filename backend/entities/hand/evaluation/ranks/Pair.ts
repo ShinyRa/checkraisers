@@ -7,7 +7,7 @@ export class Pair extends HandRank implements Rankable<Pair, HandScore> {
 	pairCards: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, pairCards: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.score = HandScore.PAIR;
 		this.pairCards = pairCards;
 	}

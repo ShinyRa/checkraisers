@@ -7,7 +7,7 @@ export class Flush extends HandRank implements Rankable<Flush, HandScore> {
 	flushCards: PlayingCard[];
 
 	constructor(hand: PlayerHand, flushCards: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.flushCards = this.sort(flushCards);
 		this.score = HandScore.FLUSH;
 	}

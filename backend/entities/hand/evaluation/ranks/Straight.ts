@@ -7,7 +7,7 @@ export class Straight extends HandRank implements Rankable<Straight, HandScore> 
 	straightCards: PlayingCard[];
 
 	constructor(hand: PlayerHand, straightCards: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.straightCards = this.sort(straightCards);
 		this.score = HandScore.STRAIGHT;
 	}

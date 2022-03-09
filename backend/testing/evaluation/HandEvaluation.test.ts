@@ -48,6 +48,23 @@ describe('Hand evaluation unit tests', () => {
 		expect(hero.beats(villain)).toBeGreaterThanOrEqual(1);
 	});
 
+	it('should be able to deterimine that hero wins by kicker', () => {
+		board = mapTemplateToCards(['♥2', '♥3', '♥4', '♠6', '♠7']);
+		player = mapTemplateToCards(['♣A', '♣Q']);
+		opponent = mapTemplateToCards(['♦A', '♦10']);
+
+		hero.deal(...player);
+		villain.deal(...opponent);
+
+		hero.estimate(board);
+		villain.estimate(board);
+
+		expect(hero.score.print()).toBe('High card: ace of clubs');
+		expect(villain.score.print()).toBe('High card: ace of diamonds');
+
+		expect(hero.beats(villain)).toBeGreaterThanOrEqual(1)
+	});
+
 	it('should be able to determine that hand score is pair', () => {
 		board = mapTemplateToCards(['♥2', '♥3', '♥4', '♠6', '♠7']);
 		player = mapTemplateToCards(['♦2', '♠J']);

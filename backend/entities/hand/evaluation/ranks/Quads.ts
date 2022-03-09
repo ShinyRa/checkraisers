@@ -7,7 +7,7 @@ export class Quads extends HandRank implements Rankable<Quads, HandScore> {
 	quads: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, quads: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.quads = quads;
 		this.score = HandScore.FOUR_OF_A_KIND;
 	}

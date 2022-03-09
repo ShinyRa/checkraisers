@@ -8,7 +8,7 @@ export class FullHouse extends HandRank implements Rankable<FullHouse, HandScore
 	pair: PlayingCard[];
 
 	constructor(hand: PlayerHand, trips: PlayingCard[], pair: PlayingCard[]) {
-		super(hand);
+		super(hand.cards);
 		this.trips = trips;
 		this.pair = pair;
 		this.score = HandScore.FULL_HOUSE;
