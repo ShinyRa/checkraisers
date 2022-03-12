@@ -62,7 +62,7 @@ describe('Hand evaluation unit tests', () => {
 		expect(hero.score.print()).toBe('High card: ace of clubs');
 		expect(villain.score.print()).toBe('High card: ace of diamonds');
 
-		expect(hero.beats(villain)).toBeGreaterThanOrEqual(1)
+		expect(hero.beats(villain)).toBeGreaterThanOrEqual(1);
 	});
 
 	it('should be able to determine that hand score is pair', () => {
@@ -152,5 +152,52 @@ describe('Hand evaluation unit tests', () => {
 		expect(hero.score.print()).toBe(
 			'Four of a kind: two of hearts and two of clubs and two of diamonds and two of spades'
 		);
+	});
+
+	it('should be able to determine that hand score is a straight flush', () => {
+		board = mapTemplateToCards(['♥A', '♥2', '♥4', '♠6', '♠7']);
+		player = mapTemplateToCards(['♥5', '♥3']);
+
+		hero.deal(...player);
+
+		hero.estimate(board);
+
+		expect(hero.score.print()).toBe(
+			'Straight Flush: two of hearts and three of hearts and four of hearts and five of hearts and ace of hearts'
+		);
+	});
+
+	it('should be able to determine that hand score is a royal flush', () => {
+		board = mapTemplateToCards(['♥A', '♥K', '♥Q', '♠5', '♠7']);
+		player = mapTemplateToCards(['♥10', '♥J']);
+
+		hero.deal(...player);
+
+		hero.estimate(board);
+
+		expect(hero.score.print()).toBe(
+			'Royal Straight Flush: ten of hearts and jack of hearts and queen of hearts and king of hearts and ace of hearts'
+		);
+	});
+
+	it('should be able to determine that hero royal flush is better than villain straight flush', () => {
+		board = mapTemplateToCards(['♥A', '♥K', '♥Q', '♥2', '♥3']);
+		player = mapTemplateToCards(['♥10', '♥J']);
+		opponent = mapTemplateToCards(['♥4', '♥5']);
+
+		hero.deal(...player);
+		villain.deal(...opponent);
+
+		hero.estimate(board);
+		villain.estimate(board);
+
+		console.log(hero.score.print());
+		console.log(villain.score.print());
+
+		expect(hero.score.print()).toBe(
+			'Royal Straight Flush: ten of hearts and jack of hearts and queen of hearts and king of hearts and ace of hearts'
+		);
+
+		expect(hero.beats(villain)).toBeGreaterThanOrEqual(1);
 	});
 });

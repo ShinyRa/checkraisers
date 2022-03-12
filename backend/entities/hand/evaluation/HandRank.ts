@@ -21,15 +21,15 @@ export abstract class HandRank implements Rankable<HandRank, HandScore> {
 	}
 
 	beatsKickers(opponent: HandRank): number {
-		const playerKickers = this.sort(this.kickers).reverse()
-		const opponentKickers = this.sort(opponent.kickers).reverse()
+		const playerKickers = this.sort(this.kickers).reverse();
+		const opponentKickers = this.sort(opponent.kickers).reverse();
 
 		if (playerKickers[0].compareTo(opponentKickers[0]) === 0) {
 			if (playerKickers.length > 1 && opponentKickers.length > 1) {
-				return playerKickers[1].compareTo(opponentKickers[1])
+				return playerKickers[1].compareTo(opponentKickers[1]);
 			}
 		} else {
-			return playerKickers[0].compareTo(opponentKickers[0])
+			return playerKickers[0].compareTo(opponentKickers[0]);
 		}
 	}
 }

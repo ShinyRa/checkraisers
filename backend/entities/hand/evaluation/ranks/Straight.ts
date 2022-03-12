@@ -5,18 +5,29 @@ import { HandScore } from '../HandScore';
 
 export class Straight extends HandRank implements Rankable<Straight, HandScore> {
 	straightCards: PlayingCard[];
+	isRoyal: boolean;
+	isFlush: boolean;
 
-	constructor(hand: PlayerHand, straightCards: PlayingCard[]) {
+	constructor(hand: PlayerHand, straightCards: PlayingCard[], isFlush = false, isRoyal = false) {
 		super(hand.cards);
 		this.straightCards = this.sort(straightCards);
+		this.isFlush = isFlush;
+		this.isRoyal = isRoyal;
+
 		this.score = HandScore.STRAIGHT;
+
+		if (isFlush) {
+			this.score = HandScore.STRAIGHT_FLUSH;
+		}
+		if (isRoyal) {
+			this.score = HandScore.ROYAL_FLUSH;
+		}
 	}
 
 	beats = (opponent: HandRank): number => {
-		if (opponent instanceof Straight) {
-			return this.solve(opponent);
+		if (super.beats(opponent) === 0) {
+			return this.solve(<Straight>opponent);
 		}
-
 		return super.beats(opponent);
 	};
 
@@ -25,7 +36,9 @@ export class Straight extends HandRank implements Rankable<Straight, HandScore> 
 	}
 
 	print = (): string => {
-		return `Straight: ${this.straightCards.map((card) => card.print()).join(' and ')}`.trim();
+		return `${this.isRoyal ? 'Royal ' : ''}Straight${
+			this.isFlush ? ' Flush' : ''
+		}: ${this.straightCards.map((card) => card.print()).join(' and ')}`.trim();
 	};
 
 	getHighCard = (): PlayingCard => {

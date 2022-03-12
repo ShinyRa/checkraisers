@@ -49,7 +49,14 @@ class HandEvaluation {
 		});
 
 		if (this.isStraight(valueScoring)) {
-			return new Straight(hand, this.findStraight(valueScoring));
+			const straight = this.findStraight(valueScoring);
+
+			return new Straight(
+				hand,
+				this.findStraight(valueScoring),
+				this.straightIsFlush(straight),
+				this.straightIsRoyal(straight)
+			);
 		}
 
 		if (quads === 1) {
@@ -100,6 +107,14 @@ class HandEvaluation {
 		suitScoring.find((suit) => suit.length >= 5) != null;
 
 	private static isStraight = (valueScoring): boolean => this.findStraight(valueScoring) != null;
+
+	private static straightIsFlush = (valueScoring): boolean => {
+		return valueScoring.filter((card) => card.getSuit() == valueScoring[0].getSuit()).length === 5;
+	};
+
+	private static straightIsRoyal = (valueScoring): boolean => {
+		return valueScoring.reduce((acc, card) => acc + card.getValue(), 0) === 60;
+	};
 
 	private static findStraight = (valueScoring): PlayingCard[] | null => {
 		let straight = null;
