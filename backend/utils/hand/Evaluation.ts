@@ -10,7 +10,7 @@ import {
 } from '../../entities/hand/evaluation/ranks';
 
 import PlayingCard from '../../entities/deck/card/PlayingCard';
-import PlayerHand from '../../entities/hand/PlayerHand';
+import { PlayerHand } from '../../entities/hand/PlayerHand';
 import { HandRank } from '../../entities/hand/evaluation/HandRank';
 
 import { CardSuit } from '../../entities/deck/card/identity/CardSuit';
@@ -48,15 +48,19 @@ class HandEvaluation {
 			}
 		});
 
-		if (this.isStraight(valueScoring)) {
-			const straight = this.findStraight(valueScoring);
+		if (this.hasStraight(valueScoring)) {
+			const straights = this.findStraight(valueScoring);
+			const converted = straights.map((straight) => {
+				return new Straight(
+					hand,
+					straight,
+					this.straightIsFlush(straight),
+					this.straightIsRoyal(straight)
+				);
+			});
 
-			return new Straight(
-				hand,
-				this.findStraight(valueScoring),
-				this.straightIsFlush(straight),
-				this.straightIsRoyal(straight)
-			);
+			converted.sort((straight1, straight2) => straight1.beats(straight2));
+			return converted[converted.length - 1];
 		}
 
 		if (quads === 1) {
@@ -106,7 +110,8 @@ class HandEvaluation {
 	private static isFlush = (suitScoring): boolean =>
 		suitScoring.find((suit) => suit.length >= 5) != null;
 
-	private static isStraight = (valueScoring): boolean => this.findStraight(valueScoring) != null;
+	private static hasStraight = (valueScoring): boolean =>
+		this.findStraight(valueScoring).length > 0;
 
 	private static straightIsFlush = (valueScoring): boolean => {
 		return valueScoring.filter((card) => card.getSuit() == valueScoring[0].getSuit()).length === 5;
@@ -116,27 +121,25 @@ class HandEvaluation {
 		return valueScoring.reduce((acc, card) => acc + card.getValue(), 0) === 60;
 	};
 
-	private static findStraight = (valueScoring): PlayingCard[] | null => {
-		let straight = null;
+	private static findStraight = (valueScoring): PlayingCard[][] | null => {
+		const straights = [];
 		// Insert aces in front of the array (It can make a straight with A-2-3-4-5 or 10-J-Q-K-A)
 		valueScoring = [valueScoring[valueScoring.length - 1], ...valueScoring];
 
 		const reversed = valueScoring.reverse();
 		reversed.forEach((_, index) => {
-			if (!straight) {
-				const from = index;
-				const to = index + 5;
+			const from = index;
+			const to = index + 5;
 
-				if (to <= reversed.length) {
-					const straightSlice = reversed.slice(from, to);
-					if (straightSlice.every((value) => value.length > 0) && straightSlice.length === 5) {
-						straight = straightSlice.flat();
-					}
+			if (to <= reversed.length) {
+				const straightSlice = reversed.slice(from, to);
+				if (straightSlice.every((value) => value.length > 0) && straightSlice.length === 5) {
+					straights.push(straightSlice.flat());
 				}
 			}
 		});
 
-		return straight;
+		return straights;
 	};
 
 	private static findFullHouse = (valueScoring): PlayingCard[][] => [

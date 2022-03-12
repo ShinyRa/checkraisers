@@ -1,13 +1,13 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
-import PlayerHand, { Rankable } from '../../PlayerHand';
+import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
-export class Trips extends HandRank implements Rankable<Trips, HandScore> {
+export class Trips extends HandRank implements IRankable<Trips, HandScore> {
 	trips: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, trips: PlayingCard[]) {
-		super(hand.cards);
+		super(hand.cards.filter((card) => ![...trips].includes(card)));
 		this.trips = trips;
 		this.score = HandScore.THREE_OF_A_KIND;
 	}
@@ -18,7 +18,11 @@ export class Trips extends HandRank implements Rankable<Trips, HandScore> {
 
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof Trips) {
-			return this.solve(opponent);
+			if (this.solve(opponent) === 0) {
+				return this.beatsKickers(opponent);
+			} else {
+				return this.solve(opponent);
+			}
 		}
 
 		return super.beats(opponent);
@@ -27,4 +31,6 @@ export class Trips extends HandRank implements Rankable<Trips, HandScore> {
 	print = (): string => {
 		return `Three of a kind: ${this.trips.map((card) => card.print()).join(' and ')}`.trim();
 	};
+
+	getCards = (): PlayingCard[] => this.trips;
 }

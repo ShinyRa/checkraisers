@@ -3,14 +3,23 @@
 	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
 
 	export let card: PlayingCard;
+	export let highlight: boolean;
 </script>
 
-<div class="playingcard" on:click={() => (card = card.flip())} class:faceup={card.isRevealed()}>
+<div
+	class="playingcard"
+	on:click={() => (card = card.flip())}
+	class:faceup={card.isRevealed()}
+	class:highlight
+>
 	<img src="{assetsPath}/cards/{card.assetName()}" alt={card.print()} class="face front" />
 	<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
 </div>
 
 <style lang="scss">
+	.highlight {
+		border: 4px solid blue;
+	}
 	.playingcard {
 		height: 268px;
 		width: 185px;

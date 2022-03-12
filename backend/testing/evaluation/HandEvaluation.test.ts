@@ -1,5 +1,5 @@
 import PlayingCard from '../../entities/deck/card/PlayingCard';
-import PlayerHand from '../../entities/hand/PlayerHand';
+import { PlayerHand } from '../../entities/hand/PlayerHand';
 
 let hero;
 let villain;
@@ -190,9 +190,6 @@ describe('Hand evaluation unit tests', () => {
 
 		hero.estimate(board);
 		villain.estimate(board);
-
-		console.log(hero.score.print());
-		console.log(villain.score.print());
 
 		expect(hero.score.print()).toBe(
 			'Royal Straight Flush: ten of hearts and jack of hearts and queen of hearts and king of hearts and ace of hearts'

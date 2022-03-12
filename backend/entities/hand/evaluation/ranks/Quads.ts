@@ -1,20 +1,24 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
-import PlayerHand, { Rankable } from '../../PlayerHand';
+import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
-export class Quads extends HandRank implements Rankable<Quads, HandScore> {
+export class Quads extends HandRank implements IRankable<Quads, HandScore> {
 	quads: PlayingCard[] = [];
 
 	constructor(hand: PlayerHand, quads: PlayingCard[]) {
-		super(hand.cards);
+		super(hand.cards.filter((card) => ![...quads].includes(card)));
 		this.quads = quads;
 		this.score = HandScore.FOUR_OF_A_KIND;
 	}
 
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof Quads) {
-			return this.solve(opponent);
+			if (this.solve(opponent) === 0) {
+				return this.beatsKickers(opponent);
+			} else {
+				return this.solve(opponent);
+			}
 		}
 
 		return super.beats(opponent);
@@ -31,4 +35,6 @@ export class Quads extends HandRank implements Rankable<Quads, HandScore> {
 	getQuad = (): PlayingCard => {
 		return this.quads[this.quads.length - 1];
 	};
+
+	getCards = (): PlayingCard[] => this.quads;
 }

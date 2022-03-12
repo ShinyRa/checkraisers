@@ -1,14 +1,14 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
-import PlayerHand, { Rankable } from '../../PlayerHand';
+import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
-export class FullHouse extends HandRank implements Rankable<FullHouse, HandScore> {
+export class FullHouse extends HandRank implements IRankable<FullHouse, HandScore> {
 	trips: PlayingCard[];
 	pair: PlayingCard[];
 
 	constructor(hand: PlayerHand, trips: PlayingCard[], pair: PlayingCard[]) {
-		super(hand.cards);
+		super(hand.cards.filter((card) => ![...trips, ...pair].includes(card)));
 		this.trips = trips;
 		this.pair = pair;
 		this.score = HandScore.FULL_HOUSE;
@@ -16,7 +16,11 @@ export class FullHouse extends HandRank implements Rankable<FullHouse, HandScore
 
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof FullHouse) {
-			return this.solve(opponent);
+			if (this.solve(opponent) === 0) {
+				return this.beatsKickers(opponent);
+			} else {
+				return this.solve(opponent);
+			}
 		}
 
 		return super.beats(opponent);
@@ -36,4 +40,6 @@ export class FullHouse extends HandRank implements Rankable<FullHouse, HandScore
 	getTrips = (): PlayingCard => {
 		return this.trips[this.trips.length - 1];
 	};
+
+	getCards = (): PlayingCard[] => [...this.trips, ...this.pair];
 }

@@ -1,4 +1,4 @@
-import PlayerHand from '../hand/PlayerHand';
+import { PlayerHand } from '../hand/PlayerHand';
 import type { User } from './User';
 
 class Player implements User {
@@ -82,9 +82,9 @@ class Player implements User {
 			'Harris'
 		];
 
-		this.name = mockNames[Math.floor(Math.random() * mockNames.length) + 1];
-		this.username = mockNames[Math.floor(Math.random() * mockNames.length) + 1];
-		this.surname = mockLastNames[Math.floor(Math.random() * mockLastNames.length) + 1];
+		this.name = mockNames[Math.floor(Math.random() * mockNames.length)];
+		this.username = mockNames[Math.floor(Math.random() * mockNames.length)];
+		this.surname = mockLastNames[Math.floor(Math.random() * mockLastNames.length)];
 
 		return this;
 	};

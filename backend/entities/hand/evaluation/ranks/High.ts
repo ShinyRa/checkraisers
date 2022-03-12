@@ -1,13 +1,13 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
-import PlayerHand, { Rankable } from '../../PlayerHand';
+import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
-export class High extends HandRank implements Rankable<High, HandScore> {
+export class High extends HandRank implements IRankable<High, HandScore> {
 	highCard: PlayingCard;
 
 	constructor(hand: PlayerHand, high: PlayingCard) {
-		super(hand.cards);
+		super(hand.cards.filter((card) => [high].includes(card)));
 		this.highCard = high;
 		this.score = HandScore.HIGH;
 	}
@@ -15,7 +15,7 @@ export class High extends HandRank implements Rankable<High, HandScore> {
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof High) {
 			if (this.solve(opponent) === 0) {
-				return this.beatsKickers(opponent)
+				return this.beatsKickers(opponent);
 			} else {
 				return this.solve(opponent);
 			}
@@ -31,4 +31,6 @@ export class High extends HandRank implements Rankable<High, HandScore> {
 	print = (): string => {
 		return `High card: ${this.highCard.print()}`;
 	};
+
+	getCards = (): PlayingCard[] => [this.highCard];
 }

@@ -2,16 +2,11 @@ import HandEvaluation from '../../utils/hand/Evaluation';
 import PlayingCard from '../deck/card/PlayingCard';
 import { HandRank } from './evaluation/HandRank';
 
-export type Hand = {
+type Hand = {
 	cards: PlayingCard[];
 };
 
-export interface Rankable<H, R> {
-	beats: (obj: H) => number;
-	score: R;
-}
-
-class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
+class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 	cards: PlayingCard[];
 	score: HandRank;
 
@@ -51,4 +46,4 @@ class PlayerHand implements Hand, Rankable<PlayerHand, HandRank> {
 	print = (): string => this.cards.map((card) => card.print()).join(' and ');
 }
 
-export default PlayerHand;
+export { Hand, PlayerHand };
