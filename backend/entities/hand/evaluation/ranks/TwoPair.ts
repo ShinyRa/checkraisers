@@ -48,6 +48,9 @@ export class TwoPair extends HandRank implements IRankable<TwoPair, HandScore> {
 	 * @returns number
 	 */
 	private solve(opponent: TwoPair): number {
+		if (this.topPair[0].compareTo(opponent.topPair[0]) === 0) {
+			return this.lowPair[0].compareTo(opponent.lowPair[0]);
+		}
 		return this.topPair[0].compareTo(opponent.topPair[0]);
 	}
 

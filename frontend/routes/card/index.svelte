@@ -67,11 +67,8 @@
 			playerScore = winningHand.score.print();
 
 			players.forEach((player, index) => {
-				setInterval(() => {
-					player.hand.reveal();
-					players[index] = player;
-					players = [...players];
-				}, 75);
+				player.hand.reveal();
+				players[index] = player;
 			});
 		}
 		if (phase === 5) {
@@ -98,6 +95,11 @@
 				break;
 		}
 	};
+
+	onMount(() => {
+		session.set({ error: 'Blah', user: { name: 'Tijs' } });
+		console.log($session);
+	});
 
 	const findCard = (highlight, card) =>
 		highlight.find((highlight) => highlight.print() == card.print()) != undefined;

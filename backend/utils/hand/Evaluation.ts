@@ -68,6 +68,7 @@ class HandEvaluation {
 		}
 
 		if (trips >= 1 && pairs >= 1) {
+			// TODO: Sort highest with 3 or more
 			const [triple, double] = this.findFullHouse(valueScoring);
 
 			return new FullHouse(hand, triple, double);
@@ -78,6 +79,7 @@ class HandEvaluation {
 		}
 
 		if (pairs >= 2) {
+			// TODO: Sort highest with 3 or more
 			const [lowPair, highPair] = this.findTwoPair(valueScoring);
 			return new TwoPair(hand, highPair, lowPair);
 		}

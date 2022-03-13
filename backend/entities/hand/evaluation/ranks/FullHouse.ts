@@ -49,6 +49,9 @@ export class FullHouse extends HandRank implements IRankable<FullHouse, HandScor
 	 * @returns number
 	 */
 	private solve(opponent: FullHouse): number {
+		if (this.tripsCards[0].compareTo(opponent.tripsCards[0]) === 0) {
+			return this.pairCards[0].compareTo(opponent.pairCards[0]);
+		}
 		return this.tripsCards[0].compareTo(opponent.tripsCards[0]);
 	}
 
