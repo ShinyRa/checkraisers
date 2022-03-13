@@ -1,4 +1,5 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
+import { type IRankable } from '../../IRankable';
 import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';

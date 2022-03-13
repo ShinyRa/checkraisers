@@ -19,7 +19,7 @@ class PlayingCard implements Card {
 	 */
 	constructor(identity: CardIdentity | string, state: CardState = CardState.HIDDEN) {
 		this.identity =
-			identity instanceof CardIdentity ? identity : CardIdentity.formTemplate(identity);
+			identity instanceof CardIdentity ? identity : CardIdentity.fromTemplate(identity);
 		this.state = state ? state : CardState.REVEALED;
 	}
 
@@ -119,11 +119,9 @@ class PlayingCard implements Card {
 	 * @returns number
 	 */
 	compareTo = (playingcard: PlayingCard): number => {
-		if (this.getValue() === playingcard.getValue()) {
-			return 0;
-		} else {
-			return this.getValue() - playingcard.getValue();
-		}
+		return this.getValue() === playingcard.getValue()
+			? 0
+			: this.getValue() - playingcard.getValue();
 	};
 }
 

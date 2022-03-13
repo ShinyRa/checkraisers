@@ -1,4 +1,5 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
+import { type IRankable } from '../../IRankable';
 import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
@@ -7,7 +8,7 @@ export class High extends HandRank implements IRankable<High, HandScore> {
 	highCard: PlayingCard;
 
 	constructor(hand: PlayerHand, high: PlayingCard) {
-		super(hand.cards.filter((card) => [high].includes(card)));
+		super(hand.cards);
 		this.highCard = high;
 		this.score = HandScore.HIGH;
 	}

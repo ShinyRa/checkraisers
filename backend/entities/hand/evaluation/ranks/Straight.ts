@@ -1,4 +1,5 @@
 import PlayingCard from '../../../deck/card/PlayingCard';
+import { type IRankable } from '../../IRankable';
 import { PlayerHand } from '../../PlayerHand';
 import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
@@ -25,7 +26,7 @@ export class Straight extends HandRank implements IRankable<Straight, HandScore>
 	}
 
 	beats = (opponent: HandRank): number => {
-		if (opponent instanceof Straight) {
+		if (opponent instanceof Straight && !super.beats(opponent)) {
 			if (this.solve(opponent) === 0) {
 				return this.beatsKickers(opponent);
 			} else {

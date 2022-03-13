@@ -18,7 +18,60 @@ export class CardIdentity implements Identity {
 		this.suit = suit;
 	}
 
-	static formTemplate = (template: string): CardIdentity | null => {
+	/**
+	 * Pint card details to string.
+	 *
+	 * template
+	 * 	 *value* of *suit*
+	 * example
+	 * 	 two of hearts
+	 *
+	 * @returns string
+	 */
+	print = (): string =>
+		CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
+
+	/**
+	 * Get value of card
+	 *
+	 * @returns CardValue
+	 */
+	getValue = (): CardValue => this.value;
+
+	/**
+	 * Get value of card as readable string
+	 *
+	 * @returns string
+	 */
+	getValueReadable = (): string => CardValue[this.value];
+
+	/**
+	 * Get suit of card
+	 *
+	 * @returns CardSuit
+	 */
+	getSuit = (): CardSuit => this.suit;
+
+	/**
+	 * Get suit of card as readalbe string
+	 *
+	 * @returns string
+	 */
+	getSuitReadable = (): string => CardSuit[this.suit];
+
+	/**
+	 * Create a CardIdentity via string template
+	 *
+	 * Template:
+	 *  *suit**value*
+	 * Example:
+	 *
+	 *
+	 * @param template string
+	 *
+	 * @returns CardIdentity | null
+	 */
+	static fromTemplate = (template: string): CardIdentity | null => {
 		if (template.length > 3 || template.length < 1) {
 			return null;
 		}
@@ -69,30 +122,4 @@ export class CardIdentity implements Identity {
 
 		return new CardIdentity(suit, value);
 	};
-
-	/**
-	 * Pint card details to string.
-	 *
-	 * template
-	 * 	 *value* of *suit*
-	 * example
-	 * 	 two of hearts
-	 *
-	 * @returns string
-	 */
-	print = (): string =>
-		CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
-
-	/**
-	 * Get value of card
-	 *
-	 * @returns string
-	 */
-	getValue = (): CardValue => this.value;
-
-	getValueReadable = (): string => CardValue[this.value];
-
-	getSuit = (): CardSuit => this.suit;
-
-	getSuitReadable = (): string => CardSuit[this.suit];
 }

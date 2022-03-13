@@ -1,6 +1,7 @@
 import HandEvaluation from '../../utils/hand/Evaluation';
 import PlayingCard from '../deck/card/PlayingCard';
 import { HandRank } from './evaluation/HandRank';
+import { type IRankable } from './IRankable';
 
 type Hand = {
 	cards: PlayingCard[];
@@ -40,10 +41,13 @@ class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 	};
 
 	beats = (hand: PlayerHand): number => {
+		if (this.score.beats(hand.score) === 0) {
+			return this.score.beatsKickers(hand.score);
+		}
 		return this.score.beats(hand.score);
 	};
 
 	print = (): string => this.cards.map((card) => card.print()).join(' and ');
 }
 
-export { Hand, PlayerHand };
+export { PlayerHand };
