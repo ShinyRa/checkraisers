@@ -2,7 +2,6 @@
 
 </script>
 
-
 <section>
     <div class="container">
         <div class="field">
