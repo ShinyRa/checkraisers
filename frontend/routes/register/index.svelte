@@ -21,7 +21,6 @@
     </div>
 </section>
 
-
 <style lang="scss">
     $svelte: #ff3e00;
 
