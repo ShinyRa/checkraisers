@@ -1,25 +1,44 @@
 
 import { HttpStatusCode } from "../../utils/HttpStatusCode";
-import { mongoDB_client } from '../../utils/mongodb';
-import BaseAPI, { response } from './../BaseAPI';
-
+import BaseAPI, { Response } from './../BaseAPI';
+import { User } from './../../entities/user/User'
 class UserAPI extends BaseAPI {
-    public getUsers = async(): Promise<response> => {
+    
+    private db = this.getCollection('users');
+
+    public getUser = async(userName: string): Promise<Response> => {
         try {
-            const collection = mongoDB_client.collection("users").find({}).toArray().then(result => {
-                if (result) {
-                    return this.httpResponse(HttpStatusCode.SUCCESS, "users found" , result);
+            const collection = this.db.find({username: userName}).toArray().then(result => {
+                if (result.length > 0) {
+                    return this.httpResponse(HttpStatusCode.SUCCESS, result);
                 }
                 else {
-                    return this.httpResponse(HttpStatusCode.NOT_FOUND, "No users found");
+                    return this.httpResponse(HttpStatusCode.NOT_FOUND);
                 }
             });
             return collection;
         } catch (err) {
-            return this.httpResponse(HttpStatusCode.SERVER_ERROR, "Could not contact DB" );
+            return this.httpResponse(HttpStatusCode.SERVER_ERROR );
         }
-
     }
+
+    public updateUser = async(userName: string, updatedUser: Partial<User>): Promise<Response> =>{
+        try {
+            this.db.findOneAndUpdate({username: userName} , {$set: updatedUser})
+            return this.httpResponse(HttpStatusCode.SUCCESS);
+        } catch (err) {
+            console.log(err)
+            return this.httpResponse(HttpStatusCode.SERVER_ERROR );
+        }
+    }
+
+    public login = async(user: Partial<User>): Promise<boolean> => {
+        const result = await this.db.findOne({email: user.email, password: user.password})
+        if(result) return true;
+        
+        return false;
+    }
+   
 }
 
 export default UserAPI;
