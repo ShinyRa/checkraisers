@@ -5,18 +5,27 @@ import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
 export class Trips extends HandRank implements IRankable<Trips, HandScore> {
-	trips: PlayingCard[] = [];
+	tripsCards: PlayingCard[] = [];
 
+	/**
+	 * Create new Trip score
+	 *
+	 * @param hand PlayerHand
+	 * @param trips PlayingCard[]
+	 */
 	constructor(hand: PlayerHand, trips: PlayingCard[]) {
 		super(hand.cards.filter((card) => ![...trips].includes(card)));
-		this.trips = trips;
 		this.score = HandScore.THREE_OF_A_KIND;
+		this.tripsCards = trips;
 	}
 
-	solve(opponent: Trips): number {
-		return this.trips[0].compareTo(opponent.trips[0]);
-	}
-
+	/**
+	 * Beats other rank
+	 *
+	 * @param opponent HandRank
+	 *
+	 * @returns number
+	 */
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof Trips) {
 			if (this.solve(opponent) === 0) {
@@ -29,9 +38,30 @@ export class Trips extends HandRank implements IRankable<Trips, HandScore> {
 		return super.beats(opponent);
 	};
 
+	/**
+	 * Solve comparison between two three of a kind ranks
+	 *
+	 * @param opponent Trips
+	 *
+	 * @returns number
+	 */
+	private solve(opponent: Trips): number {
+		return this.tripsCards[0].compareTo(opponent.tripsCards[0]);
+	}
+
+	/**
+	 * Print trips as string
+	 *
+	 * @returns string
+	 */
 	print = (): string => {
-		return `Three of a kind: ${this.trips.map((card) => card.print()).join(' and ')}`.trim();
+		return `Three of a kind: ${this.tripsCards.map((card) => card.print()).join(' and ')}`.trim();
 	};
 
-	getCards = (): PlayingCard[] => this.trips;
+	/**
+	 * Get trips cards
+	 *
+	 * @returns PlayingCard[]
+	 */
+	getCards = (): PlayingCard[] => this.tripsCards;
 }

@@ -5,16 +5,30 @@ import { HandRank } from '../HandRank';
 import { HandScore } from '../HandScore';
 
 export class FullHouse extends HandRank implements IRankable<FullHouse, HandScore> {
-	trips: PlayingCard[];
-	pair: PlayingCard[];
+	tripsCards: PlayingCard[];
+	pairCards: PlayingCard[];
 
+	/**
+	 * Create new FullHouse score
+	 *
+	 * @param hand PlayerHand
+	 * @param trips PlayingCard[]
+	 * @param pair PlayingCard[]
+	 */
 	constructor(hand: PlayerHand, trips: PlayingCard[], pair: PlayingCard[]) {
 		super(hand.cards.filter((card) => ![...trips, ...pair].includes(card)));
-		this.trips = trips;
-		this.pair = pair;
 		this.score = HandScore.FULL_HOUSE;
+		this.tripsCards = trips;
+		this.pairCards = pair;
 	}
 
+	/**
+	 * Beats other rank
+	 *
+	 * @param opponent HandRank
+	 *
+	 * @returns number
+	 */
 	beats = (opponent: HandRank): number => {
 		if (opponent instanceof FullHouse) {
 			if (this.solve(opponent) === 0) {
@@ -27,20 +41,33 @@ export class FullHouse extends HandRank implements IRankable<FullHouse, HandScor
 		return super.beats(opponent);
 	};
 
+	/**
+	 * Solve comparison between two fullhouse ranks
+	 *
+	 * @param opponent FullHouse
+	 *
+	 * @returns number
+	 */
 	private solve(opponent: FullHouse): number {
-		return this.getTrips().compareTo(opponent.getTrips());
+		return this.tripsCards[0].compareTo(opponent.tripsCards[0]);
 	}
 
+	/**
+	 * Print fullhouse as string
+	 *
+	 * @returns string
+	 */
 	print = (): string => {
-		return `Full house: Trips: ${this.trips
+		return `Full house: Trips: ${this.tripsCards
 			.map((card) => card.print())
-			.join(' and ')}, Pair: ${this.pair.map((card) => card.print()).join(' and ')}
+			.join(' and ')}, Pair: ${this.pairCards.map((card) => card.print()).join(' and ')}
         `.trim();
 	};
 
-	getTrips = (): PlayingCard => {
-		return this.trips[this.trips.length - 1];
-	};
-
-	getCards = (): PlayingCard[] => [...this.trips, ...this.pair];
+	/**
+	 * Get fullhouse cards
+	 *
+	 * @returns PlayingCard[]
+	 */
+	getCards = (): PlayingCard[] => [...this.tripsCards, ...this.pairCards];
 }
