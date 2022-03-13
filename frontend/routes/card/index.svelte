@@ -80,26 +80,16 @@
 		switch (phase) {
 			case 0:
 				return 'Flop';
-				break;
 			case 1:
 				return 'Turn';
-				break;
 			case 2:
 				return 'River';
-				break;
 			case 3:
 				return 'Evaluate';
-				break;
 			case 4:
 				return 'Replay';
-				break;
 		}
 	};
-
-	onMount(() => {
-		session.set({ error: 'Blah', user: { name: 'Tijs' } });
-		console.log($session);
-	});
 
 	const findCard = (highlight, card) =>
 		highlight.find((highlight) => highlight.print() == card.print()) != undefined;
