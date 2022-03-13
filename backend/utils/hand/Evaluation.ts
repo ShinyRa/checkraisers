@@ -63,6 +63,10 @@ class HandEvaluation {
 			return converted[converted.length - 1];
 		}
 
+		if (this.isFlush(suitScoring)) {
+			return new Flush(hand, this.findFlush(suitScoring));
+		}
+
 		if (quads === 1) {
 			return new Quads(hand, this.findQuads(valueScoring));
 		}
@@ -74,8 +78,8 @@ class HandEvaluation {
 			return new FullHouse(hand, triple, double);
 		}
 
-		if (pairs === 1) {
-			return new Pair(hand, this.findPair(valueScoring));
+		if (trips >= 1) {
+			return new Trips(hand, this.findTrips(valueScoring));
 		}
 
 		if (pairs >= 2) {
@@ -84,12 +88,8 @@ class HandEvaluation {
 			return new TwoPair(hand, highPair, lowPair);
 		}
 
-		if (trips >= 1) {
-			return new Trips(hand, this.findTrips(valueScoring));
-		}
-
-		if (this.isFlush(suitScoring)) {
-			return new Flush(hand, this.findFlush(suitScoring));
+		if (pairs === 1) {
+			return new Pair(hand, this.findPair(valueScoring));
 		}
 
 		const flat = valueScoring.flat();
