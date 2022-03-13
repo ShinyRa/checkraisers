@@ -36,10 +36,22 @@ class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 		this.cards.map((card) => card.reveal());
 	};
 
+	/**
+	 * Estimate the rank of hand and board cards
+	 *
+	 * @param board PlayingCard[]
+	 */
 	estimate = (board: PlayingCard[]): void => {
 		this.score = HandEvaluation.findScore(board, this);
 	};
 
+	/**
+	 * If hand beats opponent hand
+	 *
+	 * @param hand PlayerHand
+	 *
+	 * @returns number
+	 */
 	beats = (hand: PlayerHand): number => {
 		if (this.score.beats(hand.score) === 0) {
 			return this.score.beatsKickers(hand.score);
@@ -47,6 +59,11 @@ class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 		return this.score.beats(hand.score);
 	};
 
+	/**
+	 * Print cards in hand as string
+	 *
+	 * @returns string
+	 */
 	print = (): string => this.cards.map((card) => card.print()).join(' and ');
 }
 
