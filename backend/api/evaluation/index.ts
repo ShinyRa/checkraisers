@@ -9,6 +9,7 @@ export const evaluationAPI = {
 
 		return {
 			winner: players.filter((player) => player.hand === hands[hands.length - 1])[0],
+			// TODO: What if match is a draw?
 			winningHand: hands[hands.length - 1]
 		};
 	}
