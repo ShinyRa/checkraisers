@@ -1,7 +1,6 @@
 export type User = {
-	username: string;
 	email: string;
+	username: string
 	password: string;
-	profilePicture: Blob;
-	totalChips: number;
+	chips: number;
 };

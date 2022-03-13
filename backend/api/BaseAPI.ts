@@ -16,7 +16,7 @@ class BaseAPI {
         return repsonse
     }
 
-    protected getCollection = (collection: string): Collection<Document> => {
+    protected getCollection = (collection: string): Collection => {
         return mongoDB_client.collection(collection)
     }
 }
