@@ -10,6 +10,7 @@ export type Card = {
 class PlayingCard implements Card {
 	identity: CardIdentity;
 	state: CardState;
+	known: boolean;
 
 	/**
 	 * Create a new playingcard
@@ -21,6 +22,7 @@ class PlayingCard implements Card {
 		this.identity =
 			identity instanceof CardIdentity ? identity : CardIdentity.fromTemplate(identity);
 		this.state = state ? state : CardState.REVEALED;
+		this.known = this.state === CardState.REVEALED ? true : false;
 	}
 
 	/**
@@ -29,12 +31,11 @@ class PlayingCard implements Card {
 	 * @returns self
 	 */
 	flip = (): PlayingCard => {
-		if (this.state === CardState.REVEALED) {
-			this.state = CardState.HIDDEN;
-		}
-
 		if (this.state === CardState.HIDDEN) {
 			this.state = CardState.REVEALED;
+			this.setAsKnown();
+		} else if (this.state === CardState.REVEALED) {
+			this.state = CardState.HIDDEN;
 		}
 
 		return this;
@@ -47,6 +48,7 @@ class PlayingCard implements Card {
 	 */
 	reveal = (): void => {
 		this.state = CardState.REVEALED;
+		this.setAsKnown();
 	};
 
 	/**
@@ -55,6 +57,22 @@ class PlayingCard implements Card {
 	 * @returns boolean
 	 */
 	isRevealed = (): boolean => this.state === CardState.REVEALED;
+
+	/**
+	 * If card is known.
+	 *
+	 * @returns boolean
+	 */
+	isKnown = (): boolean => this.known;
+
+	/**
+	 * Set known
+	 *
+	 * @returns
+	 */
+	setAsKnown = (): void => {
+		this.known = true;
+	};
 
 	/**
 	 * Get asset name of card if it is known.
@@ -67,7 +85,7 @@ class PlayingCard implements Card {
 	 * @returns string
 	 */
 	assetName = (): string =>
-		this.isRevealed()
+		this.isKnown()
 			? `${this.getValueReadable().toLowerCase()}_of_${this.getSuitReadable().toLowerCase()}.png`
 			: `Cardback.png`;
 

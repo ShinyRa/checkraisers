@@ -25,7 +25,7 @@ class Player implements User {
 		this.hand = hand ? hand : new PlayerHand();
 	}
 
-	mock = (): Player => {
+	static mock = (): Player => {
 		const mockNames = [
 			'James',
 			'John',
@@ -82,11 +82,11 @@ class Player implements User {
 			'Harris'
 		];
 
-		this.name = mockNames[Math.floor(Math.random() * mockNames.length)];
-		this.username = mockNames[Math.floor(Math.random() * mockNames.length)];
-		this.surname = mockLastNames[Math.floor(Math.random() * mockLastNames.length)];
+		const name = mockNames[Math.floor(Math.random() * mockNames.length)];
+		const username = mockNames[Math.floor(Math.random() * mockNames.length)];
+		const surname = mockLastNames[Math.floor(Math.random() * mockLastNames.length)];
 
-		return this;
+		return new Player(username, surname, name);
 	};
 }
 

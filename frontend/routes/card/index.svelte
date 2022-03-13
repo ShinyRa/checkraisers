@@ -3,36 +3,42 @@
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/api/deck';
+	import { evaluationAPI } from '$lib/api/evaluation';
 	import CardDeck from '$lib/entities/deck/CardDeck';
 	import Player from '$lib/entities/user/Player';
 
 	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
 	import PlayingCard from './_PlayingCard.svelte';
-	import { identity } from 'svelte/internal';
-	import { getSupportInfo } from 'prettier';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
 	let highlight: Array<PlayingCardData> = [];
-	let helptext = '';
+	let playerWon = '';
+	let playerScore = '';
+	let phase = 0;
 
-	let players = [
-		new Player().mock(),
-		new Player().mock(),
-		new Player().mock(),
-		new Player().mock()
-	];
+	let players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
 
 	onMount(() => {
+		startGame();
+	});
+
+	const startGame = () => {
+		playerWon = '';
+		playerScore = '';
+		phase = 0;
+		deck = null;
+		shown = [];
+		highlight = [];
+		players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
 		const data = deckAPI.shuffleDeck();
+
 		deck = data.deck;
 		players.forEach((player) => {
 			[1, 2].forEach(() => player.hand.deal(deck.draw()));
 		});
 		players = players;
-
-		[1, 2, 3].forEach(drawCard);
-	});
+	};
 
 	const drawCard = () => {
 		if (shown.length < 5 && !deck.isEmpty()) {
@@ -40,21 +46,61 @@
 			newCard.reveal();
 			shown = [...shown, newCard];
 		}
+	};
 
-		if (shown.length == 5) {
-			const hands = players.map((player) => player.hand);
-			hands.map((hand) => hand.estimate(shown));
-			hands.sort((hand1, hand2) => hand1.beats(hand2));
-			highlight = hands[hands.length - 1].score.getCards();
-			helptext = `${
-				players.filter((player) => player.hand === hands[hands.length - 1])[0].name
-			} won!`;
+	const nextPhase = () => {
+		phase = phase + 1;
+
+		if (phase === 1) {
+			[1, 2, 3].forEach(drawCard);
+		}
+		if (phase === 2) {
+			drawCard();
+		}
+		if (phase === 3) {
+			drawCard();
+		}
+		if (phase === 4) {
+			const { winner, winningHand } = evaluationAPI.evaluate(players, shown);
+			highlight = winningHand.score.getCards();
+			playerWon = `${winner.name} won!`;
+			playerScore = winningHand.score.print();
+
+			players.forEach((player, index) => {
+				setInterval(() => {
+					player.hand.reveal();
+					players[index] = player;
+					players = [...players];
+				}, 75);
+			});
+		}
+		if (phase === 5) {
+			startGame();
 		}
 	};
 
-	const findCard = (highlight, card) => {
-		return highlight.find((highlight) => highlight.print() == card.print()) != undefined;
+	const phaseName = (phase) => {
+		switch (phase) {
+			case 0:
+				return 'Flop';
+				break;
+			case 1:
+				return 'Turn';
+				break;
+			case 2:
+				return 'River';
+				break;
+			case 3:
+				return 'Evaluate';
+				break;
+			case 4:
+				return 'Replay';
+				break;
+		}
 	};
+
+	const findCard = (highlight, card) =>
+		highlight.find((highlight) => highlight.print() == card.print()) != undefined;
 </script>
 
 <section class="board">
@@ -66,14 +112,16 @@
 			{/each}
 		</section>
 	{/each}
-	{#if shown.length === 5}
-		<section class="help" in:slide={{ duration: 175, easing: quintOut }}>
-			<h1>{helptext}</h1>
+	{#if phase === 4}
+		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
+			<h1>{playerWon}</h1>
+			<br />
+			<h3>{playerScore}</h3>
 		</section>
 	{/if}
 	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={drawCard}
-			>{shown.length >= 5 ? 'Evaluate' : 'Draw'}</button
+		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={nextPhase}
+			>{phaseName(phase)}</button
 		>
 		{#each shown as card}
 			<PlayingCard {card} highlight={findCard(highlight, card)} />
@@ -107,9 +155,17 @@
 			grid-area: help;
 			display: flex;
 			justify-content: center;
+			flex-direction: column;
+			text-align: center;
 			grid-column-start: 1;
 			grid-column-end: 4;
-			font-size: 3em;
+			h1 {
+				font-weight: bold;
+				font-size: 3em;
+			}
+			h3 {
+				font-size: 2.2em;
+			}
 		}
 
 		.you {

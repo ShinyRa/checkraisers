@@ -33,7 +33,7 @@ class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 	 * Reveal all cards from a hand
 	 */
 	reveal = (): void => {
-		this.cards.forEach((card) => card.reveal());
+		this.cards.map((card) => card.reveal());
 	};
 
 	estimate = (board: PlayingCard[]): void => {

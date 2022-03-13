@@ -6,26 +6,29 @@
 	export let highlight: boolean;
 </script>
 
-<div
-	class="playingcard"
-	on:click={() => (card = card.flip())}
-	class:faceup={card.isRevealed()}
-	class:highlight
->
-	<img src="{assetsPath}/cards/{card.assetName()}" alt={card.print()} class="face front" />
-	<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
+<div class:highlight>
+	<div class="playingcard" on:click={() => (card = card.flip())} class:faceup={card.isRevealed()}>
+		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.print()} class="face front" />
+		<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
+	</div>
 </div>
 
 <style lang="scss">
 	.highlight {
+		transition: transform 0.175s linear;
 		border: 4px solid blue;
+		border-radius: 15px;
+		transform: scale(1.1);
+		margin: 15px;
+		height: 275px;
+		width: 195px;
 	}
 	.playingcard {
 		height: 268px;
 		width: 185px;
 		border-radius: 15px;
 		transform-style: preserve-3d;
-		transition: transform 0.25s linear;
+		transition: transform 0.175s linear;
 
 		.face {
 			position: absolute;
