@@ -1,4 +1,5 @@
 <script lang="ts">
+import { goto } from "$app/navigation";
 
     let email: string;
     let username: string;
@@ -8,12 +9,18 @@
 		const requestOptions = {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: email, username: username, password: password })		
+			body: JSON.stringify(
+                {   
+                    email: email, 
+                    username: username, 
+                    password: password
+                })		
 		};
 		await fetch(`api/user/register`, requestOptions).then( resp => {
 			return resp.json()
 		}).then(json => {
 			console.log(json)
+            goto('/login')
 		})
 	}
 
