@@ -54,7 +54,6 @@
 			console.log(json)
 			session.set(json)
 		})
-
 	}
 </script>
 

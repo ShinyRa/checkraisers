@@ -1,22 +1,22 @@
 <script lang="ts">
+    import { session } from '$app/stores'
+    import { onMount } from 'svelte';
 
     let email: string;
-    let username: string;
     let password: string
-
-	const registerUser = async() => {
+    
+	const login = async() => {
 		const requestOptions = {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ email: email, username: username, password: password })		
+			headers: { 'Content-Type': 'application/json',  'Accept': 'application/json'},
+			body: JSON.stringify({ email: email, password: password })		
 		};
-		await fetch(`api/user/register`, requestOptions).then( resp => {
+		await fetch(`api/user/login`, requestOptions).then( resp => {
 			return resp.json()
 		}).then(json => {
-			console.log(json)
+			session.set(json)
 		})
-	}
-
+	} 
 </script>
 
 <section>
@@ -26,12 +26,6 @@
             <input class="input" type="text" placeholder="Email" bind:value={email}>
             </div>
         </div>
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" placeholder="Username" bind:value={username}>
-            </div>
-        </div>
         
         <div class="field">
             <div class="control">
@@ -39,7 +33,7 @@
             </div>
         </div>
 
-        <button class="button submit" on:click={registerUser}>create account</button>
+        <button class="button submit" on:click={login}>login</button>
     </div>
 </section>
 
