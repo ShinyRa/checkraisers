@@ -37,7 +37,7 @@ class UserAPI extends BaseAPI {
 					? this.httpResponse(HttpStatusCode.SUCCESS, res)
 					: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'could not update user' });
 			} else {
-				this.httpResponse(HttpStatusCode.NOT_FOUND, { error: 'No user found with: ' + user.email });
+				this.httpResponse(HttpStatusCode.SUCCESS, { error: 'No user found with: ' + user.email });
 			}
 		} catch (err) {
 			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
@@ -58,7 +58,7 @@ class UserAPI extends BaseAPI {
 					? this.httpResponse(HttpStatusCode.SUCCESS, { success: 'Created new user' })
 					: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'Could not create User' });
 			} else {
-				this.httpResponse(HttpStatusCode.BAD_REQUEST, { error: 'This email already exists' });
+				this.httpResponse(HttpStatusCode.SUCCESS, { error: 'This email already exists' });
 			}
 		} catch (err) {
 			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
@@ -68,7 +68,10 @@ class UserAPI extends BaseAPI {
 	public login = async (user: Record<User['email'], User['password']>): Promise<Response> => {
 		try {
 			const profile = await this.db
-				.findOne({ email: user.email, password: this.hash(user.password) })
+				.findOne(
+					{ email: user.email, password: this.hash(user.password) },
+					{ projection: { _id: 0, password: 0 } }
+				)
 				.then((result) => {
 					return result ? result : false;
 				});

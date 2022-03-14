@@ -4,17 +4,27 @@
 
     let email: string;
     let password: string
-    
+
+    onMount(() => {
+        $session
+	});
+
 	const login = async() => {
 		const requestOptions = {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json',  'Accept': 'application/json'},
-			body: JSON.stringify({ email: email, password: password })		
+			body: JSON.stringify(
+                { 
+                    email: email, 
+                    password: password
+                }
+            )		
 		};
 		await fetch(`api/user/login`, requestOptions).then( resp => {
 			return resp.json()
 		}).then(json => {
-			session.set(json)
+            session.set(json)
+            console.log($session)
 		})
 	} 
 </script>
