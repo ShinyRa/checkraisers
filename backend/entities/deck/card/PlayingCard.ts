@@ -90,7 +90,7 @@ class PlayingCard implements Card {
 			: `Cardback.png`;
 
 	/**
-	 * Pint card details to string.
+	 * Print card details to string.
 	 *
 	 * template
 	 * 	 *value* of *suit*
