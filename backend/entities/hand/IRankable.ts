@@ -1,6 +1,4 @@
-interface IRankable<H, R> {
+export interface IRankable<H, R> {
 	beats: (obj: H) => number;
 	score: R;
 }
-
-export { IRankable };
