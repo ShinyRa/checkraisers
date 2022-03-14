@@ -5,7 +5,6 @@
 	const routes = [
 		{ title: 'Home', route: '' },
 		{ title: 'Draw cards', route: '/card' },
-		{ title: 'Firebase todo-list', route: '/table' },
 		{ title: 'register', route: '/register' },
 		{ title: 'login', route: '/login' },
 		{ title: 'profile', route: '/profile' },

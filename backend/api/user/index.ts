@@ -1,4 +1,4 @@
-import { HttpStatusCode } from '../../utils/HttpStatusCode';
+import { HttpCode } from '../../utils/HttpStatusCode';
 import BaseAPI, { Response } from './../BaseAPI';
 import { User } from './../../entities/user/User';
 import * as crypto from 'crypto';
@@ -23,15 +23,16 @@ class UserAPI extends BaseAPI {
 				return result ? result : false;
 			});
 			return user
-				? this.httpResponse(HttpStatusCode.SUCCESS, user)
-				: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'No user found with: ' + email });
+				? this.httpResponse(HttpCode.SUCCESS, user)
+				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'No user found with: ' + email });
 		} catch (err) {
-			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
+			return this.httpResponse(HttpCode.SERVER_ERROR);
 		}
 	};
 
 	public updateProfile = async (user: Partial<User>): Promise<Response> => {
 		try {
+			console.log('lloool')
 			const userPresent = await this.db.findOne({ email: user.email }).then((result) => {
 				return result ? true : false;
 			});
@@ -42,13 +43,13 @@ class UserAPI extends BaseAPI {
 					{ upsert: false, returnDocument: 'after' }
 				);
 				return res
-					? this.httpResponse(HttpStatusCode.SUCCESS, res)
-					: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'could not update user' });
+					? this.httpResponse(HttpCode.SUCCESS, res)
+					: this.httpResponse(HttpCode.BAD_REQUEST, { error: 'could not update user' });
 			} else {
-				this.httpResponse(HttpStatusCode.SUCCESS, { error: 'No user found with: ' + user.email });
+				return this.httpResponse(HttpCode.NOT_FOUND, { error: 'No user found with: ' + user.email });
 			}
 		} catch (err) {
-			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
+			return this.httpResponse(HttpCode.SERVER_ERROR);
 		}
 	};
 
@@ -63,14 +64,14 @@ class UserAPI extends BaseAPI {
 				user.chips = DEFAULT_AMOUNT;
 				const res = await this.db.insertOne(user);
 				return res.acknowledged
-					? this.httpResponse(HttpStatusCode.SUCCESS, { success: 'Created new user' })
-					: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'Could not create User' });
+					? this.httpResponse(HttpCode.SUCCESS, { success: 'Created new user' })
+					: this.httpResponse(HttpCode.BAD_REQUEST, { error: 'Could not create User' });
 			} else {
-				this.httpResponse(HttpStatusCode.SUCCESS, { error: 'This email already exists' });
+				return this.httpResponse(HttpCode.BAD_REQUEST, { error: 'This email already exists' });
 			}
 		} catch (err) {
 			console.log(err);
-			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
+			return this.httpResponse(HttpCode.SERVER_ERROR);
 		}
 	};
 
@@ -85,10 +86,10 @@ class UserAPI extends BaseAPI {
 					return result ? result : false;
 				});
 			return profile
-				? this.httpResponse(HttpStatusCode.SUCCESS, profile)
-				: this.httpResponse(HttpStatusCode.SUCCESS, { error: 'Wrong credentials' });
+				? this.httpResponse(HttpCode.SUCCESS, profile)
+				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });
 		} catch (err) {
-			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
+			return this.httpResponse(HttpCode.SERVER_ERROR);
 		}
 	};
 }

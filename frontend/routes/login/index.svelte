@@ -1,4 +1,6 @@
 <script lang="ts">
+import { goto } from '$app/navigation';
+
     import { session } from '$app/stores'
     import { onMount } from 'svelte';
 
@@ -23,14 +25,20 @@
 		await fetch(`api/user/login`, requestOptions).then( resp => {
 			return resp.json()
 		}).then(json => {
-            session.set(json)
-            console.log($session)
+            session.subscribe( value => {
+                localStorage.setItem("session", JSON.stringify(value));
+            });
+            console.log(JSON.parse(localStorage.getItem("session")))
 		})
 	} 
 </script>
 
 <section>
     <div class="container">
+
+        <p>Login</p>
+        <hr>
+
         <div class="field">
             <div class="control">
             <input class="input" type="text" placeholder="Email" bind:value={email}>

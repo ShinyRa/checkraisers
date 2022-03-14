@@ -28,6 +28,10 @@ import { goto } from "$app/navigation";
 
 <section>
     <div class="container">
+
+        <p>Register</p>
+        <hr>    
+
         <div class="field">
             <div class="control">
             <input class="input" type="text" placeholder="Email" bind:value={email}>

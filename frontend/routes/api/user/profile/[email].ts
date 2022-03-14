@@ -9,6 +9,5 @@ export async function post({ request }) {
 
 // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export async function get({ params }) {
-	console.log(await userAPI.getProfile(await params.email));
 	return await userAPI.getProfile(await params.email);
 }
