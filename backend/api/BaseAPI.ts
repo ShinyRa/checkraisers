@@ -16,7 +16,7 @@ class BaseAPI {
 		return repsonse;
 	}
 
-	protected getCollection = async (collection: string): Promise<Collection> => {
+	protected getCollection = async (collection: string): Collection => {
 		const client = await mongoDB_client;
 		return client.collection(collection);
 	};

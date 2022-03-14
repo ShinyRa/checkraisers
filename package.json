@@ -10,7 +10,7 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"test": "jest frontend --passWithNoTests && jest backend --passWithNoTests",
 		"depcheck": "depcheck",
-		"test:crud": "jest -- crud.test.ts"
+		"test:crud": "jest --detectOpenHandles crud.test.ts "
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",

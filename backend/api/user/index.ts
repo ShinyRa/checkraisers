@@ -69,6 +69,7 @@ class UserAPI extends BaseAPI {
 				this.httpResponse(HttpStatusCode.SUCCESS, { error: 'This email already exists' });
 			}
 		} catch (err) {
+			console.log(err);
 			return this.httpResponse(HttpStatusCode.SERVER_ERROR);
 		}
 	};
