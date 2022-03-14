@@ -83,8 +83,9 @@ class HandEvaluation {
 		}
 
 		if (pairs >= 2) {
-			// TODO: Sort highest with 3 or more
-			const [lowPair, highPair] = this.findTwoPair(valueScoring);
+			const twoPairs = this.findTwoPair(valueScoring);
+			const lowPair = twoPairs[twoPairs.length - 2];
+			const highPair = twoPairs[twoPairs.length - 1];
 			return new TwoPair(hand, highPair, lowPair);
 		}
 

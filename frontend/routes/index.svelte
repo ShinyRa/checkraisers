@@ -3,7 +3,7 @@
 	import { assets as assetsPath } from '$app/paths';
 	import { fly } from 'svelte/transition';
 
-	let load;
+	let load: boolean;
 	onMount(() => (load = true));
 </script>
 

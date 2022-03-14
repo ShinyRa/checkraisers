@@ -76,7 +76,7 @@
 		}
 	};
 
-	const phaseName = (phase) => {
+	const phaseName = (phase: number) => {
 		switch (phase) {
 			case 0:
 				return 'Flop';
@@ -91,8 +91,8 @@
 		}
 	};
 
-	const findCard = (highlight, card) =>
-		highlight.find((highlight) => highlight.print() == card.print()) != undefined;
+	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
+		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
 </script>
 
 <section class="board">
