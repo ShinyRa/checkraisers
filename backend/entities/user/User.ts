@@ -1,6 +1,6 @@
 export type User = {
 	email: string;
-	username: string
+	username: string;
 	password: string;
-	chips: number;
+	chips?: number;
 };

@@ -2,8 +2,16 @@ import { HttpStatusCode } from '../../utils/HttpStatusCode';
 import BaseAPI, { Response } from './../BaseAPI';
 import { User } from './../../entities/user/User';
 import * as crypto from 'crypto';
+import { Collection } from 'mongodb';
 class UserAPI extends BaseAPI {
-	private db = this.getCollection('users');
+	private db: Collection;
+
+	constructor(collectionName: string) {
+		super();
+		this.getCollection(collectionName).then((res) => {
+			this.db = res;
+		});
+	}
 
 	private hash = (password): string => {
 		return crypto.createHash('sha256').update(password).digest('hex');

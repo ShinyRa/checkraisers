@@ -1,23 +1,24 @@
-import { Collection } from "mongodb";
-import { HttpStatusCode } from "../utils/HttpStatusCode";
+import { Collection } from 'mongodb';
+import { HttpStatusCode } from '../utils/HttpStatusCode';
 import { mongoDB_client } from '../utils/mongodb';
 
 export type Response = {
-    status: HttpStatusCode,
-    body: unknown
-}
+	status: HttpStatusCode;
+	body: unknown;
+};
 
 class BaseAPI {
-    protected httpResponse( status: HttpStatusCode, body?: unknown): Response{
-        const repsonse = {
-            status: status,
-            body: body
-        }
-        return repsonse
-    }
+	protected httpResponse(status: HttpStatusCode, body?: unknown): Response {
+		const repsonse = {
+			status: status,
+			body: body
+		};
+		return repsonse;
+	}
 
-    protected getCollection = (collection: string): Collection => {
-        return mongoDB_client.collection(collection)
-    }
+	protected getCollection = async (collection: string): Promise<Collection> => {
+		const client = await mongoDB_client;
+		return client.collection(collection);
+	};
 }
-export default BaseAPI
+export default BaseAPI;
