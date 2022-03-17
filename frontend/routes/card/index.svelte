@@ -1,66 +1,122 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
+	import { slide } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/api/deck';
+	import { evaluationAPI } from '$lib/api/evaluation';
 	import CardDeck from '$lib/entities/deck/CardDeck';
-	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
+	import Player from '$lib/entities/user/Player';
 
+	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
 	import PlayingCard from './_PlayingCard.svelte';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
+	let highlight: Array<PlayingCardData> = [];
+	let playerWon = '';
+	let playerScore = '';
+	let phase = 0;
 
-	const players = [
-		{ hand: [], name: 'Tijs' },
-		{ hand: [], name: 'Auke' },
-		{ hand: [], name: 'Kimberley' },
-		{ hand: [], name: 'Danny' }
-	];
+	let players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
 
 	onMount(() => {
-		const data = deckAPI.shuffleDeck();
-		deck = data.deck;
-		players.forEach((player, index) => {
-			let hand = [];
-			[1, 2].forEach(() => (hand = deal(deck, player)));
-			players[index].hand = hand;
-		});
-		[1, 2, 3].forEach(drawCard);
+		startGame();
 	});
+
+	const startGame = () => {
+		playerWon = '';
+		playerScore = '';
+		phase = 0;
+		deck = null;
+		shown = [];
+		highlight = [];
+		players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
+		const data = deckAPI.shuffleDeck();
+
+		deck = data.deck;
+		players.forEach((player) => {
+			[1, 2].forEach(() => player.hand.deal(deck.draw()));
+		});
+		players = players;
+	};
 
 	const drawCard = () => {
 		if (shown.length < 5 && !deck.isEmpty()) {
-			shown = [...shown, deck.draw()];
+			const newCard = deck.draw();
+			newCard.reveal();
+			shown = [...shown, newCard];
 		}
 	};
 
-	const deal = (
-		deck: CardDeck,
-		player: { name: string; hand: PlayingCardData[] }
-	): PlayingCardData[] => {
-		const card = deck.draw();
-		if (player.name === 'Tijs') {
-			card.reveal();
+	const nextPhase = () => {
+		phase = phase + 1;
+
+		if (phase === 1) {
+			[1, 2, 3].forEach(drawCard);
 		}
-		player.hand.push(card);
-		return player.hand;
+		if (phase === 2) {
+			drawCard();
+		}
+		if (phase === 3) {
+			drawCard();
+		}
+		if (phase === 4) {
+			const { winner, winningHand } = evaluationAPI.evaluate(players, shown);
+			highlight = winningHand.score.getCards();
+			playerWon = `${winner.name} won!`;
+			playerScore = winningHand.score.print();
+
+			players.forEach((player, index) => {
+				player.hand.reveal();
+				players[index] = player;
+			});
+		}
+		if (phase === 5) {
+			startGame();
+		}
 	};
+
+	const phaseName = (phase: number) => {
+		switch (phase) {
+			case 0:
+				return 'Flop';
+			case 1:
+				return 'Turn';
+			case 2:
+				return 'River';
+			case 3:
+				return 'Evaluate';
+			case 4:
+				return 'Replay';
+		}
+	};
+
+	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
+		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
 </script>
 
 <section class="board">
 	{#each players as player}
-		<section class="player" class:you={player.name === 'Tijs'}>
+		<section class="player" class:you={player.name === players[0].name}>
 			<h1>{player.name}</h1>
-			{#each player.hand as card}
-				<PlayingCard {card} />
+			{#each player.hand.cards as card}
+				<PlayingCard {card} highlight={findCard(highlight, card)} />
 			{/each}
 		</section>
 	{/each}
+	{#if phase === 4}
+		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
+			<h1>{playerWon}</h1>
+			<br />
+			<h3>{playerScore}</h3>
+		</section>
+	{/if}
 	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length >= 5} on:click={drawCard}
-			>Draw</button
+		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={nextPhase}
+			>{phaseName(phase)}</button
 		>
 		{#each shown as card}
-			<PlayingCard {card} />
+			<PlayingCard {card} highlight={findCard(highlight, card)} />
 		{/each}
 	</section>
 </section>
@@ -70,10 +126,11 @@
 		display: grid;
 		grid-template:
 			'player player player'
+			'help help help'
 			'cards cards cards'
 			'you you you';
-		grid-template-columns: repeat(3, 1fr);
-		grid-template-rows: repeat(3, 1fr);
+		grid-template-columns: repeat(3, 0.33fr);
+		grid-template-rows: repeat(4, 0.25fr);
 		background-color: #e3e3e3;
 		height: 100%;
 		width: 100%;
@@ -84,6 +141,23 @@
 			grid-area: 'player';
 			display: flex;
 			justify-content: center;
+		}
+
+		.help {
+			grid-area: help;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+			text-align: center;
+			grid-column-start: 1;
+			grid-column-end: 4;
+			h1 {
+				font-weight: bold;
+				font-size: 3em;
+			}
+			h3 {
+				font-size: 2.2em;
+			}
 		}
 
 		.you {

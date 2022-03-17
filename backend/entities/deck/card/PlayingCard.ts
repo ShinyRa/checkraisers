@@ -1,29 +1,26 @@
-import { CardState } from './CardState';
-import { CardSuit } from './CardSuit';
-import { CardValue } from './CardValue';
+import { CardState } from './state/CardState';
+import { CardSuit } from './identity/CardSuit';
+import { CardValue } from './identity/CardValue';
+import { CardIdentity } from './identity/CardIdentity';
 
 export type Card = {
-	value: CardValue;
-	suit: CardSuit;
 	state: CardState;
 };
 
 class PlayingCard implements Card {
-	value: CardValue;
-	suit: CardSuit;
+	identity: CardIdentity;
 	state: CardState;
 	known: boolean;
 
 	/**
 	 * Create a new playingcard
 	 *
-	 * @param suit CardSuit enum
-	 * @param value CardValue enum
+	 * @param template template to make a card
 	 * @param state CardState enum, default hidden
 	 */
-	constructor(suit: CardSuit, value: CardValue, state: CardState = CardState.HIDDEN) {
-		this.value = value;
-		this.suit = suit;
+	constructor(identity: CardIdentity | string, state: CardState = CardState.HIDDEN) {
+		this.identity =
+			identity instanceof CardIdentity ? identity : CardIdentity.fromTemplate(identity);
 		this.state = state ? state : CardState.REVEALED;
 		this.known = this.state === CardState.REVEALED ? true : false;
 	}
@@ -34,13 +31,11 @@ class PlayingCard implements Card {
 	 * @returns self
 	 */
 	flip = (): PlayingCard => {
-		if (this.state === CardState.REVEALED) {
-			this.state = CardState.HIDDEN;
-		}
-
 		if (this.state === CardState.HIDDEN) {
 			this.state = CardState.REVEALED;
 			this.setAsKnown();
+		} else if (this.state === CardState.REVEALED) {
+			this.state = CardState.HIDDEN;
 		}
 
 		return this;
@@ -91,11 +86,11 @@ class PlayingCard implements Card {
 	 */
 	assetName = (): string =>
 		this.isKnown()
-			? `${CardValue[this.value].toLowerCase()}_of_${CardSuit[this.suit].toLowerCase()}.png`
+			? `${this.getValueReadable().toLowerCase()}_of_${this.getSuitReadable().toLowerCase()}.png`
 			: `Cardback.png`;
 
 	/**
-	 * print card details to string.
+	 * Print card details to string.
 	 *
 	 * template
 	 * 	 *value* of *suit*
@@ -104,8 +99,48 @@ class PlayingCard implements Card {
 	 *
 	 * @returns string
 	 */
-	print = (): string =>
-		CardValue[this.value].toLowerCase() + ' of ' + CardSuit[this.suit].toLowerCase();
+	print = (): string => this.identity.print();
+
+	/**
+	 * Get readable value of card
+	 *
+	 * @returns string
+	 */
+	getValueReadable = (): string => this.identity.getValueReadable();
+
+	/**
+	 * Get actual value of card
+	 *
+	 * @returns CardValue
+	 */
+	getValue = (): CardValue => this.identity.getValue();
+
+	/**
+	 * Get readable suit of card
+	 *
+	 * @returns string
+	 */
+	getSuitReadable = (): string => this.identity.getSuitReadable();
+
+	/**
+	 * Get actual suit of card
+	 *
+	 * @returns CardSuit
+	 */
+	getSuit = (): CardSuit => this.identity.getSuit();
+
+	/**
+	 * Compare card value to other card value
+	 *
+	 * @param playingcard PlayingCard
+	 *
+	 * @returns number
+	 */
+	compareTo = (playingcard: PlayingCard): number => {
+		return this.getValue() === playingcard.getValue()
+			? 0
+			: this.getValue() - playingcard.getValue();
+	};
 }
 
 export default PlayingCard;

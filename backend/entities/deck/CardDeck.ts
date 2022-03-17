@@ -1,5 +1,6 @@
-import { CardSuit } from './card/CardSuit';
-import { CardValue } from './card/CardValue';
+import { CardIdentity } from './card/identity/CardIdentity';
+import { CardSuit } from './card/identity/CardSuit';
+import { CardValue } from './card/identity/CardValue';
 import PlayingCard from './card/PlayingCard';
 
 export type Deck = {
@@ -26,7 +27,9 @@ class CardDeck implements Deck {
 		const values = Object.values(CardValue).filter((value) => isNaN(Number(value)));
 
 		suits.forEach((suit) => {
-			values.forEach((value) => this.cards.push(new PlayingCard(CardSuit[suit], CardValue[value])));
+			values.forEach((value) =>
+				this.cards.push(new PlayingCard(new CardIdentity(CardSuit[suit], CardValue[value])))
+			);
 		});
 
 		return this;
