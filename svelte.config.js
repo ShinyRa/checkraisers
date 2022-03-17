@@ -1,7 +1,9 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
+import { initServer } from './backend/utils/socketServer.js';
+import { mongoDB_client } from './backend/utils/mongodb.js';
 
-const dev = process.env.NODE_ENV === 'development';
+//const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -9,23 +11,39 @@ const config = {
 	preprocess: preprocess({ typescript: { tsconfigFile: './tsconfig.json' } }),
 
 	kit: {
-		/**
-		 * Build command which is only ran while compiling to static HTML site in Gitlab pipeline
-		 */
-		adapter: adapter({ pages: 'build', assets: 'build', fallback: null }),
-		paths: { base: dev ? '' : '/2122/ivse2/IVSE2-MUCKERS/pokerapp' }, // If building on Gitlab, set base url to /pokerapp repository
-		appDir: 'app', // Don't use standard _app structure as this is hidden to the sveltekit router
-		prerender: {
-			crawl: true,
-			enabled: true,
-			entries: ['*']
-		},
+		adapter: adapter(),
 		files: {
 			lib: './backend',
 			assets: './static',
 			template: './static/app.html',
 			routes: './frontend/routes' // /frontend/routes folder as routing entry point
-		}
+		},	
+        vite: {
+            plugins: [
+                {
+                    name: 'socket-io',
+                    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+                    configureServer(server) {
+						initServer(server);
+                    }
+                },
+				{
+					name: 'mongo-DB',
+					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+					configureServer() {
+						let testing = mongoDB_client
+						
+						testing.collection("users").find({}).toArray()
+						.then(r => {
+							console.log(r);
+						}).catch(e => {
+							console.error(`ERROR:`,e);
+						})
+						
+					}
+				}
+            ]
+        }
 	}
 };
 

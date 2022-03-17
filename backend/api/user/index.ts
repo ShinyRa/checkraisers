@@ -1,6 +1,6 @@
 import type { User } from '../../entities/user/User';
 import { HttpStatusCode } from '../../utils/HttpStatusCode';
-import { doc, setDoc, getDoc, deleteDoc } from 'firebase/firestore';
+import { doc, setDoc, getDoc, deleteDoc, collection,getDocs } from 'firebase/firestore';
 import { db } from '../../utils/Firebase';
 
 const getUsername = async(username: User["username"]) => {
@@ -18,6 +18,7 @@ const usernameExist = async(username: User["username"]): Promise<boolean> => {
 }
 
 export const userAPI = {
+	//same function can be used for updating
     async addUser(user: User): Promise<Record<string, HttpStatusCode | string>> {
         try {
             if (await usernameExist(user.username)) {
@@ -37,5 +38,13 @@ export const userAPI = {
 		} else {
 			return { status: HttpStatusCode.SERVER_ERROR, message: 'Username does not exist' };
 		}
+	},
+	async getUsers(): Promise<Record<string, Array<any>>> {
+		const userDoc = await getDocs(collection(db, 'user'));
+		const userArray = [];
+		userDoc.forEach((doc) => {
+			userArray.push(doc.data())
+		});
+		return {users: userArray};
 	}
 };
