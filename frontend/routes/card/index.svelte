@@ -5,10 +5,11 @@
 	import { deckAPI } from '$lib/api/deck';
 	import { evaluationAPI } from '$lib/api/evaluation';
 	import CardDeck from '$lib/entities/deck/CardDeck';
-	import Player from '$lib/entities/user/Player';
+	import { default as PlayerData } from '$lib/entities/user/Player';
 
 	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
 	import PlayingCard from './_PlayingCard.svelte';
+	import Player from './_Player.svelte';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -17,7 +18,7 @@
 	let playerScore = '';
 	let phase = 0;
 
-	let players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
+	let players = [PlayerData.mock(), PlayerData.mock(), PlayerData.mock(), PlayerData.mock()];
 
 	onMount(() => {
 		startGame();
@@ -30,13 +31,14 @@
 		deck = null;
 		shown = [];
 		highlight = [];
-		players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
+		players = [PlayerData.mock(), PlayerData.mock(), PlayerData.mock(), PlayerData.mock()];
 		const data = deckAPI.shuffleDeck();
 
 		deck = data.deck;
 		players.forEach((player) => {
 			[1, 2].forEach(() => player.hand.deal(deck.draw()));
 		});
+		players[0].hand.reveal();
 		players = players;
 	};
 
@@ -96,13 +98,8 @@
 </script>
 
 <section class="board">
-	{#each players as player}
-		<section class="player" class:you={player.name === players[0].name}>
-			<h1>{player.name}</h1>
-			{#each player.hand.cards as card}
-				<PlayingCard {card} highlight={findCard(highlight, card)} />
-			{/each}
-		</section>
+	{#each players as player, index}
+		<Player {player} you={index === 0} {highlight} />
 	{/each}
 	{#if phase === 4}
 		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
@@ -130,18 +127,12 @@
 			'cards cards cards'
 			'you you you';
 		grid-template-columns: repeat(3, 0.33fr);
-		grid-template-rows: repeat(4, 0.25fr);
+		grid-template-rows: repeat(4, 0.1fr);
 		background-color: #e3e3e3;
-		height: 100%;
-		width: 100%;
+		height: 100vh;
+		width: 100vw;
 		padding: 50px;
-		row-gap: 125px;
-
-		.player {
-			grid-area: 'player';
-			display: flex;
-			justify-content: center;
-		}
+		row-gap: 100px;
 
 		.help {
 			grid-area: help;
@@ -158,13 +149,6 @@
 			h3 {
 				font-size: 2.2em;
 			}
-		}
-
-		.you {
-			grid-area: you;
-			grid-column-start: 1;
-			grid-column-end: 4;
-			justify-content: center;
 		}
 
 		.cards {
