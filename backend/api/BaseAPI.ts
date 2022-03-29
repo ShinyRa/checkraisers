@@ -3,15 +3,15 @@ import { HttpCode } from '../utils/HttpStatusCode';
 import { mongoDB_client } from '../utils/mongodb';
 
 export type Response = {
-	headers: Record<string,string>
+	headers: Record<string, string>;
 	status: HttpCode;
 	body: unknown;
 };
 
 class BaseAPI {
-	protected httpResponse(status: HttpCode, body?: unknown): Response {
+	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
 		const repsonse = {
-			headers: {'content-type': 'application/json'},
+			headers: { 'content-type': 'application/json' },
 			status: status,
 			body: body
 		};

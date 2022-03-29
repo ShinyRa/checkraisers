@@ -32,7 +32,6 @@ class UserAPI extends BaseAPI {
 
 	public updateProfile = async (user: Partial<User>): Promise<Response> => {
 		try {
-			console.log('lloool')
 			const userPresent = await this.db.findOne({ email: user.email }).then((result) => {
 				return result ? true : false;
 			});
@@ -46,7 +45,9 @@ class UserAPI extends BaseAPI {
 					? this.httpResponse(HttpCode.SUCCESS, res)
 					: this.httpResponse(HttpCode.BAD_REQUEST, { error: 'could not update user' });
 			} else {
-				return this.httpResponse(HttpCode.NOT_FOUND, { error: 'No user found with: ' + user.email });
+				return this.httpResponse(HttpCode.NOT_FOUND, {
+					error: 'No user found with: ' + user.email
+				});
 			}
 		} catch (err) {
 			return this.httpResponse(HttpCode.SERVER_ERROR);
