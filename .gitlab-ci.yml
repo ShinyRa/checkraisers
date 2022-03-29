@@ -1,12 +1,26 @@
 stages:
+  - install
+  - build
   - deploy
+
+install:
+  stage: install
+  before_script:
+    yarn
+  only:
+    changes:
+      - package.json
+
+build:
+  stage: build
+  script:
+    yarn build
+  only:
+    development
+
 deploy:
   stage: deploy
-  before_script:
-    - yarn
   script:
-    - yarn install
-    - yarn build
     - node build/index.js
   only:
     - development
