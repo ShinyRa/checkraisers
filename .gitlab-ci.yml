@@ -16,8 +16,6 @@ install:
     
 build:
   stage: build
-  dependencies: 
-      - node_modules
   script:
     - yarn build
   artifacts:
@@ -28,8 +26,6 @@ build:
 
 deploy:
   stage: deploy
-  dependencies: 
-    - build
   script:
     - node index.js
   only:
