@@ -1,11 +1,6 @@
 <script>
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
-
-	const routes = [
-		{ title: 'Home', route: '' },
-		{ title: 'Draw cards', route: '/card' },
-	];
 </script>
 
 <section class="hero">
