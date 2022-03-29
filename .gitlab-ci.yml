@@ -22,6 +22,8 @@ build:
 
 deploy:
   stage: deploy
+  before_script:
+    - yarn forever stopall
   script:
     - yarn forever start build/index.js
   only:
