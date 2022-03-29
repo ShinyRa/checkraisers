@@ -17,33 +17,25 @@ const config = {
 			assets: './static',
 			template: './static/app.html',
 			routes: './frontend/routes' // /frontend/routes folder as routing entry point
-		},	
-        vite: {
-            plugins: [
-                {
-                    name: 'socket-io',
-                    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-                    configureServer(server) {
+		},
+		vite: {
+			plugins: [
+				{
+					name: 'socket-io',
+					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+					configureServer(server) {
 						initServer(server);
-                    }
-                },
+					}
+				},
 				{
 					name: 'mongo-DB',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer() {
-						let testing = mongoDB_client
-						
-						testing.collection("users").find({}).toArray()
-						.then(r => {
-							console.log(r);
-						}).catch(e => {
-							console.error(`ERROR:`,e);
-						})
-						
+						let testing = mongoDB_client;
 					}
 				}
-            ]
-        }
+			]
+		}
 	}
 };
 

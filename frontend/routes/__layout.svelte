@@ -5,7 +5,6 @@
 	const routes = [
 		{ title: 'Home', route: '' },
 		{ title: 'Draw cards', route: '/card' },
-		{ title: 'Firebase todo-list', route: '/table' }
 	];
 </script>
 
@@ -16,15 +15,6 @@
 	</div>
 </section>
 <main>
-	<aside class="menu">
-		<ul class="menu-list">
-			{#each routes as { title, route }}
-				<li>
-					<a href={null} on:click={() => goto(`${base}${route}`)}>{title}</a>
-				</li>
-			{/each}
-		</ul>
-	</aside>
 
 	<slot />
 </main>
