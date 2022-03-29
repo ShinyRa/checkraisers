@@ -24,6 +24,6 @@ build:
 deploy:
   stage: deploy
   script:
-    - node build/index.js
+    - systemctl start node build/index.js
   only:
     - development
