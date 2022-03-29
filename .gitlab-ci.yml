@@ -1,11 +1,28 @@
 stages:
+  - install
+  - build
   - deploy
+
+install:
+  stage: install
+  script: yarn
+  artifacts:
+    paths:
+      - node_modules
+
+build:
+  stage: build
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - build
+  only:
+    - development
+
 deploy:
   stage: deploy
   script:
-    - killall node
-    - yarn install
-    - yarn build
-    - node build/index.js
+    - forever start build/index.js
   only:
     - development
