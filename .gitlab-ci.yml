@@ -24,6 +24,6 @@ build:
 deploy:
   stage: deploy
   script:
-    - node index.js
+    - node build/index.js
   only:
     - development
