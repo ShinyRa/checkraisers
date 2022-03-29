@@ -23,6 +23,6 @@ build:
 deploy:
   stage: deploy
   script:
-    - forever start build/index.js
+    - yarn forever start build/index.js
   only:
     - development
