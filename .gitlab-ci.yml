@@ -23,6 +23,6 @@ build:
 deploy:
   stage: deploy
   script:
-    - systemctl start node build/index.js
+    - forever start build/index.js
   only:
     - development
