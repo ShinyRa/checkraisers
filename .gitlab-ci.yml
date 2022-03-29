@@ -2,8 +2,9 @@ stages:
   - deploy
 deploy:
   stage: deploy
+  before_script:
+    - yarn
   script:
-    - killall node
     - yarn install
     - yarn build
     - node build/index.js
