@@ -5,22 +5,36 @@ stages:
 
 install:
   stage: install
+  cache: 
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - node_modules/
   script:
     yarn
   only:
     changes:
-      - package.json
-
+      - package-lock.json
+    
 build:
   stage: build
+  cache: 
+    key: $CI_COMMIT_REF_SLUG-$CI_PROJECT_DIR
+    paths:
+      - node_modules/
+    policy: pull
   script:
-    yarn build
+    - yarn build
+  artifacts:
+    paths:
+      - build
   only:
-    development
+    - development
 
 deploy:
   stage: deploy
+  dependencies: 
+    - build
   script:
-    - node build/index.js
+    - node index.js
   only:
     - development
