@@ -23,7 +23,7 @@ import { goto } from "$app/navigation";
             goto('/login')
 		})
 	}
-
+//test
 </script>
 
 <section>
