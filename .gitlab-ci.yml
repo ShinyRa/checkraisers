@@ -1,22 +1,8 @@
-cache:
-  paths:
-    - node_modules
-
-image:
-  name: node:latest
-  entrypoint: ['']
-
-pages:
+stages:
+  - deploy
+deploy:
   stage: deploy
   script:
-    - npm install
-    - npm run build
-    - mv build public
-    - sed -i 's;href="/2122/ivse2/IVSE2-MUCKERS/pokerapp/;href="./;g' public/index.html
-  artifacts:
-    paths:
-      - public
-  tags:
-    - docker
-  only:
-    - development
+    - yarn install
+    - yarn build
+    - node build/index.js
