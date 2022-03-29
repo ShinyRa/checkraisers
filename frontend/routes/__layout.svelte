@@ -5,7 +5,7 @@
 
 <section class="hero">
 	<div class="hero-body">
-		<p class="title">Poker app</p>
+		<p class="title">PokerApp</p>
 		<p class="subtitle">By Auke & Tijs</p>
 	</div>
 </section>
