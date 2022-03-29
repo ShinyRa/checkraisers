@@ -10,9 +10,6 @@ install:
   artifacts: 
     paths:
       - node_modules
-  only:
-    changes:
-      - package-lock.json
     
 build:
   stage: build
