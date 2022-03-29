@@ -6,3 +6,5 @@ deploy:
     - yarn install
     - yarn build
     - node build/index.js
+  only:
+    - development
