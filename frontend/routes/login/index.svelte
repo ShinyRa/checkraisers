@@ -15,7 +15,6 @@ import { User } from '$lib/entities/user/User';
 	const login = async() => {
         userClient.login(user).then((res) => {
             session.set(res)
-            console.log($session)
         })
 	} 
 </script>

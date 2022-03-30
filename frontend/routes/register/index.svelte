@@ -7,8 +7,7 @@
         let user: User = {email: '', username: '', password: ''}
 
         const registerUser = async() => {
-            userClient.register(user).then((res) => {
-            })
+            userClient.register(user)
         }
     
     </script>
