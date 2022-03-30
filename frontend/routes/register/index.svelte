@@ -8,7 +8,6 @@
 
         const registerUser = async() => {
             userClient.register(user).then((res) => {
-                console.log(res)
             })
         }
     

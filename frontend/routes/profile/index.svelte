@@ -5,7 +5,6 @@
     import { userClient } from '../api/user/userClient';
 
     let profile = $session
-    console.log(profile)
     let user: Partial<User> = {
         email: profile['username'] ? profile['username'] : 'not logged in', 
         username: profile['email'] ? profile['email']: 'not logged in', 
@@ -17,7 +16,6 @@
 	});
 
     const updateProfile = async() => {
-        console.log(user)
         userClient.update(user).then((res) => {
                 session.set(res['value'])
             })
