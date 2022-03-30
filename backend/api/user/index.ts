@@ -6,9 +6,9 @@ import { Collection } from 'mongodb';
 class UserAPI extends BaseAPI {
 	private db: Collection;
 
-	constructor(collectionName: string) {
+	constructor() {
 		super();
-		this.getCollection(collectionName).then((res) => {
+		this.getCollection('users').then((res) => {
 			this.db = res;
 		});
 	}
@@ -26,7 +26,8 @@ class UserAPI extends BaseAPI {
 				? this.httpResponse(HttpCode.SUCCESS, user)
 				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'No user found with: ' + email });
 		} catch (err) {
-			return this.httpResponse(HttpCode.SERVER_ERROR);
+			console.log('try catch error:\n', err);
+			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'could not get user profile' });
 		}
 	};
 
@@ -39,7 +40,7 @@ class UserAPI extends BaseAPI {
 				const res = await this.db.findOneAndUpdate(
 					{ email: user.email },
 					{ $set: user },
-					{ upsert: false, returnDocument: 'after' }
+					{ upsert: false, returnDocument: 'after', projection: { _id: 0, password: 0 } }
 				);
 				return res
 					? this.httpResponse(HttpCode.SUCCESS, res)
@@ -50,19 +51,20 @@ class UserAPI extends BaseAPI {
 				});
 			}
 		} catch (err) {
-			return this.httpResponse(HttpCode.SERVER_ERROR);
+			console.log('try catch error:\n', err);
+			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'could not update user' });
 		}
 	};
 
 	public register = async (user: User): Promise<Response> => {
-		const DEFAULT_AMOUNT = 1000;
+		const DEFAULT_CHIP_AMOUNT = 1000;
 		try {
 			const userPresent = await this.db.findOne({ email: user.email }).then((result) => {
 				return result ? true : false;
 			});
 			if (!userPresent) {
 				user.password = this.hash(user.password);
-				user.chips = DEFAULT_AMOUNT;
+				user.chips = DEFAULT_CHIP_AMOUNT;
 				const res = await this.db.insertOne(user);
 				return res.acknowledged
 					? this.httpResponse(HttpCode.SUCCESS, { success: 'Created new user' })
@@ -71,8 +73,8 @@ class UserAPI extends BaseAPI {
 				return this.httpResponse(HttpCode.BAD_REQUEST, { error: 'This email already exists' });
 			}
 		} catch (err) {
-			console.log(err);
-			return this.httpResponse(HttpCode.SERVER_ERROR);
+			console.log('try catch error:\n', err);
+			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'Could not register user' });
 		}
 	};
 
@@ -90,7 +92,8 @@ class UserAPI extends BaseAPI {
 				? this.httpResponse(HttpCode.SUCCESS, profile)
 				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });
 		} catch (err) {
-			return this.httpResponse(HttpCode.SERVER_ERROR);
+			console.log('try catch error:\n', err);
+			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'Could not login' });
 		}
 	};
 }
