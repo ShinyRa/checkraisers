@@ -1,74 +1,62 @@
+
+
 <script lang="ts">
-import { goto } from "$app/navigation";
+    import { User } from "$lib/entities/user/User";
+    import { userClient } from "../api/user/userClient";
+    
+        let user: User = {email: '', username: '', password: ''}
 
-    let email: string;
-    let username: string;
-    let password: string
-
-	const registerUser = async() => {
-		const requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify(
-                {   
-                    email: email, 
-                    username: username, 
-                    password: password
-                })		
-		};
-		await fetch(`api/user/register`, requestOptions).then( resp => {
-			return resp.json()
-		}).then(json => {
-			console.log(json)
-            goto('/login')
-		})
-	}
-//test
-</script>
-
-<section>
-    <div class="container">
-
-        <p>Register</p>
-        <hr>    
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" placeholder="Email" bind:value={email}>
+        const registerUser = async() => {
+            userClient.register(user).then((res) => {
+                console.log(res)
+            })
+        }
+    
+    </script>
+    
+    <section>
+        <div class="container">
+    
+            <p>Register</p>
+            <hr>    
+    
+            <div class="field">
+                <div class="control">
+                <input class="input" type="text" placeholder="Email" bind:value={user.email}>
+                </div>
             </div>
-        </div>
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" placeholder="Username" bind:value={username}>
+    
+            <div class="field">
+                <div class="control">
+                <input class="input" type="text" placeholder="Username" bind:value={user.username}>
+                </div>
             </div>
-        </div>
-        
-        <div class="field">
-            <div class="control">
-            <input class="input" type="password" placeholder="Password" bind:value={password}>
+            
+            <div class="field">
+                <div class="control">
+                <input class="input" type="password" placeholder="Password" bind:value={user.password}>
+                </div>
             </div>
+    
+            <button class="button submit" on:click={registerUser}>create account</button>
         </div>
-
-        <button class="button submit" on:click={registerUser}>create account</button>
-    </div>
-</section>
-
-<style lang="scss">
-    $svelte: #ff3e00;
-
-    .submit {
-        background-color: $svelte;
-        color: white
-    }
-
-    section {
-		margin: 0 auto;
-	}
-
-    .container {
-        margin-top: 50px    ;
-		text-align: center;
-		font-size: 40px;
-	}
-</style>
+    </section>
+    
+    <style lang="scss">
+        $svelte: #ff3e00;
+    
+        .submit {
+            background-color: $svelte;
+            color: white
+        }
+    
+        section {
+            margin: 0 auto;
+        }
+    
+        .container {
+            margin-top: 50px    ;
+            text-align: center;
+            font-size: 40px;
+        }
+    </style>

@@ -1,35 +1,22 @@
 <script lang="ts">
 import { goto } from '$app/navigation';
 
-    import { session } from '$app/stores'
+    import { session } from '$app/stores';
+import { User } from '$lib/entities/user/User';
     import { onMount } from 'svelte';
+    import { userClient } from '../api/user/userClient';
 
-    let email: string;
-    let password: string
+    let user: Partial<User> = {email: '', password: ''}
 
     onMount(() => {
         $session
 	});
 
 	const login = async() => {
-		const requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json',  'Accept': 'application/json'},
-			body: JSON.stringify(
-                { 
-                    email: email, 
-                    password: password
-                }
-            )		
-		};
-		await fetch(`api/user/login`, requestOptions).then( resp => {
-			return resp.json()
-		}).then(json => {
-            session.subscribe( value => {
-                localStorage.setItem("session", JSON.stringify(value));
-            });
-            console.log(JSON.parse(localStorage.getItem("session")))
-		})
+        userClient.login(user).then((res) => {
+            session.set(res)
+            console.log($session)
+        })
 	} 
 </script>
 
@@ -41,13 +28,13 @@ import { goto } from '$app/navigation';
 
         <div class="field">
             <div class="control">
-            <input class="input" type="text" placeholder="Email" bind:value={email}>
+            <input class="input" type="text" placeholder="Email" bind:value={user.email}>
             </div>
         </div>
         
         <div class="field">
             <div class="control">
-            <input class="input" type="password" placeholder="Password" bind:value={password}>
+            <input class="input" type="password" placeholder="Password" bind:value={user.password}>
             </div>
         </div>
 

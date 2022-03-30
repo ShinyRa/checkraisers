@@ -1,34 +1,26 @@
 <script lang="ts">
     import { session } from '$app/stores'
+    import { User } from '$lib/entities/user/User';
     import { onMount } from 'svelte';
+    import { userClient } from '../api/user/userClient';
 
-    let profile = JSON.parse(localStorage.getItem("session"))
-    let email = profile['username']
-    let username = profile['email']
-    let chips = profile['chips']
+    let profile = $session
+    console.log(profile)
+    let user: Partial<User> = {
+        email: profile['username'] ? profile['username'] : 'not logged in', 
+        username: profile['email'] ? profile['email']: 'not logged in', 
+        chips: profile['chips'] ?  profile['chips']: 0
+    }
 
     onMount(() => {
         $session
 	});
 
     const updateProfile = async() => {
-		const requestOptions = {
-			method: 'POST',
-			headers: { 'Content-Type': 'application/json',  'Accept': 'application/json'},
-			body: JSON.stringify(
-                { 
-                    email: email,
-                    username: username,
-                    chips: chips
-                }
-            )		
-		};
-		await fetch(`api/user/profile`, requestOptions).then( resp => {
-			return resp.json()
-		}).then(json => {
-            session.set(json)
-            console.log(localStorage.getItem('session'))
-		})
+        console.log(user)
+        userClient.update(user).then((res) => {
+                session.set(res['value'])
+            })
     }
 </script>
 
@@ -40,19 +32,19 @@
 
         <div class="field">
             <div class="control">
-            <input class="input" type="text" bind:value={email}>
+            <input class="input" type="text" bind:value={user.email}>
             </div>
         </div>
         
         <div class="field">
             <div class="control">
-            <input class="input" type="text" bind:value={username}>
+            <input class="input" type="text" bind:value={user.username}>
             </div>
         </div>
 
         <div class="field">
             <div class="control">
-            <input class="input" type="text" bind:value={chips}>
+            <input class="input" type="number" bind:value={user.chips}>
             </div>
         </div>
 
