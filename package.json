@@ -37,9 +37,9 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@types/formidable": "^2.0.4",
 		"dotenv": "^14.2.0",
-		"firebase": "^9.6.6",
-		"firebase-admin": "^10.0.2",
+		"formidable": "^2.0.1",
 		"global": "^4.4.0",
 		"mongodb": "^4.4.0",
 		"sass": "^1.49.7",

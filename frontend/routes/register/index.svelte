@@ -17,7 +17,6 @@
     
             <p>Register</p>
             <hr>    
-            <form>
                 <div class="field">
                     <div class="control">
                     <input class="input" type="text" placeholder="Email" bind:value={user.email} required>
@@ -37,7 +36,6 @@
                 </div>
         
                 <button class="button submit" on:click={registerUser}>create account</button>
-            </form>
         </div>
     </section>
     

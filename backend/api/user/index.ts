@@ -3,6 +3,8 @@ import BaseAPI, { Response } from './../BaseAPI';
 import { User } from './../../entities/user/User';
 import * as crypto from 'crypto';
 import { Collection } from 'mongodb';
+import { IncomingForm } from 'formidable';
+
 class UserAPI extends BaseAPI {
 	private db: Collection;
 
@@ -12,7 +14,7 @@ class UserAPI extends BaseAPI {
 			this.db = res;
 		});
 	}
-
+	//TODO formidable -> incomingform
 	private hash = (password): string => {
 		return crypto.createHash('sha256').update(password).digest('hex');
 	};
@@ -37,6 +39,8 @@ class UserAPI extends BaseAPI {
 				return result ? true : false;
 			});
 			if (userPresent) {
+				//middleware
+
 				const res = await this.db.findOneAndUpdate(
 					{ email: user.email },
 					{ $set: user },
@@ -65,6 +69,7 @@ class UserAPI extends BaseAPI {
 			if (!userPresent) {
 				user.password = this.hash(user.password);
 				user.chips = DEFAULT_CHIP_AMOUNT;
+				user.profilePicture = './static/logo.png';
 				const res = await this.db.insertOne(user);
 				return res.acknowledged
 					? this.httpResponse(HttpCode.SUCCESS, { success: 'Created new user' })

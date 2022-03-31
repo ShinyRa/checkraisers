@@ -24,7 +24,6 @@ import { User } from '$lib/entities/user/User';
     <div class="container">
         <p>Login</p>
         <hr>
-        <form>
             <div class="field">
                 <div class="control">
                 <input class="form-control input" type="text" placeholder="Email" bind:value={user.email} required>
@@ -38,7 +37,6 @@ import { User } from '$lib/entities/user/User';
             </div>
     
             <button class="button submit" on:click={login}>login</button>
-        </form>
     </div>
 </section>
 

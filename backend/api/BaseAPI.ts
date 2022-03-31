@@ -7,7 +7,6 @@ export type Response = {
 	status: HttpCode;
 	body: unknown;
 };
-
 class BaseAPI {
 	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
 		const repsonse = {
@@ -22,5 +21,6 @@ class BaseAPI {
 		const client = await mongoDB_client;
 		return client.collection(collection);
 	};
+	//../../../images/profile-pictures
 }
 export default BaseAPI;
