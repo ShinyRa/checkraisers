@@ -27,24 +27,25 @@
 
         <p>Profile</p>
         <hr>
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" bind:value={user.email}>
+        <form>
+            <div class="field">
+                <div class="control">
+                <input class="input" type="text" bind:value={user.email} required>
+                </div>
             </div>
-        </div>
-        
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" bind:value={user.username}>
+            
+            <div class="field">
+                <div class="control">
+                <input class="input" type="text" bind:value={user.username} required>
+                </div>
             </div>
-        </div>
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="number" bind:value={user.chips}>
+    
+            <div class="field">
+                <div class="control">
+                <input class="input" type="number" bind:value={user.chips} required>
+                </div>
             </div>
-        </div>
+        </form>
 
         <button class="button submit" on:click={updateProfile}>Update Account</button>
     </div>

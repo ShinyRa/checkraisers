@@ -17,27 +17,28 @@ import { User } from '$lib/entities/user/User';
             session.set(res)
         })
 	} 
+
 </script>
 
 <section>
     <div class="container">
-
         <p>Login</p>
         <hr>
-
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" placeholder="Email" bind:value={user.email}>
+        <form>
+            <div class="field">
+                <div class="control">
+                <input class="form-control input" type="text" placeholder="Email" bind:value={user.email} required>
+                </div>
             </div>
-        </div>
-        
-        <div class="field">
-            <div class="control">
-            <input class="input" type="password" placeholder="Password" bind:value={user.password}>
+            
+            <div class="field">
+                <div class="control">
+                <input class="form-control input" type="password" placeholder="Password" bind:value={user.password} required>
+                </div>
             </div>
-        </div>
-
-        <button class="button submit" on:click={login}>login</button>
+    
+            <button class="button submit" on:click={login}>login</button>
+        </form>
     </div>
 </section>
 
