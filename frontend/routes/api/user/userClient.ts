@@ -21,7 +21,7 @@ export const userClient = {
 	login: async (user: Partial<User>): Promise<unknown> => {
 		return httpRequest('api/user/login',user)
 	},
-	register: async (user: User): Promise<unknown> => {
+	register: async (user: Partial<User>): Promise<unknown> => {
 		return httpRequest('api/user/register',user)
 	},
 	update: async (user: Partial<User>): Promise<unknown> => {
