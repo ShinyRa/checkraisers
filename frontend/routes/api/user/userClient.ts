@@ -1,30 +1,21 @@
 import { User } from '$lib/entities/user/User';
+import BaseClient from '../BaseClient';
 
-
-const httpRequest = async(url: string, data: Partial<User>): Promise<unknown> => {
-	const requestOptions = {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-		body: JSON.stringify(data)
-	};
-
-	return await fetch(url, requestOptions)
-	.then((resp) => {
-		return resp.json();
-	})
-	.then((json) => {
-		return json;
-	});
-}
-
-export const userClient = {
-	login: async (user: Partial<User>): Promise<unknown> => {
-		return httpRequest('api/user/login',user)
-	},
-	register: async (user: Partial<User>): Promise<unknown> => {
-		return httpRequest('api/user/register',user)
-	},
-	update: async (user: Partial<User>): Promise<unknown> => {
-		return httpRequest('api/user/profile',user)
+class UserClient extends BaseClient {
+	constructor() {
+		super();
 	}
-};
+
+	public static async login(user: Partial<User>): Promise<unknown> {
+		return this.httpRequest('api/user/login', user);
+	}
+
+	public static async register(user: Partial<User>): Promise<unknown> {
+		return this.httpRequest('api/user/register', user);
+	}
+
+	public static async update(user: Partial<User>): Promise<unknown> {
+		return this.httpRequest('api/user/profile', user);
+	}
+}
+export default UserClient;
