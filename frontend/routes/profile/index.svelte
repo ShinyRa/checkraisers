@@ -2,7 +2,7 @@
     import { session } from '$app/stores'
     import { User } from '$lib/entities/user/User';
     import { onMount } from 'svelte';
-    import { userClient } from '../api/user/userClient';
+    import UserClient from '../api/user/UserClient';
 
     const MAXIUM_FILE_SIZE = 1500000
     let profile = $session
@@ -28,7 +28,7 @@
     }
 
     const updateProfile = async() => {
-        userClient.update(user).then((res) => {
+        UserClient.update(user).then((res) => {
                 session.set(res['value'])
             })
     }
@@ -64,13 +64,13 @@
 <style lang="scss">
     $svelte: #ff3e00;
 
-    .avatar {
-        width: 300px;
-        object-fit: cover;
-        border-radius: 100%;
-        //watch out experimental!... but neat fix :)
-        aspect-ratio: 1 / 1;
-    }
+    // .avatar {
+    //     width: 300px;
+    //     object-fit: cover;
+    //     border-radius: 100%;
+    //     //watch out experimental!... but neat fix :)
+    //     aspect-ratio: 1 / 1;
+    // }
 
     .submit {
         background-color: $svelte;

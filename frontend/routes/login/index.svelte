@@ -1,10 +1,8 @@
 <script lang="ts">
-import { goto } from '$app/navigation';
-
     import { session } from '$app/stores';
-import { User } from '$lib/entities/user/User';
+    import { User } from '$lib/entities/user/User';
     import { onMount } from 'svelte';
-    import { userClient } from '../api/user/userClient';
+    import UserClient from '../api/user/UserClient';
 
     let user: Partial<User> = {email: '', password: ''}
 
@@ -13,7 +11,7 @@ import { User } from '$lib/entities/user/User';
 	});
 
 	const login = async() => {
-        userClient.login(user).then((res) => {
+        UserClient.login(user).then((res) => {
             session.set(res)
         })
 	} 

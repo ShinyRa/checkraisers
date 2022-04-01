@@ -1,13 +1,11 @@
-
-
 <script lang="ts">
     import { User } from "$lib/entities/user/User";
-    import { userClient } from "../api/user/userClient";
+    import UserClient  from "../api/user/UserClient";
     
         let user: Partial<User> = {email: '', username: '', password: ''}
 
         const registerUser = async() => {
-            userClient.register(user)
+            UserClient.register(user)
         }
     
     </script>
