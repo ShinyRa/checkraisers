@@ -3,7 +3,7 @@ import BaseAPI, { Response } from './../BaseAPI';
 import { User } from './../../entities/user/User';
 import * as crypto from 'crypto';
 import { Collection } from 'mongodb';
-import { IncomingForm } from 'formidable';
+import formidable from 'formidable';
 
 class UserAPI extends BaseAPI {
 	private db: Collection;
@@ -15,6 +15,7 @@ class UserAPI extends BaseAPI {
 		});
 	}
 	//TODO formidable -> incomingform
+
 	private hash = (password): string => {
 		return crypto.createHash('sha256').update(password).digest('hex');
 	};
@@ -33,7 +34,7 @@ class UserAPI extends BaseAPI {
 		}
 	};
 
-	public updateProfile = async (user: Partial<User>): Promise<Response> => {
+	public updateProfile = async (req: Request, user: Partial<User>): Promise<Response> => {
 		try {
 			const userPresent = await this.db.findOne({ email: user.email }).then((result) => {
 				return result ? true : false;
