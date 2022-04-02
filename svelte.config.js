@@ -13,7 +13,6 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		files: {
-			hooks: './frontend',
 			lib: './backend',
 			assets: './static',
 			template: './static/app.html',
