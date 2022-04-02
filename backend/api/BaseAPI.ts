@@ -1,6 +1,8 @@
 import { Collection } from 'mongodb';
 import { HttpCode } from '../utils/HttpStatusCode';
 import { mongoDB_client } from '../utils/mongodb';
+import FileSystem from 'fs';
+import * as crypto from 'crypto';
 
 export type Response = {
 	headers: Record<string, string>;
@@ -21,6 +23,19 @@ class BaseAPI {
 		const client = await mongoDB_client;
 		return client.collection(collection);
 	};
-	//../../../images/profile-pictures
+
+	protected writeToDisk = async (file: File, path: string): Promise<string> => {
+		const buffer = await file.arrayBuffer();
+		FileSystem.writeFileSync(path, new Uint8Array(buffer));
+		return path;
+	};
+
+	protected readFromDisk = (path: string): Buffer => {
+		return FileSystem.readFileSync(path);
+	};
+
+	protected hash = (text: string): string => {
+		return crypto.createHash('sha256').update(text).digest('hex');
+	};
 }
 export default BaseAPI;
