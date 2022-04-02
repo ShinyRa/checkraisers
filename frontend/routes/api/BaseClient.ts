@@ -2,23 +2,29 @@ import { User } from '$lib/entities/user/User';
 
 type RequestOption = {
 	method: string;
-	headers: Record<string, string>;
-	body: string;
+	body: FormData | string;
 };
-
 class BaseClient {
+	private static serialize(data: FormData | Partial<User>): FormData | string {
+		if (data instanceof FormData) return data;
+		return JSON.stringify(data);
+	}
+
 	protected static async httpRequest(
 		url: string,
-		data: Partial<User>,
-		customRequestOptions?: RequestOption
+		data: FormData | Partial<User>,
+		customRequestOptions?: Partial<RequestOption>
 	): Promise<unknown> {
-		const requestOptions = {
+		let requestOptions: RequestOption = {
 			method: 'POST',
-			headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-			body: JSON.stringify(data)
+			body: this.serialize(data)
 		};
 
-		return await fetch(url, customRequestOptions ?? requestOptions)
+		requestOptions = customRequestOptions
+			? { ...requestOptions, ...customRequestOptions }
+			: requestOptions;
+
+		return await fetch(url, requestOptions)
 			.then((resp) => {
 				return resp.json();
 			})

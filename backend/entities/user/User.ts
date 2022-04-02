@@ -2,6 +2,6 @@ export type User = {
 	email: string;
 	username: string;
 	password: string;
-	profilePicture: string | File;
+	profilePicture?: string | File;
 	chips?: number;
 };

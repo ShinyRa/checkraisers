@@ -1,25 +1,22 @@
 <script lang="ts">
     import { session } from '$app/stores';
     import { User } from '$lib/entities/user/User';
-    import { onMount } from 'svelte';
     import UserClient from '../api/user/UserClient';
+    import Util from '../_utils/Util';
 
     let user: Partial<User> = {email: '', password: ''}
 
-    onMount(() => {
-        $session
-	});
-
 	const login = async() => {
         UserClient.login(user).then((res) => {
+            res['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['profilePicture'].data)}`;
             session.set(res)
         })
 	} 
-
 </script>
 
 <section>
     <div class="container">
+
         <p>Login</p>
         <hr>
             <div class="field">

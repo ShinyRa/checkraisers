@@ -14,7 +14,7 @@ class UserClient extends BaseClient {
 		return this.httpRequest('api/user/register', user);
 	}
 
-	public static async update(user: Partial<User>): Promise<unknown> {
+	public static async update(user: FormData): Promise<unknown> {
 		return this.httpRequest('api/user/profile', user);
 	}
 }
