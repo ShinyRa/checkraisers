@@ -1,6 +1,6 @@
 <script lang="ts">
     import { User } from "$lib/entities/user/User";
-    import UserClient  from "../api/user/UserClient";
+    import UserClient from "../api/user/userClient";
     
         let user: Partial<User> = {email: '', username: '', password: ''}
 
