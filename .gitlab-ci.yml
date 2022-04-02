@@ -5,8 +5,6 @@ stages:
 
 install:
   stage: install
-  before_script:
-    - killall node
   script: yarn
   artifacts:
     paths:
