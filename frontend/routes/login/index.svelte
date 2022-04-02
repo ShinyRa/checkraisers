@@ -3,11 +3,13 @@
     import { User } from '$lib/entities/user/User';
     import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
+    $session
 
     let user: Partial<User> = {email: '', password: ''}
 
 	const login = async() => {
         UserClient.login(user).then((res) => {
+            if(res['error']) return 
             res['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['profilePicture'].data)}`;
             session.set(res)
         })

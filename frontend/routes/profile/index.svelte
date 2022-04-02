@@ -4,9 +4,9 @@
     import { onMount } from 'svelte';
     import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
+    $session
 
     const MAXIUM_FILE_SIZE = 1500000
-    let imagePreview
 
     let user: Partial<User> = {
         email: $session['email'],
@@ -15,9 +15,7 @@
         profilePicture: $session['profilePicture']
     }
 
-    onMount(() => {
-        $session
-	});
+    let preview = user.profilePicture as string
 
     const onFileSelected =(e)=>{
         let reader = new FileReader()
@@ -29,7 +27,7 @@
         user.profilePicture = image
         reader.readAsDataURL(image);
         reader.onload = (e) => {
-                imagePreview = e.target.result
+                preview = e.target.result as string
             };
     }
 
@@ -66,14 +64,9 @@
 
         <div class="picture">
             
-            {#if typeof user.profilePicture === 'string'}
-                <img class="avatar" src={user.profilePicture} alt='no_profilepicture'/>
-            {:else}
-                <img class="avatar" src={imagePreview} alt='no_profilepicture'/>
-            {/if}
+            <img class="avatar" src={preview} alt='no_profilepicture'/>
 
             <input name="profilePicture" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)}>
-        
         </div>
         <button class="button submit" on:click={updateProfile}>Update Account</button>
     </div>
