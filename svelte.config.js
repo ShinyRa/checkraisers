@@ -13,29 +13,30 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		files: {
+			hooks: './frontend',
 			lib: './backend',
 			assets: './static',
 			template: './static/app.html',
 			routes: './frontend/routes' // /frontend/routes folder as routing entry point
-		},	
-        vite: {
-            plugins: [
-                {
-                    name: 'socket-io',
-                    // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-                    configureServer(server) {
+		},
+		vite: {
+			plugins: [
+				{
+					name: 'socket-io',
+					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+					configureServer(server) {
 						initServer(server);
-                    }
-                },
+					}
+				},
 				{
 					name: 'mongo-DB',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer() {
-						mongoDB_client
+						mongoDB_client;
 					}
 				}
-            ]
-        }
+			]
+		}
 	}
 };
 
