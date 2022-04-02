@@ -10,4 +10,4 @@ const connect = async () => {
 	}
 };
 
-export let mongoDB_client = await connect();
+export let mongoDB_client = connect();

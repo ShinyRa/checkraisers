@@ -12,7 +12,8 @@
 		"test:frontend": "jest frontend --passWithNoTests",
 		"test:backend": "jest backend --passWithNoTests",
 		"test:coverage": "jest --passWithNoTests --coverage",
-		"depcheck": "depcheck"
+		"depcheck": "depcheck",
+		"test:crud": "jest --detectOpenHandles crud.test.ts "
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",
@@ -40,8 +41,6 @@
 	"type": "module",
 	"dependencies": {
 		"dotenv": "^14.2.0",
-		"firebase": "^9.6.6",
-		"firebase-admin": "^10.0.2",
 		"forever": "^4.0.3",
 		"global": "^4.4.0",
 		"mongodb": "^4.4.0",

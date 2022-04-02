@@ -13,6 +13,7 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		files: {
+			hooks: './frontend',
 			lib: './backend',
 			assets: './static',
 			template: './static/app.html',
@@ -31,7 +32,7 @@ const config = {
 					name: 'mongo-DB',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer() {
-						let testing = mongoDB_client;
+						mongoDB_client;
 					}
 				}
 			]

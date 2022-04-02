@@ -1,7 +1,7 @@
 export type User = {
+	email: string;
 	username: string;
-	name: string;
-	surname: string;
-	dateOfBirth: Date;
-	totalChips: number;
+	password: string;
+	profilePicture?: string | File;
+	chips?: number;
 };
