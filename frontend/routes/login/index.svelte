@@ -1,18 +1,25 @@
 <script lang="ts">
     import { session } from '$app/stores';
     import { type User } from '$lib/entities/user/User';
-import UserClient from '../api/user/UserClient';
+    import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
-    $session
+    import { fly } from 'svelte/transition';
+import { goto } from '$app/navigation';
 
+    $session
+    let message
     let user: Partial<User> = {email: '', password: ''}
 
 	const login = async() => {
-        UserClient.login(user).then((res) => {
-            if(res['error']) return 
+        let res = await UserClient.login(user)
+        if(res['error']){
+            message = res['error']
+            return
+        } else{
             res['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['profilePicture'].data)}`;
-            session.set(res)
-        })
+            session.set({user: res})
+            goto('/card')
+        }
 	} 
 </script>
 
@@ -34,6 +41,10 @@ import UserClient from '../api/user/UserClient';
             </div>
     
             <button class="button submit" on:click={login}>login</button>
+            
+            {#if message }
+                <p class="error is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{message}</p>
+            {/if}
     </div>
 </section>
 
@@ -43,6 +54,10 @@ import UserClient from '../api/user/UserClient';
     .submit {
         background-color: $svelte;
         color: white
+    }
+
+    .error {
+        color:$svelte
     }
 
     section {

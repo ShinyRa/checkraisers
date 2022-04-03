@@ -3,17 +3,23 @@
     import UserClient from "../api/user/UserClient";
     import { fly } from 'svelte/transition';
 import Validate from "../_utils/Validate";
+import Util from "../_utils/Util";
+import { goto } from "$app/navigation";
     
         let user: Partial<User> = {email: '', username: '', password: ''}
         let messageType
         let message
 
         const registerUser = async() => {
-            UserClient.register(user).then((res)=>{
+            await UserClient.register(user).then((res)=>{
                 messageType = Object.keys(res)[0]
                 message = res[Object.keys(res)[0]]
-                console.log(messageType,message)
             })
+            console.log(messageType)
+            if(messageType === 'success') {
+                await Util.sleep(2000)
+                goto('/login')
+            }
         }
     
     </script>

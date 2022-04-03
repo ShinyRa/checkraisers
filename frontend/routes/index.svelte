@@ -2,7 +2,7 @@
 	import { onMount } from 'svelte';
 	import { assets as assetsPath } from '$app/paths';
 	import { fly } from 'svelte/transition';
-import { goto } from '$app/navigation';
+	import { goto } from '$app/navigation';
 
 	let load: boolean;
 	onMount(() => (load = true));
@@ -22,7 +22,7 @@ import { goto } from '$app/navigation';
 		<img src="{assetsPath}/logo.png" alt="Logo" class="logo" />
 		<p in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
 		<button on:click={register} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Register</button>
-		<button on:click={login} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>To Login</button>
+		<button on:click={login} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Login</button>
 	</section>
 {/if}
 
