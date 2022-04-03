@@ -35,6 +35,8 @@
 		"frontend/global.d.ts",
 		"backend/entities/deck/card/CardValue.ts",
 		"backend/entities/deck/card/CardSuit.ts",
-		"backend/utils/socketServer.js"
-	]
+		"backend/utils/socketServer.js",
+		"backend/utils/mongodb.js"
+	],
+	"extends": "./.svelte-kit/tsconfig.json"
 }

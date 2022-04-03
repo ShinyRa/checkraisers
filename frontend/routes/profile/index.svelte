@@ -1,6 +1,6 @@
 <script lang="ts">
     import { session } from '$app/stores'
-    import { User } from '$lib/entities/user/User';
+    import { type User } from '$lib/entities/user/User';
     import { onMount } from 'svelte';
     import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
