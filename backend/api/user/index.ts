@@ -103,7 +103,7 @@ class UserAPI extends BaseAPI {
 			profile['profilePicture'] = this.readFromDisk(profile['profilePicture']);
 			return profile
 				? this.httpResponse(HttpCode.SUCCESS, profile)
-				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });
+				: this.httpResponse(HttpCode.NOT_FOUND, { message: 'Wrong credentials' });
 		} catch (err) {
 			console.log('try catch error Login:\n', err);
 			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'Could not login' });
