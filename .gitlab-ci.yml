@@ -6,12 +6,15 @@ stages:
 install:
   stage: install
   script: yarn
+  after_script: -killall node
   artifacts:
     paths:
       - node_modules
 
 build:
   stage: build
+  before_script:
+    - ./sh /root/createImageFolder.bash
   script:
     - yarn build
   artifacts:

@@ -1,6 +1,6 @@
 import { HttpCode } from '../../utils/HttpStatusCode';
-import BaseAPI, { Response } from './../BaseAPI';
-import { User } from './../../entities/user/User';
+import BaseAPI, { type Response } from './../BaseAPI';
+import { type User } from './../../entities/user/User';
 import { Collection } from 'mongodb';
 
 class UserAPI extends BaseAPI {
