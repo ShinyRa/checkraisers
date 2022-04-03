@@ -1,7 +1,7 @@
 <script lang="ts">
     import { session } from '$app/stores';
     import { type User } from '$lib/entities/user/User';
-    import UserClient from '../api/user/UserClient';
+import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
     $session
 

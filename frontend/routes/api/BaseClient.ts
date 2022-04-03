@@ -1,4 +1,4 @@
-import { User } from '$lib/entities/user/User';
+import { type User } from '$lib/entities/user/User';
 
 type RequestOption = {
 	method: string;
