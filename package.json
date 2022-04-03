@@ -41,7 +41,6 @@
 	"type": "module",
 	"dependencies": {
 		"dotenv": "^14.2.0",
-		"forever": "^4.0.3",
 		"global": "^4.4.0",
 		"mongodb": "^4.4.0",
 		"sass": "^1.49.7",

@@ -25,9 +25,8 @@ build:
 
 deploy:
   stage: deploy
-  before_script:
-    - yarn forever stopall
   script:
-    - yarn forever start build/index.js
+    - screen -S 3358.pts-0.h296537 -p 0 -X stuff "^C"
+    - screen -S 3358.pts-0.h296537 -p 0 -X stuff "node build/index.js^M"
   only:
     - development
