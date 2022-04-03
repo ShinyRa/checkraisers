@@ -39,19 +39,22 @@ class UserAPI extends BaseAPI {
 			});
 
 			if (userPresent) {
-				const path = await this.writeToDisk(
-					user.profilePicture as File,
-					this.PROFILE_PICTURE_PATH + `${user.email}.png`
-				);
-
-				user.profilePicture = path;
+				if (user.profilePicture) {
+					const path = await this.writeToDisk(
+						user.profilePicture as File,
+						this.PROFILE_PICTURE_PATH + `${user.email}.png`
+					);
+					user.profilePicture = path;
+				}
 
 				const res = await this.db.findOneAndUpdate(
 					{ email: user.email },
 					{ $set: user },
 					{ upsert: false, returnDocument: 'after', projection: { _id: 0, password: 0 } }
 				);
-				res.value['profilePicture'] = this.readFromDisk(res.value['profilePicture']);
+
+				if (user.profilePicture)
+					res.value['profilePicture'] = this.readFromDisk(res.value['profilePicture']);
 				return res
 					? this.httpResponse(HttpCode.SUCCESS, res)
 					: this.httpResponse(HttpCode.BAD_REQUEST, { error: 'could not update user' });
@@ -100,7 +103,7 @@ class UserAPI extends BaseAPI {
 					return result ? result : false;
 				});
 
-			profile['profilePicture'] = this.readFromDisk(profile['profilePicture']);
+			if (profile) profile['profilePicture'] = this.readFromDisk(profile['profilePicture']);
 			return profile
 				? this.httpResponse(HttpCode.SUCCESS, profile)
 				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });

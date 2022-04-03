@@ -5,5 +5,8 @@ class Util {
 		);
 		return base64;
 	};
+	public static sleep = (ms): Promise<unknown> => {
+		return new Promise((resolve) => setTimeout(resolve, ms ?? 200));
+	};
 }
 export default Util;

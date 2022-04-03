@@ -1,17 +1,21 @@
 <script lang="ts">
     import { session } from '$app/stores'
     import { type User } from '$lib/entities/user/User';
-import UserClient from '../api/user/UserClient';
+    import { select_option } from 'svelte/internal';
+    import UserClient from '../api/user/UserClient';
     import Util from '../_utils/Util';
+    import { fly } from 'svelte/transition';
     $session
+
+    let updated
 
     const MAXIUM_FILE_SIZE = 1500000
 
     let user: Partial<User> = {
-        email: $session['email'],
-        username: $session['username'], 
-        chips: $session['chips'], 
-        profilePicture: $session['profilePicture']
+        email: $session['user']['email'],
+        username: $session['user']['username'], 
+        chips: $session['user']['chips'], 
+        profilePicture: $session['user']['profilePicture']
     }
 
     let preview = user.profilePicture as string
@@ -30,17 +34,20 @@ import UserClient from '../api/user/UserClient';
             };
     }
 
-    const updateProfile = () => {
+    const updateProfile = async() => {
         //Refactor into URLSearchParams
+        console.log($session['user'])
         let fd = new FormData()
         fd.append('email', user.email)
         fd.append('username', user.username)
         fd.append('chips', user.chips.toString())
-        fd.append('profilePicture', user.profilePicture)
-        UserClient.update(fd).then((res) => {
-                res['value']['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['value']['profilePicture'].data)}`;
-                session.set(res['value'])
-            })
+        if(typeof user.profilePicture !== 'string') fd.append('profilePicture', user.profilePicture)
+
+        let res = await UserClient.update(fd)
+        updated = res['ok']
+        res['value']['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['value']['profilePicture'].data)}`;
+        console.log(updated)
+        session.set({ user: res['value'] })
     }
 </script>
 
@@ -68,6 +75,9 @@ import UserClient from '../api/user/UserClient';
             <input name="profilePicture" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)}>
         </div>
         <button class="button submit" on:click={updateProfile}>Update Account</button>
+        {#if updated }
+            <p class="success is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{user.username}'s profile updated!</p>
+        {/if}
     </div>
 </section>
 
@@ -80,6 +90,10 @@ import UserClient from '../api/user/UserClient';
          border-radius: 100%;
          //watch out experimental!... but neat fix :)
          aspect-ratio: 1 / 1;
+    }
+
+    .success {
+        color: green
     }
 
     .submit {

@@ -12,7 +12,7 @@ export type Response = {
 class BaseAPI {
 	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
 		const repsonse = {
-			headers: { 'content-type': 'application/json' },
+			headers: { 'content-type': 'application/json', Accept: 'application/json' },
 			status: status,
 			body: body
 		};
