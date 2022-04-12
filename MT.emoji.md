@@ -1,4 +1,4 @@
-#Sprint 0 | Week 4
+# Sprint 0 | Week 4
 
 ### Self Evaluation
 
@@ -41,3 +41,74 @@
 - Try to do more research towards devops, not automatically deployed. Why do certain things work the way they do.
 - Do more unit tests
 - Not really any code to show
+
+# Sprint 1 | Week 10
+
+### Self Evaluation
+
+|                | CODE | TEST | DEVOPS | User stories worked on |
+|----------------|------|------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Tijs de Graaff | 😄   | 😄   | 😐     | - [When the round is finished, I want to see who has the winning hand, so I can see who won the hand](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/27) <br> - [When I’m playing, each turn I want to be able to “fold” to my opponents, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/16) <br> - [When I’m playing, each turn I want to be able to “raise” my opponents, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/17) <br> - [When I’m playing, each turn I want to be able to go “all-in”, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/18) |
+| Auke Steenman  |    |    |      | - [title](link)| |
+
+### MT-Coach Feedback
+
+|                | CODE | TEST | DEVOPS | OVERALL |
+|----------------|------|------|--------|---------|
+| Tijs de Graaff |    |    |      |       |
+
+#### What went well:
+ - Workable MVP
+ - Test coverage of new hand evaluation functionality
+ - Estimation of work for this sprint.
+
+#### (Even) better if:
+- 
+
+### Coach feedback: Auke
+
+
+|               | CODE | TEST | DEVOPS | OVERALL |
+|---------------|------|------|--------|---------|
+| Auke Steenman |    |    |      |       |
+
+### What went well:
+-
+### (Even) better if:
+-
+### Coach feedback: Auke
+
+# Sprint 2 | Week x
+
+### Self Evaluation
+
+|                | CODE | TEST | DEVOPS | User stories worked on |
+|----------------|------|------|--------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Tijs de Graaff | 🤒   | 🤒   | 🤒     | - [When I’m playing, each turn I want to be able to “check” my opponents, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/15) <br> - [When I’m playing, each turn I want to be able to “fold” to my opponents, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/16) <br> - [When I’m playing, each turn I want to be able to “raise” my opponents, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/17) <br> - [When I’m playing, each turn I want to be able to go “all-in”, so I can play the game](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/18) |
+| Auke Steenman  | 😄   | 😞   | 😄     | - [When entering the site for the first time, I want to create an account, so I can participate in a game]([link-to-relevant-commit](https://gitlab.fdmci.hva.nl/project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp/-/issues/1))
+
+### MT-Coach Feedback
+
+|                | CODE | TEST | DEVOPS | OVERALL |
+|----------------|------|------|--------|---------|
+| Tijs de Graaff |      |      |        |         |
+
+#### What went well:
+ - Workable MVP
+ - Code coverage of 
+
+#### (Even) better if:
+- 
+
+### Coach feedback: Auke
+
+
+|               | CODE | TEST | DEVOPS | OVERALL |
+|---------------|------|------|--------|---------|
+| Auke Steenman |      |      |        |         |
+
+### What went well:
+-
+### (Even) better if:
+-
+### Coach feedback: Auke
