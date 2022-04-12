@@ -1,7 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
 import { initServer } from './backend/utils/socketServer.js';
-import { mongoDB_client } from './backend/utils/mongodb.js';
 
 //const dev = process.env.NODE_ENV === 'development';
 
@@ -25,13 +24,6 @@ const config = {
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer(server) {
 						initServer(server);
-					}
-				},
-				{
-					name: 'mongo-DB',
-					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-					configureServer() {
-						mongoDB_client;
 					}
 				}
 			]

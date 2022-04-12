@@ -1,7 +1,7 @@
 import { Collection } from 'mongodb';
 import { HttpCode } from '../utils/HttpStatusCode';
-import { mongoDB_client } from '../utils/mongodb';
 import FileSystem from 'fs';
+import { MongoClient } from 'mongodb';
 import * as crypto from 'crypto';
 
 export type Response = {
@@ -10,6 +10,8 @@ export type Response = {
 	body: unknown;
 };
 class BaseAPI {
+	private client: MongoClient;
+
 	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
 		const repsonse = {
 			headers: { 'content-type': 'application/json', Accept: 'application/json' },
@@ -19,9 +21,24 @@ class BaseAPI {
 		return repsonse;
 	}
 
+	protected openDbConnection = async (): Promise<void> => {
+		try {
+			this.client = await MongoClient.connect('mongodb://127.0.0.1:27017/');
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
+	protected closeDbConnection = async (): Promise<void> => {
+		try {
+			this.client.close();
+		} catch (err) {
+			console.log(err);
+		}
+	};
+
 	protected getCollection = async (collection: string): Promise<Collection> => {
-		const client = await mongoDB_client;
-		return client.collection(collection);
+		return await this.client.db('local').collection(collection);
 	};
 
 	protected writeToDisk = async (file: File, path: string): Promise<string> => {

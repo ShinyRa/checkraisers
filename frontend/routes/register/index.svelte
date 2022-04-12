@@ -2,9 +2,9 @@
     import { type User } from "$lib/entities/user/User";
     import UserClient from "../api/user/UserClient";
     import { fly } from 'svelte/transition';
-import Validate from "../_utils/Validate";
-import Util from "../_utils/Util";
-import { goto } from "$app/navigation";
+    import Validate from "../_utils/Validate";
+    import Util from "../_utils/Util";
+    import { goto } from "$app/navigation";
     
         let user: Partial<User> = {email: '', username: '', password: ''}
         let messageType
