@@ -33,7 +33,7 @@ class UserAPI extends BaseAPI {
 			const db = await this.getCollection('users');
 			const res = await db.deleteOne({ email: email });
 			await this.closeDbConnection();
-			return res.acknowledged
+			return res.deletedCount > 0
 				? this.httpResponse(HttpCode.SUCCESS, { success: 'Deleted the user' })
 				: this.httpResponse(HttpCode.BAD_REQUEST, {
 						error: 'Something went wrong with deleting a user'
