@@ -2,7 +2,6 @@ import 'regenerator-runtime/runtime';
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-
 import UserAPI from '../../api/user';
 import { type User } from '../../entities/user/User';
 
