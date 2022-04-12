@@ -20,7 +20,7 @@ beforeAll(() => {
 	user = testUser;
 });
 
-describe('user operations on database', () => {
+describe('Test user operations on database', () => {
 	it('should register a new user', async () => {
 		const expectedResult = { success: 'Created new user' };
 		const result = await userAPI.register(user);
@@ -42,16 +42,19 @@ describe('user operations on database', () => {
 		expect(result.body['email']).toEqual(user.email);
 	});
 
-	it('should update a user', async () => {
+	it('should update a user profile', async () => {
 		user.username = 'updatedUserName';
 		user.chips = 1234567;
-		const result = await userAPI.update({
-			email: user.email,
-			username: user.username,
-			chips: user.chips
-		});
+		const fd = new FormData();
+		fd.append('email', user.email);
+		fd.append('username', user.username);
+		fd.append('chips', user.chips.toString());
+		const result = await userAPI.updateProfile(fd);
+
+		//we have to wait some seconds extra with a timeout for the response to come back. even if you use await.
+		//Jest still prematurely does the toEqual check.
 		setTimeout(() => {
-			expect(result.body['email']).toEqual(user.email);
+			expect(result.body['chips']).toEqual(user.chips);
 		}, 2000);
 	});
 

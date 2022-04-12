@@ -12,8 +12,7 @@
 		"test:frontend": "jest frontend --passWithNoTests",
 		"test:backend": "jest backend --passWithNoTests",
 		"test:coverage": "jest --passWithNoTests --coverage",
-		"depcheck": "depcheck",
-		"test:crud": "jest --detectOpenHandles --runInBand crud.test.ts "
+		"depcheck": "depcheck"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",
