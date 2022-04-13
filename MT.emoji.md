@@ -59,7 +59,7 @@
 
 |                | CODE | TEST | DEVOPS | OVERALL |
 | -------------- | ---- | ---- | ------ | ------- |
-| Tijs de Graaff |      |      |        |         |
+| Tijs de Graaff |   2   |  3    |  1      |  2       |
 
 #### What went well:
 
@@ -71,7 +71,7 @@
 
 |               | CODE | TEST | DEVOPS | OVERALL |
 | ------------- | ---- | ---- | ------ | ------- |
-| Auke Steenman |      |      |        |         |
+| Auke Steenman |  2    |   3   | 2       |  2       |
 
 ### What went well:
 
