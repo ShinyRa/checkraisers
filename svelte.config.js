@@ -1,6 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
-import { initServer } from './backend/utils/socketServer.js';
+//import { initServer } from './backend/utils/socketServer.js';
 
 //const dev = process.env.NODE_ENV === 'development';
 
@@ -12,20 +12,20 @@ const config = {
 	kit: {
 		adapter: adapter(),
 		files: {
-			lib: './backend',
+			lib: './lib',
 			assets: './static',
 			template: './static/app.html',
-			routes: './frontend/routes' // /frontend/routes folder as routing entry point
+			routes: './src/routes' // /frontend/routes folder as routing entry point
 		},
 		vite: {
 			plugins: [
-				{
-					name: 'socket-io',
-					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-					configureServer(server) {
-						initServer(server);
-					}
-				}
+				// {
+				// 	name: 'socket-io',
+				// 	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+				// 	configureServer(server) {
+				// 		initServer(server);
+				// 	}
+				// }
 			]
 		}
 	}
