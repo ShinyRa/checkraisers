@@ -1,5 +1,5 @@
-import PlayingCard from '../../../logic/deck/card/PlayingCard';
-import Player from '../../../logic/user/Player';
+import PlayingCard from '../../frontend/entities/poker_rules/deck/card/PlayingCard'
+import Player from '../../frontend/entities/poker_rules/Player'
 
 export const evaluationAPI = {
 	evaluate(players: Player[], table: PlayingCard[]): Record<string, any> {

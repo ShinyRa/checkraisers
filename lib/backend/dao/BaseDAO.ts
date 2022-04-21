@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { HttpCode } from '../entities/server/database/HttpStatusCodeode';
+import { HttpCode } from '../entities/server/HttpCode';
 import FileSystem from 'fs';
 import { MongoClient } from 'mongodb';
 import * as crypto from 'crypto';
@@ -9,7 +9,7 @@ export type Response = {
 	status: HttpCode;
 	body: unknown;
 };
-class BaseAPI {
+class BaseDAO {
 	private client: MongoClient;
 
 	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
@@ -55,4 +55,4 @@ class BaseAPI {
 		return crypto.createHash('sha256').update(text).digest('hex');
 	};
 }
-export default BaseAPI;
+export default BaseDAO;

@@ -1,4 +1,4 @@
-import CardDeck from '$lib/entities/deck/CardDeck';
+import CardDeck from '../../entities/poker_rules/deck/CardDeck';
 
 let deck: CardDeck;
 

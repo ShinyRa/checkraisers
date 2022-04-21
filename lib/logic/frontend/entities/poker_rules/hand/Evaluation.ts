@@ -7,14 +7,14 @@ import {
 	TwoPair,
 	Trips,
 	Flush
-} from '../../../entities/hand/evaluation/ranks';
+} from './evaluation/ranks';
 
-import PlayingCard from '../../../entities/deck/card/PlayingCard';
-import { PlayerHand } from '../../../entities/hand/PlayerHand';
-import { HandRank } from '../../../entities/hand/evaluation/HandRank';
+import PlayingCard from '../deck/card/PlayingCard';
+import { PlayerHand } from '../hand/PlayerHand';
+import { HandRank } from './evaluation/HandRank';
 
-import { CardSuit } from '../../../entities/deck/card/identity/CardSuit';
-import { CardValue } from '../../../entities/deck/card/identity/CardValue';
+import { CardSuit } from '../deck/card/identity/CardSuit';
+import { CardValue } from '../deck/card/identity/CardValue';
 
 class HandEvaluation {
 	static findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {

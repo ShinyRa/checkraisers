@@ -1,9 +1,9 @@
 import { render, screen } from '@testing-library/svelte';
 
-import { CardState } from '$lib/entities/deck/card/state/CardState';
+import { CardState } from '../../entities/poker_rules/deck/card/state/CardState';
 
-import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
-import PlayingCard from '../../frontend/routes/card/_PlayingCard.svelterd.svelte';
+import { default as PlayingCardData } from '../../entities/poker_rules/deck/card/PlayingCard';
+import PlayingCard from '../../../../../src/frontend/components/card/PlayingCard.svelte';
 
 let card: PlayingCardData;
 
@@ -27,7 +27,7 @@ describe('Playingcard unit tests', () => {
 
 	it('should display the right asset', () => {
 		expect(card.assetName()).toEqual('ace_of_clubs.png');
-		render(PlayingCard, { props: { card: card } });
+		render(PlayingCard, { props: { card: card, highlight: false } });
 
 		expect(screen.getByAltText(card.print()).getAttribute('src')).toContain('ace_of_clubs.png');
 	});

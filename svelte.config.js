@@ -15,7 +15,7 @@ const config = {
 			lib: './lib',
 			assets: './static',
 			template: './static/app.html',
-			routes: './src/routes' // /frontend/routes folder as routing entry point
+			routes: './src/frontend/routes' // /frontend/routes folder as routing entry point
 		},
 		vite: {
 			plugins: [

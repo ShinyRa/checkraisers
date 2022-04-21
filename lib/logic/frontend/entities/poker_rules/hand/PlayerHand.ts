@@ -1,4 +1,4 @@
-import HandEvaluation from '../../utils/gameplay/hand/Evaluation';
+import HandEvaluation from './Evaluation';
 import PlayingCard from '../deck/card/PlayingCard';
 import { HandRank } from './evaluation/HandRank';
 import { type IRankable } from './IRankable';

@@ -33,11 +33,10 @@
 		"src/**/*.ts",
 		"src/**/*.svelte",
 		"src/global.d.ts",
-		"lib/logic/deck/card/CardValue.ts",
-		"lib/logic/deck/card/CardSuit.ts",
-		"lib/logic/socketServer.js",
-		"lib/logic/mongodb.js"
-, "lib/Util.ts", "lib/logic/frontend/DTO/UserClient.ts", "lib/logic/frontend/DTO/BaseClient.ts,
+		"lib/**/*.ts",
+		"lib/**/*.test.ts",
+		"lib/**/*.js"
+	],
 	"extends": "./.svelte-kit/tsconfig.json"
 }
 	

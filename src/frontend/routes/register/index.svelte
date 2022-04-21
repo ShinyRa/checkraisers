@@ -1,8 +1,8 @@
 <script lang="ts">
-    import { type User } from "$lib/entities/user/User";
-    import UserClient from "../../../.svelte-kit/types/frontend/routes/api/user/UserClient";
+    import { type User } from "$lib/backend/entities/user/User";
+    import UserClient from "$lib/logic/clients/user/UserClient";
     import { fly } from 'svelte/transition';
-    import Util from '$lib/utils/frontend/Util';
+    import Util from '$lib/logic/frontend/generic/Util';
     import { goto } from "$app/navigation";
     
         let user: Partial<User> = {email: '', username: '', password: ''}

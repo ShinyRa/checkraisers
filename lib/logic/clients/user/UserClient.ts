@@ -1,7 +1,6 @@
-import { type User } from '$lib/entities/user/User';
-import BaseClient from '../../../../../.svelte-kit/types/frontend/routes/api/BaseClientt';
-
-class UserClient extends BaseDto {
+import { type User } from '../../../backend/entities/user/User';
+import BaseClient from '../BaseClient'
+class UserClient extends BaseClient {
 
 	public static async login(user: Partial<User>): Promise<unknown> {
 		return this.httpRequest('api/user/login', user);

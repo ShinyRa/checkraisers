@@ -1,8 +1,8 @@
 <script lang="ts">
     import { session } from '$app/stores';
-    import { type User } from '$lib/entities/user/User';
-    import Util from '$lib/utils/frontend/Util';
-    import UserClient from '../../../../lib/logic/clients/user/UserClient';
+    import { type User } from '$lib/backend/entities/user/User';
+    import Util from '$lib/logic/frontend/generic/Util';
+    import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
     import { goto } from '$app/navigation';
 

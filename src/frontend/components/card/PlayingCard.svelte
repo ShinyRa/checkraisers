@@ -2,7 +2,7 @@
 	import { assets as assetsPath } from '$app/paths';
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import PlayingCard from '$lib/entities/deck/card/PlayingCard';
+	import PlayingCard from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
 
 	export let card: PlayingCard;
 	export let highlight: boolean;

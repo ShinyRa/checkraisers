@@ -1,6 +1,6 @@
-import { HttpCode } from '../../entities/server/database/HttpStatusCodeode';
+import { HttpCode } from '../../entities/server/HttpCode';
 import BaseDAO, { type Response } from '../BaseDAO';
-import { type User } from '../../../logic/user/User';
+import { type User } from '../../entities/user/User';
 
 class UserDAO extends BaseDAO {
 	private PROFILE_PICTURE_PATH = './../images/profile_pictures/';

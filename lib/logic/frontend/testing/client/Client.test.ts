@@ -1,7 +1,7 @@
-import type { User } from '$lib/entities/user/User';
+import { type User } from '../../../../backend/entities/user/User'
 import 'regenerator-runtime/runtime';
 import { TextEncoder, TextDecoder } from 'util';
-import UserClient from '../../../../../.svelte-kit/types/frontend/routes/api/user/UserClient'
+import UserClient from '../../../clients/user/UserClient'
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
 

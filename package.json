@@ -9,7 +9,7 @@
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"test": "jest frontend --passWithNoTests && jest backend --passWithNoTests",
-		"test:frontend": "jest frontend --passWithNoTests",
+		"test:frontend": "jest lib/logic/frontend --passWithNoTests",
 		"test:backend": "jest backend --passWithNoTests",
 		"test:coverage": "jest --passWithNoTests --coverage",
 		"depcheck": "depcheck",
@@ -45,6 +45,7 @@
 		"global": "^4.4.0",
 		"mongodb": "^4.4.0",
 		"sass": "^1.49.7",
+		"scandir": "^0.1.2",
 		"socket.io": "^4.4.1"
 	}
 }

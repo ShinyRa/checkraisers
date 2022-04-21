@@ -2,11 +2,11 @@ import 'regenerator-runtime/runtime';
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-import UserAPI from '../../dao/user';
-import { type User } from '../../../logic/user/User';
+import UserDAO from '../../dao/user/UserDAO';
+import { type User } from '../../entities/user/User';
 
 let user: User;
-let userAPI: UserAPI;
+let userAPI: UserDAO;
 
 beforeEach(() => {
 	const testUser: User = {
@@ -17,7 +17,7 @@ beforeEach(() => {
 
 	user = testUser;
 
-	userAPI = new UserAPI();
+	userAPI = new UserDAO();
 });
 
 afterEach(() => {

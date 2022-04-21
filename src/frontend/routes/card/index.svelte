@@ -4,10 +4,10 @@
 	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/logic/api/deck';
 	import { evaluationAPI } from '$lib/logic/api/evaluation';
-	import CardDeck from '$lib/entities/deck/CardDeck';
-	import Player from '$lib/entities/user/Player';
+	import CardDeck from '$lib/logic/frontend/entities/poker_rules/deck/CardDeck';
+	import Player from '$lib/logic/frontend/entities/poker_rules/Player';
 
-	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
+	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
 	import PlayingCard from '../../components/card/PlayingCard.svelte';
 
 	let deck: CardDeck;

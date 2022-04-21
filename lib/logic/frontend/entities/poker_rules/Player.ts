@@ -1,5 +1,5 @@
 import { PlayerHand } from './hand/PlayerHand';
-import type { User } from '../../../../backend/entities/user/User User {
+class Player {
 	username: string;
 	name: string;
 	surname: string;
