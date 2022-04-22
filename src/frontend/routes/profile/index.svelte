@@ -18,7 +18,6 @@
         profilePicture: $session['user']['profilePicture']
     }
 
-    //The only way the browser will not use the previous cached image
     let preview: string = `${assetsPath}/avatars/${user.profilePicture}`
 
     const onFileSelected =(e)=>{
@@ -28,7 +27,6 @@
             alert(`profile picture exceeds maxiumum file size by: ${image.size && ((image.size - MAXIUM_FILE_SIZE)/1000000).toFixed(2)}MB`)
             return
         }
-        //sets state of modification of image to reload image instead of using cached image
         user.profilePicture = image
         reader.readAsDataURL(image);
         reader.onload = (e) => {
