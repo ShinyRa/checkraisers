@@ -51,6 +51,12 @@ class BaseDAO {
 		return FileSystem.readFileSync(path);
 	};
 
+	protected removeFromDisk = (path: string): void => {
+		FileSystem.rm(path, (err)=>{
+			if(err) console.log(err)
+		})
+	}
+
 	protected hash = (text: string): string => {
 		return crypto.createHash('sha256').update(text).digest('hex');
 	};

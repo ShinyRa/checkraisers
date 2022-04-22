@@ -8,7 +8,7 @@ node_modules
 /.svelte-kit
 /package
 /coverage
-/static/profile-pictures
+/static/avatars
 
 # Secrets
 .env

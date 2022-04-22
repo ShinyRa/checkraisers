@@ -2,6 +2,8 @@
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores'
+	import { assets as assetsPath } from '$app/paths';
+
 
 	const routes = [
 		{ title: 'Draw cards', route: '/card' },
@@ -31,7 +33,8 @@
 					<p class="is-size-6">chips: {$session['user']['chips']}</p>
 				</div>
 				<figure class = "image is-square is-48x48 pt-1 is-clickable" on:click={gotoProfile}>
-					<img class='is-rounded' src={$session['user']['profilePicture']} alt='d'>
+					<!--The only way the browser will not use the previous cached image-->
+					<img class='is-rounded' src="{assetsPath}/avatars/{$session['user']['profilePicture']}" alt='d'>
 				</figure>
 				<button class="is-size-7 mt-3 ml-3 button" on:click={logout}>logout</button>
 			</div>

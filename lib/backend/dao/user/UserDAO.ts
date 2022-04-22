@@ -3,10 +3,23 @@ import BaseDAO, { type Response } from '../BaseDAO';
 import { type User } from '../../entities/user/User';
 
 class UserDAO extends BaseDAO {
-	private PROFILE_PICTURE_PATH = './../images/profile_pictures/';
+	private DEFAULT_AVATAR = 'default.png'
+	private ASSET_PATH = './static/avatars/'
+	private DEFAULT_CHIP_AMOUNT = 1000;
 
 	constructor() {
 		super();
+	}
+
+	private updateAvatar = async(oldAvatar: string, user: Partial<User>): Promise<string> => {
+		const timePreset = Date.now()
+
+		await this.removeFromDisk(`${this.ASSET_PATH}${oldAvatar}`)
+		await this.writeToDisk(
+			user.profilePicture as File,
+			`${this.ASSET_PATH}${user.email}_${timePreset}.png`
+		);
+		return `${user.email}_${timePreset}.png`
 	}
 
 	public getProfile = async (email: User['email']): Promise<Response> => {
@@ -53,19 +66,14 @@ class UserDAO extends BaseDAO {
 
 			await this.openDbConnection();
 			const db = await this.getCollection('users');
-			const userPresent = await db.findOne({ email: user.email }).then((result) => {
-				return result ? true : false;
+			const currentUser = await db.findOne({ email: user.email }).then((result) => {
+				return result ? result : false;
 			});
 
-			if (userPresent) {
+			if (currentUser) {
 				if (user.profilePicture) {
-					const path = await this.writeToDisk(
-						user.profilePicture as File,
-						this.PROFILE_PICTURE_PATH + `${user.email}.png`
-					);
-					user.profilePicture = path;
+					user.profilePicture = await this.updateAvatar(currentUser['profilePicture'], user)
 				}
-
 				const res = await db.findOneAndUpdate(
 					{ email: user.email },
 					{ $set: user },
@@ -73,8 +81,6 @@ class UserDAO extends BaseDAO {
 				);
 				await this.closeDbConnection();
 
-				if (user.profilePicture)
-					res.value['profilePicture'] = this.readFromDisk(res.value['profilePicture']);
 				return res
 					? this.httpResponse(HttpCode.SUCCESS, res)
 					: this.httpResponse(HttpCode.BAD_REQUEST, { error: 'could not update user' });
@@ -90,7 +96,6 @@ class UserDAO extends BaseDAO {
 	};
 
 	public register = async (user: User): Promise<Response> => {
-		const DEFAULT_CHIP_AMOUNT = 1000;
 		try {
 			await this.openDbConnection();
 			const db = await this.getCollection('users');
@@ -99,8 +104,8 @@ class UserDAO extends BaseDAO {
 			});
 			if (!userPresent) {
 				user.password = this.hash(user.password);
-				user.chips = DEFAULT_CHIP_AMOUNT;
-				user.profilePicture = `${this.PROFILE_PICTURE_PATH}default.png`;
+				user.chips = this.DEFAULT_CHIP_AMOUNT;
+				user.profilePicture = this.DEFAULT_AVATAR;
 				const res = await db.insertOne(user);
 				await this.closeDbConnection();
 				return res.acknowledged
@@ -128,7 +133,6 @@ class UserDAO extends BaseDAO {
 					return result ? result : false;
 				});
 			await this.closeDbConnection();
-			if (profile) profile['profilePicture'] = this.readFromDisk(profile['profilePicture']);
 			return profile
 				? this.httpResponse(HttpCode.SUCCESS, profile)
 				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });
