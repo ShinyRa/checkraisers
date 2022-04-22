@@ -44,9 +44,7 @@
 
         let res = await UserClient.update(fd)
         updated = res['ok']
-        console.log(updated)
         session.set({ user: res['value'] })
-        console.log($session['user']['profilePicture'])
     }
 </script>
 
