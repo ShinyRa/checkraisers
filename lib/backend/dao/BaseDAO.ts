@@ -55,7 +55,6 @@ class BaseDAO {
 		FileSystem.rm(path, (err)=>{
 			if(err) console.log(err)
 		})
-		FileSystem.renameSync
 	}
 
 	protected renameFile = (oldPath: string, newPath: string): void => {
