@@ -14,7 +14,6 @@
                 messageType = Object.keys(res)[0]
                 message = res[Object.keys(res)[0]]
             })
-            console.log(messageType)
             if(messageType === 'success') {
                 await Util.sleep(2000)
                 goto('/login')

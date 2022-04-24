@@ -16,7 +16,6 @@
             message = res['error']
             return
         } else{
-            res['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['profilePicture'].data)}`;
             session.set({user: res})
             goto('/card')
         }

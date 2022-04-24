@@ -1,9 +1,10 @@
 <script lang="ts">
     import { session } from '$app/stores'
     import { type User } from '$lib/backend/entities/user/User';
-    import Util from '$lib/logic/frontend/generic/Util'
-    import UserClient from '$lib/logic/clients/user/UserClient';
+        import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
+	import {assets as assetsPath } from '$app/paths';
+
     $session
 
     let updated
@@ -17,11 +18,11 @@
         profilePicture: $session['user']['profilePicture']
     }
 
-    let preview = user.profilePicture as string
+    let preview: string = `${assetsPath}/avatars/${user.profilePicture}`
 
     const onFileSelected =(e)=>{
         let reader = new FileReader()
-        const image = e.target.files[0]
+        const image: File = e.target.files[0]
         if(image.size > MAXIUM_FILE_SIZE){
             alert(`profile picture exceeds maxiumum file size by: ${image.size && ((image.size - MAXIUM_FILE_SIZE)/1000000).toFixed(2)}MB`)
             return
@@ -35,7 +36,6 @@
 
     const updateProfile = async() => {
         //Refactor into URLSearchParams
-        console.log($session['user'])
         let fd = new FormData()
         fd.append('email', user.email)
         fd.append('username', user.username)
@@ -44,8 +44,6 @@
 
         let res = await UserClient.update(fd)
         updated = res['ok']
-        res['value']['profilePicture'] = `data:image/png;base64,${Util.binaryToBase64Conversion(res['value']['profilePicture'].data)}`;
-        console.log(updated)
         session.set({ user: res['value'] })
     }
 </script>
