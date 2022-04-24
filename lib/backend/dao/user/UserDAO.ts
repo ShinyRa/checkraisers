@@ -13,14 +13,14 @@ class UserDAO extends BaseDAO {
 
 	private updateAvatar = async(oldAvatar: string, user: Partial<User>): Promise<string> => {
 		const timePreset = Date.now()
-		const newAvatarPath = `${this.ASSET_PATH}${user.email}_${timePreset}.png`
 		const oldAvatarPath = `${this.ASSET_PATH}${oldAvatar}`
+		const newAvatarPath = `${this.ASSET_PATH}${user.email}_${timePreset}.png`
 
 		await this.writeToDisk(
 			user.profilePicture as File,
-			oldAvatarPath
+			oldAvatar !== this.DEFAULT_AVATAR ? oldAvatarPath : newAvatarPath
 		);
-		this.renameFile(oldAvatarPath, newAvatarPath)
+		if(oldAvatar !== this.DEFAULT_AVATAR) this.renameFile(oldAvatarPath, newAvatarPath)
 		return `${user.email}_${timePreset}.png`
 	}
 

@@ -15,6 +15,7 @@ const config = {
 			lib: './lib',
 			assets: './static',
 			template: './static/app.html',
+			hooks: './lib/logic/frontend/hooks',
 			routes: './src/frontend/routes' // /frontend/routes folder as routing entry point
 		},
 		vite: {
