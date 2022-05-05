@@ -16,6 +16,6 @@
 		"^\\$app(.*)$": [
 			"<rootDir>/.svelte-kit/runtime/app$1"
 		],
-		"^\\$lib/(.*)": "<rootDir>/backend/$1"
+		"^\\$lib/(.*)": "<rootDir>/lib/$1"
 	 }
 }

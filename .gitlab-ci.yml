@@ -1,22 +1,35 @@
-cache:
-  paths:
-    - node_modules
+stages:
+  - install
+  - build
+  - deploy
 
-image:
-  name: node:latest
-  entrypoint: ['']
-
-pages:
-  stage: deploy
-  script:
-    - npm install
-    - npm run build
-    - mv build public
-    - sed -i 's;href="/2122/ivse2/IVSE2-MUCKERS/pokerapp/;href="./;g' public/index.html
+install:
+  stage: install
+  script: yarn
+  after_script:
+    - killall node
   artifacts:
     paths:
-      - public
-  tags:
-    - docker
+      - node_modules
+  only:
+    - development
+
+build:
+  stage: build
+  before_script:
+    - sh /root/createImageFolder.bash
+  script:
+    - yarn build
+  artifacts:
+    paths:
+      - build
+  only:
+    - development
+
+deploy:
+  stage: deploy
+  script:
+    - screen -S 3358.pts-0.h296537 -p 0 -X stuff "^C"
+    - screen -S 3358.pts-0.h296537 -p 0 -X stuff "node build/index.js^M"
   only:
     - development

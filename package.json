@@ -4,25 +4,28 @@
 	"scripts": {
 		"dev": "svelte-check && svelte-kit dev",
 		"build": "svelte-kit build",
-		"clean": "rm -rf node_modules && rm -rf .svelte-kit",
+		"clean": "rm -rf node_modules && rm -rf .svelte-kit && rm -rf build",
 		"preview": "svelte-kit preview",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. .",
 		"test": "jest frontend --passWithNoTests && jest backend --passWithNoTests",
-		"test:frontend": "jest frontend --passWithNoTests",
+		"test:frontend": "jest lib/logic/frontend --passWithNoTests",
 		"test:backend": "jest backend --passWithNoTests",
-		"test:coverage": "jest --coverage",
-		"depcheck": "depcheck"
+		"test:coverage": "jest --passWithNoTests --coverage",
+		"depcheck": "depcheck",
+		"test:client": "jest --detectOpenHandles Client.test.ts",
+		"test:crud": "jest --detectOpenHandles Crud.test.ts"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",
+		"@sveltejs/adapter-node": "^1.0.0-next.70",
 		"@sveltejs/adapter-static": "^1.0.0-next.26",
-		"@sveltejs/kit": "next",
+		"@sveltejs/kit": "^@sveltejs/kit@1.0.0-next.287",
 		"@testing-library/svelte": "^3.0.3",
+		"@testing-library/user-event": "^13.5.0",
 		"@types/jest": "^27.4.0",
 		"@typescript-eslint/eslint-plugin": "^4.31.1",
 		"@typescript-eslint/parser": "^4.31.1",
-		"@testing-library/user-event": "^13.5.0",
 		"depcheck": "^1.4.3",
 		"eslint": "^7.32.0",
 		"eslint-config-prettier": "^8.3.0",
@@ -39,9 +42,10 @@
 	"type": "module",
 	"dependencies": {
 		"dotenv": "^14.2.0",
-		"firebase": "^9.6.6",
-		"firebase-admin": "^10.0.2",
 		"global": "^4.4.0",
-		"sass": "^1.49.7"
+		"mongodb": "^4.4.0",
+		"sass": "^1.49.7",
+		"scandir": "^0.1.2",
+		"socket.io": "^4.4.1"
 	}
 }

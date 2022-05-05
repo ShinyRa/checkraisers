@@ -46,46 +46,52 @@ For more info: [https://www.nldigital.nl/news/avg-uitgelegd-deel-3-privacy-by-de
 ## Repository overview
 
 ```
-│   .env.example
-│   .eslintrc.cjs
-│   .gitignore
-│   .gitlab-ci.yml
-│   .prettierrc
-│   package-lock.json
-│   package.json
-│   README.md
-│   svelte.config.js
-│   tsconfig.json
-│   yarn.lock
-│
-├───src
-│   │   app.html
-│   │   global.d.ts
-│   │
-│   └───routes
-│       │   index.svelte
-│       │
-│       ├───about
-│       │       [userid].svelte
-│       │       _Card.svelte
-│       │
-│       ├───api
-│       │   └───deck
-│       │           index.ts
-│       │
-│       └───poker
-│               index.svelte
-│
-└───static
-        .nojekyll
-        favicon.png
+├───.vscode               
+├───backend               
+│   ├───api               
+│   │   ├───deck          
+│   │   └───user          
+│   ├───entities          
+│   │   ├───deck          
+│   │   │   └───card      
+│   │   └───user          
+│   └───utils             
+├───frontend              
+│   ├───routes            
+│   │   ├───card          
+│   │   ├───table         
+│   │   └───test          
+│   └───testing           
+│       ├───card          
+│       └───deck          
+├───src                   
+│   ├───lib               
+│   │   ├───api           
+│   │   │   ├───deck      
+│   │   │   └───user      
+│   │   ├───entities      
+│   │   │   ├───deck      
+│   │   │   │   └───card  
+│   │   │   ├───hand      
+│   │   │   └───user      
+│   │   └───utils         
+│   │       └───hand      
+│   ├───routes            
+│   │   ├───card          
+│   │   ├───table         
+│   │   └───test          
+│   └───testing           
+│       ├───card          
+│       └───deck          
+└───static                
+    └───cards
 ```
 
 # How to install, configure, run and deploy
 
 To host your own instance of this application follow these steps to setup this project. For this guide you need a (unix) terminal like [CMDer](https://cmder.net/).
 
-1. Pull this repository via `git@gitlab.fdmci.hva.nl:graafft4/pokerapp.git` and navigate to the directory `/PokerApp`
+1. Pull this repository via `git@gitlab.fdmci.hva.nl:project-se/2122/ivse2/IVSE2-MUCKERS/pokerapp.git` and navigate to the directory `/PokerApp`
 2. Execute `node -v` to check if you have [Node](https://nodejs.org/en/) installed
 3. Execute `npm install yarn` to use [Yarn](https://yarnpkg.com/) package manager
 4. In the root folder of the project run `yarn install` to install all project dependancies
