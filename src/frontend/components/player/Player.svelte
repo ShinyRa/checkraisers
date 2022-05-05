@@ -1,7 +1,7 @@
 <script lang="ts">
-	import Player from '$lib/entities/user/Player';
-	import { default as PlayingCardData } from '$lib/entities/deck/card/PlayingCard';
-	import PlayingCard from './_PlayingCard.svelte';
+	import Player from '$lib/logic/frontend/entities/poker_rules/Player';
+	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
+	import PlayingCard from '../card/PlayingCard.svelte';
 
 	export let player: Player;
 	export let you: boolean;
