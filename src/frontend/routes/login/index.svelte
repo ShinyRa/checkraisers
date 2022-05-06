@@ -1,13 +1,27 @@
+<script context="module">
+	export async function load({ session }) {
+        session.authenticated = session.authenticated
+		if (session.authenticated) {
+			return {
+				status: 302,
+				redirect: '/'
+			};
+		}
+		return {};
+	}
+</script>
+
 <script lang="ts">
-    import { session } from '$app/stores';
     import { type User } from '$lib/backend/entities/user/User';
-    import Util from '$lib/logic/frontend/generic/Util';
     import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
-    import { goto } from '$app/navigation';
+    import { goto, invalidate } from '$app/navigation';
+    import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
+    import { session } from '$app/stores';
+import Util from '$lib/logic/frontend/generic/Util';
 
-    $session
     let message
+
     let user: Partial<User> = {email: '', password: ''}
 
 	const login = async() => {
@@ -16,15 +30,18 @@
             message = res['error']
             return
         } else{
-            session.set({user: res})
-            goto('/card')
+            userStore.update(currentUser => {
+                currentUser.setUserData(res);
+                return currentUser;
+            });
+            $session['authenticated'] = true
+            await goto('/profile')
         }
 	} 
 </script>
 
 <section>
     <div class="container">
-
         <p>Login</p>
         <hr>
             <div class="field">
@@ -40,7 +57,6 @@
             </div>
     
             <button class="button submit" on:click={login}>login</button>
-            
             {#if message }
                 <p class="error is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{message}</p>
             {/if}

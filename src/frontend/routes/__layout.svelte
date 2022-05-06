@@ -1,9 +1,16 @@
 <script>
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
-	import { session } from '$app/stores'
 	import { assets as assetsPath } from '$app/paths';
+	import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
 
+	
+
+	let user = $userStore.getUserData()
+
+	userStore.subscribe(val => {
+		user = val.getUserData()
+	})
 
 	const routes = [
 		{ title: 'Draw cards', route: '/card' },
@@ -15,9 +22,13 @@
 	}
 
 	const logout = async() => {
-		$session = {}
-		await goto('/')
+		userStore.update(currentUser => {
+			currentUser.clearUserData()
+            return currentUser;
+        });
+		await goto('/logout')
 	}
+
 </script>
 
 <section class="hero ">
@@ -26,14 +37,14 @@
 			<p class="title">PokerApp</p>
 			<p class="subtitle">By Auke & Tijs</p>
 		</div>
-		{#if $session['user']}
+		{#if user}
 			<div class='is-flex'>
 				<div class="pt-0 mr-3">
-					<p class="is-size-5">{$session['user']['username']}</p>
-					<p class="is-size-6">chips: {$session['user']['chips']}</p>
+					<p class="is-size-5">{user.username}</p>
+					<p class="is-size-6">chips: {user.chips}</p>
 				</div>
 				<figure class = "image is-square is-48x48 pt-1 is-clickable" on:click={gotoProfile}>
-					<img class='is-rounded' src="{assetsPath}/avatars/{$session['user']['profilePicture']}" alt='d'>
+					<img class='is-rounded' src="{assetsPath}/avatars/{user.profilePicture}" alt='d'>
 				</figure>
 				<button class="is-size-7 mt-3 ml-3 button" on:click={logout}>logout</button>
 			</div>
@@ -44,7 +55,7 @@
 </section>
 <main>
 
-	{#if $session['user']}
+	{#if user}
 		<aside class="menu">
 			<ul class="menu-list">
 				{#each routes as { title, route }}

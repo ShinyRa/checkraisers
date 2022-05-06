@@ -1,25 +1,27 @@
+<script context="module">
+	export async function load({ session }) {
+        session.authenticated = session.authenticated
+		if (!session.authenticated) {
+			return {
+				status: 302,
+				redirect: '/'
+			};
+		}
+		return {};
+	}
+</script>
+
 <script lang="ts">
-    import { session } from '$app/stores'
-    import { type User } from '$lib/backend/entities/user/User';
-        import UserClient from '$lib/logic/clients/user/UserClient';
+    import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
 	import {assets as assetsPath } from '$app/paths';
-
-    $session
-
-    let updated
+    import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
 
     const MAXIUM_FILE_SIZE = 1500000
-
-    let user: Partial<User> = {
-        email: $session['user']['email'],
-        username: $session['user']['username'], 
-        chips: $session['user']['chips'], 
-        profilePicture: $session['user']['profilePicture']
-    }
-
+    let updated
+    let user = $userStore.getUserData()
     let preview: string = `${assetsPath}/avatars/${user.profilePicture}`
-
+    
     const onFileSelected =(e)=>{
         let reader = new FileReader()
         const image: File = e.target.files[0]
@@ -41,10 +43,12 @@
         fd.append('username', user.username)
         fd.append('chips', user.chips.toString())
         if(typeof user.profilePicture !== 'string') fd.append('profilePicture', user.profilePicture)
-
         let res = await UserClient.update(fd)
+        userStore.update(currentUser => {
+			currentUser.setUserData(res['value'])
+            return currentUser;
+        });
         updated = res['ok']
-        session.set({ user: res['value'] })
     }
 </script>
 
@@ -52,28 +56,32 @@
     <div id='form' class="container">
         <p>Profile</p>
         <hr>         
-        <div class="field">
-            <div class="control">
-            <input class="input" type="text" name="username" placeholder="username" bind:value={user.username} required>
+        {#if user}
+            <div class="field">
+                <div class="control">
+                <input class="input" type="text" name="username" placeholder="username" bind:value={user.username} required>
+                </div>
             </div>
-        </div>
-        
-        <div class="field">
-            <div class="control">
-            <input class="input" type="number" name="chips" placeholder="amount of chips" bind:value={user.chips} required>
-            </div>
-        </div>
-        <div>
-
-        <div class="picture">
             
-            <img class="avatar" src={preview} alt='no_profilepicture'/>
+            <div class="field">
+                <div class="control">
+                <input class="input" type="number" name="chips" placeholder="amount of chips" bind:value={user.chips} required>
+                </div>
+            </div>
 
-            <input name="profilePicture" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)}>
-        </div>
-        <button class="button submit" on:click={updateProfile}>Update Account</button>
-        {#if updated }
-            <p class="success is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{user.username}'s profile updated!</p>
+            <div class="picture">
+                
+                <img class="avatar" src={preview} alt='no_profilepicture'/>
+
+                <input name="profilePicture" type="file" accept=".jpg, .jpeg, .png" on:change={(e)=>onFileSelected(e)}>
+            </div>
+            <button class="button submit" on:click={updateProfile}>Update Account</button>
+        
+            {#if updated }
+                <p class="success is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{user.username}'s profile updated!</p>
+            {/if}
+        {:else}
+            <p>loading...</p>
         {/if}
     </div>
 </section>
