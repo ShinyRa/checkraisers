@@ -1,3 +1,16 @@
+<script context="module">
+	export async function load({ session }) {
+        session.authenticated = session.authenticated
+		if (!session.authenticated) {
+			return {
+				status: 302,
+				redirect: '/'
+			};
+		}
+		return {};
+	}
+</script>
+
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';

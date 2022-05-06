@@ -3,6 +3,7 @@ import { HttpCode } from '../entities/server/HttpCode';
 import FileSystem from 'fs';
 import { MongoClient } from 'mongodb';
 import * as crypto from 'crypto';
+import jwt from 'jsonwebtoken';
 
 export type Response = {
 	headers: Record<string, string>;
@@ -12,9 +13,11 @@ export type Response = {
 class BaseDAO {
 	private client: MongoClient;
 
-	protected httpResponse(status: Response['status'], body?: Response['body']): Response {
+	protected httpResponse(status: Response['status'], body?: Response['body'], additionalHeader?: Response['headers']): Response {
+		const standardHeader = { 'content-type': 'application/json', 'accept': 'application/json' }
+		const alterdHeader = {...standardHeader, ...additionalHeader}
 		const repsonse = {
-			headers: { 'content-type': 'application/json', Accept: 'application/json' },
+			headers: additionalHeader? alterdHeader: standardHeader,
 			status: status,
 			body: body
 		};
@@ -55,14 +58,30 @@ class BaseDAO {
 		FileSystem.rm(path, (err)=>{
 			if(err) console.log(err)
 		})
-	}
+	};
 
 	protected renameFile = (oldPath: string, newPath: string): void => {
 		FileSystem.renameSync(oldPath, newPath)
-	}
+	};
 
 	protected hash = (text: string): string => {
 		return crypto.createHash('sha256').update(text).digest('hex');
 	};
+
+	protected verifyJWT = (token: string, email: string): boolean => {
+		let result
+		jwt.verify(token, 'my-key', function(err, data) {
+			if(err){
+				result = false
+			}else{
+				if(data['email'] === email){
+					result = true
+				}else{
+					result = false
+				}
+			}
+		})
+		return result
+	}
 }
 export default BaseDAO;

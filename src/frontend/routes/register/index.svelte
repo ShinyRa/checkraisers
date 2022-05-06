@@ -1,3 +1,15 @@
+<script context="module">
+	export async function load({ session }) {
+		if (session.authenticated) {
+			return {
+				status: 302,
+				redirect: '/profile'
+			};
+		}
+		return {};
+	}
+</script>
+
 <script lang="ts">
     import { type User } from "$lib/backend/entities/user/User";
     import UserClient from "$lib/logic/clients/user/UserClient";
