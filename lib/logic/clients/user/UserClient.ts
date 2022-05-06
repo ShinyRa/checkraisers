@@ -6,6 +6,10 @@ class UserClient extends BaseClient {
 		return this.httpRequest('api/user/login', user);
 	}
 
+	public static async logout(): Promise<unknown> {
+		return this.httpRequest('api/user/logout');
+	}
+
 	public static async register(user: Partial<User>): Promise<unknown> {
 		return this.httpRequest('api/user/register', user);
 	}

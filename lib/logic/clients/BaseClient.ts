@@ -12,7 +12,7 @@ class BaseDto {
 
 	protected static async httpRequest(
 		url: string,
-		data: FormData | Partial<User>,
+		data?: FormData | Partial<User>,
 		customRequestOptions?: Partial<RequestOption>
 	): Promise<unknown> {
 		let requestOptions: RequestOption = {
