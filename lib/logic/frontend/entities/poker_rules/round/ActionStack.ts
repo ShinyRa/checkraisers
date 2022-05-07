@@ -1,6 +1,6 @@
 import { Action } from './action/Action';
 
-export class ActionQueue {
+export class ActionStack {
 	actions: Action[];
 
 	constructor() {
@@ -9,5 +9,9 @@ export class ActionQueue {
 
 	push(action: Action): void {
 		this.actions.push(action);
+	}
+
+	get length(): number {
+		return this.actions.length;
 	}
 }

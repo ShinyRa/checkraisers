@@ -6,7 +6,7 @@ export class Action {
 
 	constructor(action: PlayerAction, chips?: number) {
 		this.action = action;
-		this.chips = chips;
+		this.chips = chips ?? 0;
 	}
 
 	print = (): string => {
