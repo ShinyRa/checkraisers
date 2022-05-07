@@ -1,4 +1,5 @@
 import { PlayerHand } from './hand/PlayerHand';
+import { PlayerAction } from './round/action/PlayerAction';
 class Player {
 	username: string;
 	name: string;
@@ -23,7 +24,15 @@ class Player {
 		this.hand = hand ? hand : new PlayerHand();
 	}
 
-	static mock = (): Player => {
+	canTakeAction(action: PlayerAction): boolean {
+		return this.totalChips >= action.chips;
+	}
+
+	takeAction(action: PlayerAction): void {
+		this.totalChips -= action.chips;
+	}
+
+	static mock(): Player {
 		const mockNames = [
 			'James',
 			'John',
@@ -85,7 +94,7 @@ class Player {
 		const surname = mockLastNames[Math.floor(Math.random() * mockLastNames.length)];
 
 		return new Player(username, surname, name);
-	};
+	}
 }
 
 export default Player;
