@@ -8,10 +8,23 @@ const players = [Player.mock(), Player.mock()];
 players[0].totalChips = 2000;
 players[1].totalChips = 1000;
 
-beforeAll(() => {
-	stack = new ActionStack();
+beforeEach(() => {
+	stack = new ActionStack(players);
 });
+
 describe('Player action unit tests', () => {
+	it('should track the correct amount of actions taken', () => {
+		stack.push(new PlayerAction(players[0], PlayerActionEnum.CALL, 200));
+		stack.push(new PlayerAction(players[1], PlayerActionEnum.CALL, 200));
+		expect(stack.length).toEqual(2);
+	});
+
+	it('should track the correct potsize for all actions', () => {
+		stack.push(new PlayerAction(players[0], PlayerActionEnum.CALL, 200));
+		stack.push(new PlayerAction(players[1], PlayerActionEnum.CALL, 200));
+		expect(stack.potSize).toEqual(400);
+	});
+
 	it('should be created succesfully', () => {
 		players.map((player) => {
 			const action = new PlayerAction(player, PlayerActionEnum.RAISE, 2000);

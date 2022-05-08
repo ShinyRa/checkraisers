@@ -2,10 +2,10 @@ import { PlayerAction } from '../../entities/poker_rules/round/action/PlayerActi
 import { PlayerActionEnum } from '../../entities/poker_rules/round/action/PlayerActionEnum';
 import { ActionStack } from '../../entities/poker_rules/round/ActionStack';
 
-let stack;
-beforeAll(() => {
-	stack = new ActionStack();
-});
+// let stack;
+// beforeAll(() => {
+// 	stack = new ActionStack();
+// });
 
 describe('Action stack unit tests', () => {
 	// it('should add actions to the stack', () => {
