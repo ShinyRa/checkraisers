@@ -1,5 +1,5 @@
 import { Collection } from 'mongodb';
-import { HttpCode } from '../entities/server/HttpCode';
+import { HttpCode } from '../entities/HttpCode';
 import FileSystem from 'fs';
 import { MongoClient } from 'mongodb';
 import * as crypto from 'crypto';

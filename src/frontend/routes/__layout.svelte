@@ -2,9 +2,7 @@
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { assets as assetsPath } from '$app/paths';
-	import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
-
-	
+	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores/userStore';
 
 	let user = $userStore.getUserData()
 
@@ -22,6 +20,7 @@
 	}
 
 	const logout = async() => {
+		$socketStore.disconnect()
 		userStore.update(currentUser => {
 			currentUser.clearUserData()
             return currentUser;

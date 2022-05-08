@@ -1,4 +1,4 @@
-import { HttpCode } from '../../entities/server/HttpCode';
+import { HttpCode } from '../../entities/HttpCode';
 import BaseDAO, { type Response } from '../BaseDAO';
 import { type User } from '../../entities/user/User';
 import jwt from 'jsonwebtoken'
