@@ -1,6 +1,6 @@
 <script context="module">
 	export async function load({ session }) {
-		session.authenticated = session.authenticated
+		session.authenticated = session.authenticated;
 		if (session.authenticated) {
 			return {
 				status: 302,
@@ -20,30 +20,40 @@
 	let load: boolean;
 	onMount(() => (load = true));
 
-	const login = async() =>{
-		await goto('/login')
-	}
+	const login = async () => {
+		await goto('/login');
+	};
 
-	const register = async() =>{
-		await goto('/register')
-	}
-	
+	const register = async () => {
+		await goto('/register');
+	};
 </script>
 
 {#if load}
 	<section class="container" in:fly|local={{ x: -500, duration: 1250 }}>
 		<img src="{assetsPath}/logo.png" alt="Logo" class="logo" />
 		<p in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
-		<button on:click={register} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Register</button>
-		<button on:click={login} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Login</button>
+		<button
+			on:click={register}
+			class="nes-btn submit"
+			in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Register</button
+		>
+		<button
+			on:click={login}
+			class="nes-btn submit"
+			in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Login</button
+		>
 	</section>
 {/if}
 
 <style lang="scss">
-	  $svelte: #ff3e00;
+	$svelte: #ff3e00;
 	.submit {
 		background-color: $svelte;
-		color: white
+		color: white;
+	}
+	.submit::after {
+		box-shadow: inset -4px -4px #c22f00;
 	}
 	.container {
 		margin-top: 120px;
