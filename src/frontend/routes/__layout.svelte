@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { assets as assetsPath } from '$app/paths';
-	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores/userStore';
+	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 
 	let user = $userStore.getUserData()
 

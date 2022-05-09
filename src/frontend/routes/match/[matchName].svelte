@@ -22,7 +22,7 @@
 	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
 	import PlayingCard from '../../components/card/PlayingCard.svelte';
 	import { page } from '$app/stores';
-	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores/userStore';
+	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 	import { goto } from '$app/navigation';
 	import { io } from 'socket.io-client';
 import { writable } from 'svelte/store';

@@ -16,7 +16,7 @@
     import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
     import { goto, invalidate } from '$app/navigation';
-    import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
+    import { userStore } from '$lib/logic/frontend/entities/stores';
     import { session } from '$app/stores';
 import Util from '$lib/logic/frontend/generic/Util';
 

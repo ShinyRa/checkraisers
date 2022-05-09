@@ -13,7 +13,7 @@
 </script>
 
 <script lang='ts'>
-    import { socketStore, userStore } from "$lib/logic/frontend/entities/stores/userStore";
+    import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { onMount } from "svelte";
     import { get, writable, type Writable } from "svelte/store";
 
@@ -60,7 +60,9 @@
                             <td>{Object.keys(match['players']).length}/{match['maxPlayers']}</td>
                             <td>${match['bigBlind']}</td>
                             <!--nog een guard fixen-->
-                            <td><a href={`/match/${match['name']}`} class='p2 button'>join</a></td>
+                            {#if Object.keys(match['players']).length < match['maxPlayers']}
+                                <td><a href={`/match/${match['name']}`} class='p2 button'>join</a></td>
+                            {/if}
                         </tr>
 				    {/each}
                 </tbody>

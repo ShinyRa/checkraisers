@@ -15,7 +15,7 @@
     import UserClient from '$lib/logic/clients/user/UserClient';
     import { fly } from 'svelte/transition';
 	import {assets as assetsPath } from '$app/paths';
-    import { userStore } from '$lib/logic/frontend/entities/stores/userStore';
+    import { userStore } from '$lib/logic/frontend/entities/stores';
 
     const MAXIUM_FILE_SIZE = 1500000
     let updated
