@@ -31,6 +31,7 @@
 		border-radius: 15px;
 		transform-style: preserve-3d;
 		transition: transform 0.175s linear;
+		image-rendering: pixelated;
 
 		.face {
 			position: absolute;
