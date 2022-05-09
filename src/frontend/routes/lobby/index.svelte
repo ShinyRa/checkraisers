@@ -41,14 +41,14 @@
     <div class="container is-flex is-flex-direction-column">
         <p class="is-size-1 has-text-centered">Game list</p>
         <hr>
-        <input class="form-control input" bind:value={matchName} placeholder="game name" required>
-        <input class="form-control input" bind:value={bigBlind} placeholder="big blind" type='number' required>
-        <input class="form-control input" bind:value={maxPlayers} placeholder="max players" type='number' required>
+        <input class="form-control input mb-2" bind:value={matchName} placeholder="game name" required>
+        <input class="form-control input mb-2" bind:value={bigBlind} placeholder="big blind" type='number' required>
+        <input class="form-control input mb-2" bind:value={maxPlayers} placeholder="max players" type='number' required>
         <button class="button" on:click={createGame}>Create match</button>
         <div class="table-container list">
             <table class="table ">
                 <thead>
-                    <th>Game names</th>
+                    <th>name</th>
                     <th>players</th>
                     <th>big blind</th>
                     <th></th>
