@@ -1,5 +1,7 @@
 {
 	"compilerOptions": {
+		"outDir": "./lib/backend/socketServer/out",
+		"downlevelIteration": true,
 		"moduleResolution": "node",
 		"module": "es2020",
 		"lib": ["es2020", "DOM", "dom.iterable"],
@@ -35,8 +37,8 @@
 		"src/global.d.ts",
 		"lib/**/*.ts",
 		"lib/**/*.test.ts",
-		"lib/**/*.js"
-	],
+		"lib/**/*.js", "lib/backend/socketServer/index.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs", "lib/backend/socketServer/server.cjs"],
+	"exclude": ["lib/backend/socketServer/index.cjs"],
 	"extends": "./.svelte-kit/tsconfig.json"
 }
 	

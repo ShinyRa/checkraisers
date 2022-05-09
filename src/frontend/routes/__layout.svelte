@@ -11,8 +11,8 @@
 	})
 
 	const routes = [
-		{ title: 'Draw cards', route: '/card' },
-		{ title: 'profile', route: '/profile' }
+		{ title: 'profile', route: '/profile' },
+		{ title: 'lobby', route: '/lobby' }
 	];
 
 	const gotoProfile = async() =>{
@@ -20,7 +20,6 @@
 	}
 
 	const logout = async() => {
-		$socketStore.disconnect()
 		userStore.update(currentUser => {
 			currentUser.clearUserData()
             return currentUser;

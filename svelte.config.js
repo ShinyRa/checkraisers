@@ -24,7 +24,7 @@ const config = {
 					name: 'socket-io',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer(server) {
-						import("./lib/backend/socketServer/build/index.js")
+						import("./lib/backend/socketServer/server.cjs")
 					}
 				}
 			],

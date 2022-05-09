@@ -4,6 +4,7 @@
 	"scripts": {
 		"dev": "svelte-check && svelte-kit dev",
 		"build": "svelte-kit build",
+		"compileSocket": "tsc ./lib/backend/socketServer/server.ts",
 		"clean": "rm -rf node_modules && rm -rf .svelte-kit && rm -rf build",
 		"preview": "svelte-kit preview",
 		"lint": "prettier --ignore-path .gitignore --check --plugin-search-dir=. . && eslint --ignore-path .gitignore .",
@@ -51,7 +52,6 @@
 		"sass": "^1.49.7",
 		"scandir": "^0.1.2",
 		"socket.io": "^4.5.0",
-		"socket.io-client": "^4.5.0",
-		"vite-plugin-node": "^0.0.19"
+		"socket.io-client": "^4.5.0"
 	}
 }

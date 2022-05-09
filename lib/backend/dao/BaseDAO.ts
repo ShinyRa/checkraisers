@@ -1,9 +1,9 @@
 import { Collection } from 'mongodb';
 import { HttpCode } from '../entities/HttpCode';
-import FileSystem from 'fs';
+import * as fs from 'fs';
 import { MongoClient } from 'mongodb';
 import * as crypto from 'crypto';
-import jwt from 'jsonwebtoken';
+import * as jwt from 'jsonwebtoken';
 
 export type Response = {
 	headers: Record<string, string>;
@@ -46,22 +46,22 @@ class BaseDAO {
 
 	protected writeToDisk = async (file: File, path: string): Promise<string> => {
 		const buffer = await file.arrayBuffer();
-		FileSystem.writeFileSync(path, new Uint8Array(buffer));
+		fs.writeFileSync(path, new Uint8Array(buffer));
 		return path;
 	};
 
 	protected readFromDisk = (path: string): Buffer => {
-		return FileSystem.readFileSync(path);
+		return fs.readFileSync(path);
 	};
 
 	protected removeFromDisk = (path: string): void => {
-		FileSystem.rm(path, (err)=>{
+		fs.rm(path, (err)=>{
 			if(err) console.log(err)
 		})
 	};
 
 	protected renameFile = (oldPath: string, newPath: string): void => {
-		FileSystem.renameSync(oldPath, newPath)
+		fs.renameSync(oldPath, newPath)
 	};
 
 	protected hash = (text: string): string => {
