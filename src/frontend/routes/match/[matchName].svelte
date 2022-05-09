@@ -7,7 +7,7 @@
 				redirect: '/'
 			};
 		}
-		return {};
+		return {}
 	}
 </script>
 
@@ -19,9 +19,13 @@
 	import { evaluationAPI } from '$lib/logic/api/evaluation';
 	import CardDeck from '$lib/logic/frontend/entities/poker_rules/deck/CardDeck';
 	import Player from '$lib/logic/frontend/entities/poker_rules/Player';
-
 	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
 	import PlayingCard from '../../components/card/PlayingCard.svelte';
+	import { page } from '$app/stores';
+	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores/userStore';
+	import { goto } from '$app/navigation';
+	import { io } from 'socket.io-client';
+import { writable } from 'svelte/store';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -29,6 +33,7 @@
 	let playerWon = '';
 	let playerScore = '';
 	let phase = 0;
+	let matchData = writable()
 
 	let players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
 
@@ -106,36 +111,71 @@
 
 	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
 		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
-</script>
 
-<section class="board">
-	{#each players as player}
-		<section class="player" class:you={player.name === players[0].name}>
-			<h1>{player.name}</h1>
-			{#each player.hand.cards as card}
+
+	const user = $userStore.getUserData()
+	const matchName = $page.params['matchName']
+    $socketStore.emit('join-match', {email: user.email, username: user.username, chips: user.chips, matchName: matchName})
+	
+	const returnToLobby = () => {
+		$socketStore.emit('leave-match', {matchName: matchName, email: $userStore.getUserData().email})
+		goto('/lobby')
+	}
+
+	$socketStore.on('player-joined', (data) => {
+        $matchData = data
+		console.log(matchData)
+    })
+</script>
+<div class="info">
+	<p>Match name: {matchName}</p>
+	<button on:click={returnToLobby} class='button leave'>leave match</button>
+</div>
+
+	<section class="board">
+		{#each players as player}
+			<section class="player" class:you={player.name === players[0].name}>
+				<h1>{player.name}</h1>
+				{#each player.hand.cards as card}
+					<PlayingCard {card} highlight={findCard(highlight, card)} />
+				{/each}
+			</section>
+		{/each}
+		{#if phase === 4}
+			<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
+				<h1>{playerWon}</h1>
+				<br />
+				<h3>{playerScore}</h3>
+			</section>
+		{/if}
+		<section class="cards">
+			<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={nextPhase}
+				>{phaseName(phase)}</button
+			>
+			{#each shown as card}
 				<PlayingCard {card} highlight={findCard(highlight, card)} />
 			{/each}
 		</section>
-	{/each}
-	{#if phase === 4}
-		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
-			<h1>{playerWon}</h1>
-			<br />
-			<h3>{playerScore}</h3>
-		</section>
-	{/if}
-	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={nextPhase}
-			>{phaseName(phase)}</button
-		>
-		{#each shown as card}
-			<PlayingCard {card} highlight={findCard(highlight, card)} />
-		{/each}
 	</section>
-</section>
 
 <style lang="scss">
+	.info{
+		justify-content: space-between;
+		display: flex;
+		font-size: 20px;
+		width: 90%;
+		position: absolute;
+		left: 9%;
+	}
+	.leave{
+		height: 30px;
+		color:white;
+		background-color:#ff3e00;
+		border: 0;
+		margin-top: 5px;
+	}
 	.board {
+		margin-top: 40px;
 		display: grid;
 		grid-template:
 			'player player player'
