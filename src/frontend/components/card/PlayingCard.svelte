@@ -13,7 +13,11 @@
 	class:highlight
 	in:fly={{ duration: 175, x: 0, y: -40, easing: quintOut }}
 >
-	<div class="playingcard" on:click={() => (card = card.flip())} class:faceup={card.isRevealed()}>
+	<div
+		class="playingcard nes-pointer"
+		on:click={() => (card = card.flip())}
+		class:faceup={card.isRevealed()}
+	>
 		<img src="{assetsPath}/cards/{card.assetName()}" alt={card.print()} class="face front" />
 		<img src="{assetsPath}/cards/cardback.png" alt="back" class="face" />
 	</div>
@@ -56,10 +60,6 @@
 				user-select: none;
 			}
 		}
-	}
-
-	.playingcard:hover {
-		cursor: pointer;
 	}
 
 	.faceup {
