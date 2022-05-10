@@ -1,14 +1,21 @@
-<script context="module">
-    import { browser } from '$app/env';
-    import UserClient from '$lib/logic/clients/user/UserClient';
+<script lang='ts'>
+    import { goto } from "$app/navigation";
+    import { session } from "$app/stores";
+    import UserClient from "$lib/logic/clients/user/UserClient";
+    import { userStore } from "$lib/logic/frontend/entities/stores";
+    import { onMount } from "svelte";
 
-    /** @type {import('@sveltejs/kit').Load} */
-    export async function load({ session }) {
-	    await UserClient.logout()
-        if (browser) session['authenticated'] = false;
-        return {
-            status: 302,
-            redirect: "/",
-        };
-    }
+    onMount(async () => {
+        userStore.update(currentUser => {
+			currentUser.clearUserData()
+            return currentUser;
+        });
+        session.update(currentSession =>{
+            currentSession['authenticated'] = false
+            return currentSession
+        })
+        await UserClient.logout()
+        await goto('/')
+    })
+
 </script>

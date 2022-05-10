@@ -7,5 +7,6 @@ export async function handle({ event, resolve }) {
 }
 
 export function getSession({ locals }) {
-	return {authenticated: locals.authenticated};
+	console.log('authenticated?: ', locals.authenticated);
+	return { authenticated: locals.authenticated };
 }

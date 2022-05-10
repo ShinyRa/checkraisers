@@ -20,10 +20,6 @@
 	}
 
 	const logout = async() => {
-		userStore.update(currentUser => {
-			currentUser.clearUserData()
-            return currentUser;
-        });
 		await goto('/logout')
 	}
 

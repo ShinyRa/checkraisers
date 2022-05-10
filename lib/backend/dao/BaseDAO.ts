@@ -13,11 +13,15 @@ export type Response = {
 class BaseDAO {
 	private client: MongoClient;
 
-	protected httpResponse(status: Response['status'], body?: Response['body'], additionalHeader?: Response['headers']): Response {
-		const standardHeader = { 'content-type': 'application/json', 'accept': 'application/json' }
-		const alterdHeader = {...standardHeader, ...additionalHeader}
+	protected httpResponse(
+		status: Response['status'],
+		body?: Response['body'],
+		additionalHeader?: Response['headers']
+	): Response {
+		const standardHeader = { 'content-type': 'application/json', accept: 'application/json' };
+		const alterdHeader = { ...standardHeader, ...additionalHeader };
 		const repsonse = {
-			headers: additionalHeader? alterdHeader: standardHeader,
+			headers: additionalHeader ? alterdHeader : standardHeader,
 			status: status,
 			body: body
 		};
@@ -55,13 +59,13 @@ class BaseDAO {
 	};
 
 	protected removeFromDisk = (path: string): void => {
-		fs.rm(path, (err)=>{
-			if(err) console.log(err)
-		})
+		fs.rm(path, (err) => {
+			if (err) console.log(err);
+		});
 	};
 
 	protected renameFile = (oldPath: string, newPath: string): void => {
-		fs.renameSync(oldPath, newPath)
+		fs.renameSync(oldPath, newPath);
 	};
 
 	protected hash = (text: string): string => {
@@ -69,19 +73,19 @@ class BaseDAO {
 	};
 
 	protected verifyJWT = (token: string, email: string): boolean => {
-		let result
-		jwt.verify(token, 'my-key', function(err, data) {
-			if(err){
-				result = false
-			}else{
-				if(data['email'] === email){
-					result = true
-				}else{
-					result = false
+		let result;
+		jwt.verify(token, 'my-key', function (err, data) {
+			if (err) {
+				result = false;
+			} else {
+				if (data['email'] === email) {
+					result = true;
+				} else {
+					result = false;
 				}
 			}
-		})
-		return result
-	}
+		});
+		return result;
+	};
 }
 export default BaseDAO;

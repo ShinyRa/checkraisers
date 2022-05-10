@@ -2,7 +2,7 @@ import { type User } from '../../backend/entities/user/User';
 
 type RequestOption = {
 	method: string;
-	body: FormData | string;
+	body?: FormData | string;
 };
 class BaseDto {
 	private static serialize(data: FormData | Partial<User>): FormData | string {
@@ -16,13 +16,17 @@ class BaseDto {
 		customRequestOptions?: Partial<RequestOption>
 	): Promise<unknown> {
 		let requestOptions: RequestOption = {
-			method: 'POST',
-			body: this.serialize(data)
+			method: 'POST'
 		};
 
-		requestOptions = customRequestOptions
-			? { ...requestOptions, ...customRequestOptions }
-			: requestOptions;
+		if (data) {
+			const updatedData = { body: this.serialize(data) };
+			requestOptions = { ...requestOptions, ...updatedData };
+		}
+
+		if (customRequestOptions) {
+			requestOptions = { ...requestOptions, ...customRequestOptions };
+		}
 
 		return await fetch(url, requestOptions)
 			.then((resp) => {

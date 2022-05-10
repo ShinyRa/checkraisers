@@ -1,10 +1,9 @@
 <script context="module">
 	export async function load({ session }) {
-		session.authenticated = session.authenticated
 		if (!session.authenticated) {
 			return {
 				status: 302,
-				redirect: '/profile'
+				redirect: '/'
 			};
 		}
         const socket = get(socketStore)
