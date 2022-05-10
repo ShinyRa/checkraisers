@@ -24,7 +24,7 @@
 	};
 </script>
 
-<!-- <section class="hero ">
+<section class="hero ">
 	<div class="hero-body is-flex is-justify-content-space-between">
 		<div>
 			<p class="title">PokerApp</p>
@@ -48,7 +48,7 @@
 			</div>
 		{/if}
 	</div>
-</section> -->
+</section>
 <main>
 	{#if user}
 		<aside class="menu">

@@ -1,7 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import preprocess from 'svelte-preprocess';
 
-
 //const dev = process.env.NODE_ENV === 'development';
 
 /** @type {import('@sveltejs/kit').Config} */
@@ -24,15 +23,15 @@ const config = {
 					name: 'socket-io',
 					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 					configureServer(server) {
-						import("./lib/backend/socketServer/server.cjs")
+						import('./lib/backend/socketServer/server.cjs');
 					}
 				}
 			],
 			resolve: {
 				alias: {
-				  "xmlhttprequest-ssl": "./node_modules/engine.io-client/lib/xmlhttprequest.js",
-				},
-			  },
+					'xmlhttprequest-ssl': './node_modules/engine.io-client/lib/xmlhttprequest.js'
+				}
+			}
 		}
 	}
 };

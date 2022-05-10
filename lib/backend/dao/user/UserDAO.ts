@@ -1,51 +1,33 @@
 import { HttpCode } from '../../entities/HttpCode';
 import BaseDAO, { type Response } from '../BaseDAO';
 import { type User } from '../../entities/user/User';
-import * as jwt from 'jsonwebtoken'
+import * as jwt from 'jsonwebtoken';
 
 class UserDAO extends BaseDAO {
-	private DEFAULT_AVATAR = 'default.png'
-	private ASSET_PATH = './static/avatars/'
+	private DEFAULT_AVATAR = 'default.png';
+	private ASSET_PATH = './static/avatars/';
 	private DEFAULT_CHIP_AMOUNT = 1000;
 
 	constructor() {
 		super();
 	}
 
-	private updateAvatar = async(oldAvatar: string, user: Partial<User>): Promise<string> => {
-		const timePreset = Date.now()
-		const oldAvatarPath = `${this.ASSET_PATH}${oldAvatar}`
-		const newAvatarPath = `${this.ASSET_PATH}${user.email}_${timePreset}.png`
+	private updateAvatar = async (oldAvatar: string, user: Partial<User>): Promise<string> => {
+		const timePreset = Date.now();
+		const oldAvatarPath = `${this.ASSET_PATH}${oldAvatar}`;
+		const newAvatarPath = `${this.ASSET_PATH}${user.email}_${timePreset}.png`;
 
 		await this.writeToDisk(
 			user.profilePicture as File,
 			oldAvatar !== this.DEFAULT_AVATAR ? oldAvatarPath : newAvatarPath
 		);
-		if(oldAvatar !== this.DEFAULT_AVATAR) this.renameFile(oldAvatarPath, newAvatarPath)
-		return `${user.email}_${timePreset}.png`
-	}
-
-	public getProfile = async (email: User['email']): Promise<Response> => {
-		try {
-			await this.openDbConnection();
-			const db = await this.getCollection('users');
-			const user = await db.findOne({ email: email }).then((result) => {
-				return result ? result : false;
-			});
-			await this.closeDbConnection();
-
-			return user
-				? this.httpResponse(HttpCode.SUCCESS, user)
-				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'No user found with: ' + email });
-		} catch (err) {
-			console.log('try catch error GetProfile:\n', err);
-			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'could not get user profile' });
-		}
+		if (oldAvatar !== this.DEFAULT_AVATAR) this.renameFile(oldAvatarPath, newAvatarPath);
+		return `${user.email}_${timePreset}.png`;
 	};
 
-	public removeUser = async (email: User['email'], token:string): Promise<Response> => {
+	public removeUser = async (email: User['email'], token: string): Promise<Response> => {
 		try {
-			if(this.verifyJWT(token, email)){
+			if (this.verifyJWT(token, email)) {
 				await this.openDbConnection();
 				const db = await this.getCollection('users');
 				const res = await db.deleteOne({ email: email });
@@ -54,9 +36,9 @@ class UserDAO extends BaseDAO {
 					? this.httpResponse(HttpCode.SUCCESS, { success: 'Deleted the user' })
 					: this.httpResponse(HttpCode.BAD_REQUEST, {
 							error: 'Something went wrong with deleting a user'
-					});
-			}else{
-				this.httpResponse(HttpCode.UNAUTHORIZED, { error: 'session compromised.' })
+					  });
+			} else {
+				this.httpResponse(HttpCode.UNAUTHORIZED, { error: 'session compromised.' });
 			}
 		} catch (err) {
 			console.log('try catch error Register:\n', err);
@@ -64,13 +46,13 @@ class UserDAO extends BaseDAO {
 		}
 	};
 
-	public updateProfile = async (data: FormData, token:string): Promise<Response> => {
+	public updateProfile = async (data: FormData, token: string): Promise<Response> => {
 		try {
 			let user: User;
 			for (const pair of data.entries()) {
 				user = { ...user, ...{ [pair[0]]: pair[1] } };
 			}
-			if(this.verifyJWT(token, user.email)){
+			if (this.verifyJWT(token, user.email)) {
 				await this.openDbConnection();
 				const db = await this.getCollection('users');
 				const currentUser = await db.findOne({ email: user.email }).then((result) => {
@@ -79,7 +61,7 @@ class UserDAO extends BaseDAO {
 
 				if (currentUser) {
 					if (user.profilePicture) {
-						user.profilePicture = await this.updateAvatar(currentUser['profilePicture'], user)
+						user.profilePicture = await this.updateAvatar(currentUser['profilePicture'], user);
 					}
 					const res = await db.findOneAndUpdate(
 						{ email: user.email },
@@ -95,14 +77,13 @@ class UserDAO extends BaseDAO {
 						error: 'No user found with: ' + user.email
 					});
 				}
-			}else{
-				this.httpResponse(HttpCode.UNAUTHORIZED, { error: 'session compromised.' })
+			} else {
+				this.httpResponse(HttpCode.UNAUTHORIZED, { error: 'session compromised.' });
 			}
 		} catch (err) {
 			console.log('try catch error updateProfile:\n', err);
 			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'could not update user' });
 		}
-			
 	};
 
 	public register = async (user: User): Promise<Response> => {
@@ -134,8 +115,8 @@ class UserDAO extends BaseDAO {
 		try {
 			await this.openDbConnection();
 			const db = await this.getCollection('users');
-			user.password = this.hash(user.password)
-			const token = jwt.sign({email: user.email}, 'my-key', { expiresIn: "7d" })
+			user.password = this.hash(user.password);
+			const token = jwt.sign({ email: user.email }, 'my-key', { expiresIn: '7d' });
 			const profile = await db
 				.findOne(
 					{ email: user.email, password: user.password },
@@ -148,27 +129,29 @@ class UserDAO extends BaseDAO {
 
 			const today = new Date();
 			const expire = new Date();
-			expire.setTime(today.getTime() + 3600000*24*7);
-			const cookieHeader = { 'set-cookie': `token=${token}; Path=/; expires=${expire} ;HttpOnly` }
+			expire.setTime(today.getTime() + 3600000 * 24 * 7);
+			const cookieHeader = { 'set-cookie': `token=${token}; Path=/; expires=${expire} ;HttpOnly` };
 
 			return profile
-				? this.httpResponse(HttpCode.SUCCESS, profile , cookieHeader)
+				? this.httpResponse(HttpCode.SUCCESS, profile, cookieHeader)
 				: this.httpResponse(HttpCode.NOT_FOUND, { error: 'Wrong credentials' });
 		} catch (err) {
 			console.log('try catch error Login:\n', err);
 			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'Could not login' });
 		}
 	};
- 
+
 	public logout = async (): Promise<Response> => {
-		try{
-			const cookieHeader = { 'set-cookie': `token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT` }
-			return this.httpResponse(HttpCode.SUCCESS, {} ,cookieHeader)
-		}catch(err){
+		try {
+			const cookieHeader = {
+				'set-cookie': `token=deleted; Path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`
+			};
+			return this.httpResponse(HttpCode.SUCCESS, {}, cookieHeader);
+		} catch (err) {
 			console.log('try catch error Logout:\n', err);
 			return this.httpResponse(HttpCode.SERVER_ERROR, { error: 'Could not logout' });
 		}
-	}
+	};
 }
 
 export default UserDAO;

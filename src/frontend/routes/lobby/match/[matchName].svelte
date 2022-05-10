@@ -24,7 +24,6 @@
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
 	import PlayingCard from '../../../components/card/PlayingCard.svelte';
-
 	
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -33,10 +32,24 @@
 	let playerScore = '';
 	let phase = 0;
 	let matchData = writable();
+	const matchName = $page.params['matchName']
 
-	let players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
+	let players
 
-	onMount(() => {
+	$socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
+
+	const returnToLobby = () => {
+		$socketStore.emit('leave-match', {
+			matchName: matchName,
+			email: $userStore.getUserData().email
+		});
+		goto('/lobby');
+	};
+
+	$socketStore.on('player-joined', (data) => {
+		$matchData = data;
+		players = [$matchData['players']];
+		console.log(players)
 		startGame();
 	});
 
@@ -47,7 +60,6 @@
 		deck = null;
 		shown = [];
 		highlight = [];
-		players = [Player.mock(), Player.mock(), Player.mock(), Player.mock()];
 		const data = deckAPI.shuffleDeck();
 
 		deck = data.deck;
@@ -111,22 +123,6 @@
 	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
 		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
 
-
-	const matchName = $page.params['matchName']
-    $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
-	
-	const returnToLobby = () => {
-		$socketStore.emit('leave-match', {
-			matchName: matchName,
-			email: $userStore.getUserData().email
-		});
-		goto('/lobby');
-	};
-
-	$socketStore.on('player-joined', (data) => {
-		$matchData = data;
-		console.log(matchData);
-	});
 </script>
 
 <div class="info">
@@ -135,18 +131,20 @@
 </div>
 
 <section class="board">
-	{#each players as player}
-		<section class="player" class:you={player.name === players[0].name}>
-			<h1>{player.name}</h1>
-			<div class="hand">
-				{#each player.hand.cards as card}
-					<div class="card-shadow">
-						<PlayingCard {card} highlight={findCard(highlight, card)} />
-					</div>
-				{/each}
-			</div>
-		</section>
-	{/each}
+	{#if players}
+		{#each players as player}
+			<section class="player" class:you={player.name === players[0].name}>
+				<h1>{player.name}</h1>
+				<div class="hand">
+					{#each player.hand.cards as card}
+						<div class="card-shadow">
+							<PlayingCard {card} highlight={findCard(highlight, card)} />
+						</div>
+					{/each}
+				</div>
+			</section>
+		{/each}
+	{/if}
 	{#if phase === 4}
 		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
 			<h1>{playerWon}</h1>
