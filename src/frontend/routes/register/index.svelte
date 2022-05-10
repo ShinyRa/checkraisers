@@ -34,77 +34,62 @@
 </script>
 
 <section>
-	<div class="container">
-		<p>Register</p>
-		<hr />
-		<div class="field">
-			<div class="control">
-				<input
-					class="nes-input"
-					type="email"
-					placeholder="Email"
-					bind:value={user.email}
-					required
-				/>
-			</div>
+	<div class="nes-container with-title">
+		<p class="title">register</p>
+		<div class="nes-field">
+			<label for="name_field">email</label>
+			<input class="nes-input" type="email" placeholder="Email" bind:value={user.email} required />
+		</div>
+		<div class="nes-field">
+			<label for="name_field">username</label>
+			<input
+				class="nes-input"
+				type="text"
+				placeholder="Username"
+				bind:value={user.username}
+				required
+			/>
+		</div>
+		<div class="nes-field">
+			<label for="name_field">password</label>
+			<input
+				class="nes-input"
+				type="password"
+				placeholder="Password"
+				bind:value={user.password}
+				required
+			/>
 		</div>
 
-		<div class="field">
-			<div class="control">
-				<input
-					class="nes-input"
-					type="text"
-					placeholder="Username"
-					bind:value={user.username}
-					required
-				/>
-			</div>
-		</div>
-
-		<div class="field">
-			<div class="control">
-				<input
-					class="nes-input"
-					type="password"
-					placeholder="Password"
-					bind:value={user.password}
-					required
-				/>
-			</div>
-		</div>
-
-		<button class="nes-btn is-primary" on:click={registerUser}>create account</button>
+		<button type="button" class="nes-btn is-primary" on:click={registerUser}>create account</button>
 		{#if messageType === 'error' && message}
-			<p class="error is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{message}</p>
+			<span class="nes-text is-error" in:fly|local={{ y: -25, duration: 250 }}>{message}</span>
 		{:else if message}
-			<p class="success is-size-6" in:fly|local={{ y: -25, duration: 250 }}>{message}</p>
+			<span class="nes-text is-success" in:fly|local={{ y: -25, duration: 250 }}>{message}</span>
 		{/if}
 	</div>
 </section>
 
 <style lang="scss">
-	$error: #ff3e00;
-	$success: green;
-
-	.submit {
-		background-color: $error;
-		color: white;
-	}
-
-	.error {
-		color: $error;
-	}
-
-	.success {
-		color: $success;
-	}
 	section {
-		margin: 0 auto;
+		height: 100vh;
+		width: 100vw;
+		background-color: #ececec;
+	}
+	.nes-container {
+		max-width: 725px;
+		margin: 75px auto;
+	}
+	p.title {
+		background-color: #ececec !important;
 	}
 
-	.container {
-		margin-top: 50px;
-		text-align: center;
-		font-size: 40px;
+	.nes-field {
+		padding: 8px 15px;
+	}
+
+	.nes-btn {
+		margin: 35px 0px;
+		width: 100%;
 	}
 </style>
