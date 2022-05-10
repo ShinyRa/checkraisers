@@ -144,9 +144,13 @@
 	{#each players as player}
 		<section class="player" class:you={player.name === players[0].name}>
 			<h1>{player.name}</h1>
-			{#each player.hand.cards as card}
-				<PlayingCard {card} highlight={findCard(highlight, card)} />
-			{/each}
+			<div class="hand">
+				{#each player.hand.cards as card}
+					<div class="card-shadow">
+						<PlayingCard {card} highlight={findCard(highlight, card)} />
+					</div>
+				{/each}
+			</div>
 		</section>
 	{/each}
 	{#if phase === 4}
@@ -192,16 +196,25 @@
 			'you you you';
 		grid-template-columns: repeat(3, 0.33fr);
 		grid-template-rows: repeat(4, 0.25fr);
-		background-color: #e3e3e3;
+		background-color: #31663c;
 		height: 100%;
 		width: 100%;
 		padding: 50px;
 		row-gap: 125px;
 
 		.player {
-			grid-area: 'player';
 			display: flex;
+			flex-direction: column;
+			grid-area: 'player';
 			justify-content: center;
+			color: white;
+			.hand {
+				display: flex;
+				flex-direction: row;
+				.card-shadow {
+					box-shadow: 5px 8px 0px black;
+				}
+			}
 		}
 
 		.help {

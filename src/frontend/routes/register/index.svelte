@@ -74,7 +74,7 @@
 	section {
 		height: 100vh;
 		width: 100vw;
-		background-color: #ececec;
+		background-color: #31663c;
 	}
 	.nes-container {
 		max-width: 725px;
