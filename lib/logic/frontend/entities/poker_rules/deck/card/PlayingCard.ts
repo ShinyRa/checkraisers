@@ -22,7 +22,7 @@ class PlayingCard implements Card {
 		this.identity =
 			identity instanceof CardIdentity ? identity : CardIdentity.fromTemplate(identity);
 		this.state = state ? state : CardState.REVEALED;
-		this.known = this.state === CardState.REVEALED ? true : false;
+		this.known = this.state === CardState.REVEALED;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 <script context="module">
 	export async function load({ session }) {
-		session.authenticated = session.authenticated
+		session.authenticated = session.authenticated;
 		if (session.authenticated) {
 			return {
 				status: 302,
@@ -14,54 +14,95 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { assets as assetsPath } from '$app/paths';
-	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
+	import { fly } from 'svelte/transition';
+	import { expoOut } from 'svelte/easing';
 
 	let load: boolean;
-	onMount(() => (load = true));
+	let timer: boolean;
+	let keypressed: boolean;
 
-	const login = async() =>{
-		await goto('/login')
-	}
+	onMount(() => {
+		load = true;
+		timer = true;
+		setInterval(() => {
+			timer = !timer;
+		}, 750);
+		document.onkeydown = () => {
+			// keypressed = true;
+		};
+		document.onclick = () => {
+			keypressed = true;
+		};
+	});
 
-	const register = async() =>{
-		await goto('/register')
-	}
-	
+	const login = async () => {
+		await goto('/login');
+	};
+
+	const register = async () => {
+		await goto('/register');
+	};
 </script>
 
 {#if load}
-	<section class="container" in:fly|local={{ x: -500, duration: 1250 }}>
-		<img src="{assetsPath}/logo.png" alt="Logo" class="logo" />
-		<p in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>🚧 Under construction...</p>
-		<button on:click={register} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Register</button>
-		<button on:click={login} class="button submit" in:fly|local={{ y: -25, duration: 250, delay: 1250 }}>Login</button>
+	<section class="background" style="background-image: url('{assetsPath}/pattern.png')">
+		<section class="container">
+			<img
+				src="{assetsPath}/logo.png"
+				alt="Logo"
+				class="logo"
+				in:fly|local={{ x: -500, duration: 1250, easing: expoOut }}
+			/>
+		</section>
+		<section class="container">
+			{#if !keypressed}
+				<label>
+					<input type="radio" class="nes-radio" checked={timer} />
+					<span>Press any key to continue...</span>
+				</label>
+			{:else}
+				<section class="menu">
+					<div class="nes-container is-rounded message">
+						<p>Welcome to <span class="nes-text is-error">CheckRaisers</span></p>
+						<p>Please log in or create an account to start playing</p>
+					</div>
+					<a class="nes-btn" on:click={login} href="#">Login</a>
+					<a class="nes-btn" on:click={register} href="#">Register</a>
+				</section>
+			{/if}
+		</section>
 	</section>
 {/if}
 
 <style lang="scss">
-	  $svelte: #ff3e00;
-	.submit {
-		background-color: $svelte;
-		color: white
+	$background: #ececec;
+	.logo {
+		image-rendering: pixelated;
+	}
+	.background {
+		background-color: $background;
+		width: 100vw;
+		height: 100vh;
+	}
+	.background-card {
+		position: absolute;
+		height: 80px;
+		width: 40px;
+		transform-origin: right;
 	}
 	.container {
 		margin-top: 120px;
 		text-align: center;
+		display: flex;
+		flex-direction: column;
 	}
-
-	.logo {
-		height: 300px;
-		width: 300px;
-		animation: 2.5s infinite spin forwards;
+	.message {
+		background-color: $background;
+		margin-bottom: 2em;
 	}
-
-	@keyframes spin {
-		0% {
-			transform: rotate(0deg);
-		}
-		100% {
-			transform: rotate(360deg);
-		}
+	label {
+		background-color: $background;
+		padding: 2em;
 	}
 </style>

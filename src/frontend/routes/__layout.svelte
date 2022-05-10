@@ -4,51 +4,52 @@
 	import { assets as assetsPath } from '$app/paths';
 	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 
-	let user = $userStore.getUserData()
+	let user = $userStore.getUserData();
 
-	userStore.subscribe(val => {
-		user = val.getUserData()
-	})
+	userStore.subscribe((val) => {
+		user = val.getUserData();
+	});
 
 	const routes = [
 		{ title: 'profile', route: '/profile' },
 		{ title: 'lobby', route: '/lobby' }
 	];
 
-	const gotoProfile = async() =>{
-		await goto('/profile')
-	}
+	const gotoProfile = async () => {
+		await goto('/profile');
+	};
 
-	const logout = async() => {
-		await goto('/logout')
-	}
-
+	const logout = async () => {
+		await goto('/logout');
+	};
 </script>
 
-<section class="hero ">
+<!-- <section class="hero ">
 	<div class="hero-body is-flex is-justify-content-space-between">
 		<div>
 			<p class="title">PokerApp</p>
 			<p class="subtitle">By Auke & Tijs</p>
 		</div>
 		{#if user}
-			<div class='is-flex'>
+			<div class="is-flex">
 				<div class="pt-0 mr-3">
 					<p class="is-size-5">{user.username}</p>
 					<p class="is-size-6">chips: {user.chips}</p>
 				</div>
-				<figure class = "image is-square is-48x48 pt-1 is-clickable" on:click={gotoProfile}>
-					<img class='is-rounded' src="{assetsPath}/avatars/{user.profilePicture}" alt='d'>
+				<figure class="image is-square is-48x48 pt-1 is-clickable" on:click={gotoProfile}>
+					<img
+						class="is-rounded"
+						src="{assetsPath}/avatars/{user.profilePicture}"
+						alt="d"
+						style="image-rendering: pixelated;"
+					/>
 				</figure>
 				<button class="is-size-7 mt-3 ml-3 button" on:click={logout}>logout</button>
 			</div>
-
 		{/if}
 	</div>
-
-</section>
+</section> -->
 <main>
-
 	{#if user}
 		<aside class="menu">
 			<ul class="menu-list">
