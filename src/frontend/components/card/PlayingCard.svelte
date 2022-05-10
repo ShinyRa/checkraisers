@@ -45,8 +45,6 @@
 
 			.front {
 				transform: rotateY(180deg);
-				outline: 3px solid white;
-				outline-offset: -2px;
 			}
 			img {
 				height: 100%;
