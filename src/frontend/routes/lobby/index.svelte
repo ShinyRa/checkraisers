@@ -60,7 +60,7 @@
                             <td>${match['bigBlind']}</td>
                             <!--nog een guard fixen-->
                             {#if Object.keys(match['players']).length < match['maxPlayers']}
-                                <td><a href={`/match/${match['name']}`} class='p2 button'>join</a></td>
+                                <td><a href={`/lobby/match/${match['name']}`} class='p2 button'>join</a></td>
                             {/if}
                         </tr>
 				    {/each}

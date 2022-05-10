@@ -10,6 +10,7 @@
 			currentUser.clearUserData()
             return currentUser;
         });
+        $session
         session.update(currentSession =>{
             currentSession['authenticated'] = false
             return currentSession

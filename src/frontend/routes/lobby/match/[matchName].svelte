@@ -19,12 +19,11 @@
 	import CardDeck from '$lib/logic/frontend/entities/poker_rules/deck/CardDeck';
 	import Player from '$lib/logic/frontend/entities/poker_rules/Player';
 	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
-	import PlayingCard from '../../components/card/PlayingCard.svelte';
-	import { page } from '$app/stores';
+	import { page, session } from '$app/stores';
 	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 	import { goto } from '$app/navigation';
-	import { io } from 'socket.io-client';
-import { writable } from 'svelte/store';
+	import { writable } from 'svelte/store';
+	import PlayingCard from '../../../components/card/PlayingCard.svelte';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -114,7 +113,7 @@ import { writable } from 'svelte/store';
 
 	const user = $userStore.getUserData()
 	const matchName = $page.params['matchName']
-    $socketStore.emit('join-match', {email: user.email, username: user.username, chips: user.chips, matchName: matchName})
+    $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
 	
 	const returnToLobby = () => {
 		$socketStore.emit('leave-match', {matchName: matchName, email: $userStore.getUserData().email})
