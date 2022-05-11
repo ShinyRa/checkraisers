@@ -50,7 +50,7 @@
 	</div>
 </section>
 <main>
-	{#if user}
+	<!-- {#if user}
 		<aside class="menu">
 			<ul class="menu-list">
 				{#each routes as { title, route }}
@@ -60,7 +60,7 @@
 				{/each}
 			</ul>
 		</aside>
-	{/if}
+	{/if} -->
 
 	<slot />
 </main>

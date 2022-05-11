@@ -72,10 +72,7 @@
 	.nes-container {
 		max-width: 725px;
 		margin: 75px auto;
-	}
-
-	p.title {
-		background-color: #ececec !important;
+		background-color: white;
 	}
 
 	.nes-field {

@@ -11,7 +11,8 @@
 </script>
 
 <script lang="ts">
-	import { slide } from 'svelte/transition';
+	import { onMount } from 'svelte';
+	import { fade, fly, slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/logic/api/deck';
 	import { evaluationAPI } from '$lib/logic/api/evaluation';
@@ -24,7 +25,8 @@
 	import { writable, type Writable } from 'svelte/store';
 	import PlayingCard from '../../../components/card/PlayingCard.svelte';
 	import Util from '$lib/logic/frontend/generic/Util';
-	
+	import { assets as assetsPath } from '$app/paths';
+
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
 	let highlight: Array<PlayingCardData> = [];
@@ -35,6 +37,8 @@
 	const matchName = $page.params['matchName']
 	console.log("page params ",$page.params)
 	let players: Writable<Array<Player>> = writable([])
+	let actionMessage;
+	let load;
 
 	$socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
 
@@ -48,6 +52,10 @@
 
 	$socketStore.on('match-data', (data) => {
 		$matchData = data;
+	})
+
+	onMount(() => {
+		load = true;
 		startGame();
 	});
 
@@ -130,41 +138,91 @@
 		});
 		goto('/lobby');
 	};
+
+	const takeAction = (action: string, sound: string) => {
+		const audio = new Audio(assetsPath + '/audio/' + sound);
+		audio.play();
+		actionMessage = action;
+		nextPhase()
+		setTimeout(() => {
+			actionMessage = null;
+		}, 2500);
+	};
+
+	$socketStore.on('player-joined', (data) => {
+		$matchData = data;
+		console.log(matchData);
+	});
 </script>
 
-<div class="info">
+<!-- <div class="info">
 	<p>Match name: {matchName}</p>
 	<button on:click={returnToLobby} class="button leave">leave match</button>
-</div>
+</div> -->
 
-<section class="board">
-		{#each $players as player}
-			<section class="player" class:you={player.email === $session['email']}>
-				<div class="is-flex">
-					<img class="image is-rounded is-48x48 " src={player.profilePicture} alt="avatar"/>
-					<h1>{player.username}</h1>
-				</div>
-				<div class="hand">
-					{#each player.hand.cards as card}
-						<div class="card-shadow">
-							<PlayingCard {card} highlight={findCard(highlight, card)} />
-						</div>
-					{/each}
-				</div>
-				<p class="mt-3">total chips: {player.totalChips}</p>
-			</section>
-		{/each}
-	{#if phase === 4}
-		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
-			<h1>{playerWon}</h1>
-			<br />
-			<h3>{playerScore}</h3>
-		</section>
-	{/if}
-	<section class="cards">
-		<button class="button is-large is-primary" disabled={shown.length >= 6} on:click={nextPhase}
-			>{phaseName(phase)}</button
+<section class="board" style={'background-image: url(' + assetsPath + '/rug.png);'}>
+	{#each $players as player}
+		{@const isYou = player.email === $session['email']}
+		<section
+			class="player"
+			class:you={isYou}
+			style={isYou ? 'background-image: url(' + assetsPath + '/wood.png)' : ''}
 		>
+			<h1>{player.username}</h1>
+			<div class="hand">
+				{#if isYou}
+					{#if actionMessage != null}
+						<p transition:fade={{ duration: 250 }} class="nes-balloon from-left text-balloon">
+							{actionMessage}
+						</p>
+					{/if}
+				{/if}
+				{#each player.hand.cards as card}
+					<div class="card-shadow">
+						<PlayingCard {card} highlight={findCard(highlight, card)} />
+					</div>
+				{/each}
+				{#if isYou}
+					<div class="actions">
+						<a class="nes-btn" href="#" on:click={() => takeAction('I call', 'call.wav')}
+							>Call ($0)</a
+						>
+						<a class="nes-btn" href="#" on:click={() => takeAction('I fold', 'fold.wav')}>Fold</a>
+						<a
+							class="nes-btn"
+							href="#"
+							on:click={() => takeAction('I Raise with $250', 'raise.wav')}>Raise ($250)</a
+						>
+						<a
+							class="nes-btn"
+							href="#"
+							on:click={() => takeAction("I'm all in for $15.000", 'allin.wav')}>All In ($15000)</a
+						>
+					</div>
+				{/if}
+			</div>
+		</section>
+	{/each}
+	<!-- {#if phase === 4} -->
+	<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
+		{#if load}
+			{#each [...new Array(4)] as _, index}
+				<img
+					alt="d"
+					in:fly={{ x: 5, y: 35, duration: 1000, delay: index * 200 }}
+					src="{assetsPath}/chip_yellow.png"
+					class="chip"
+					style="position: absolute; left: {0 - index * 3}px; top: {0 - index * 3}px"
+				/>
+			{/each}
+		{/if}
+		<!-- <h1>{playerWon}</h1>
+			<br />
+			<h3>{playerScore}</h3> -->
+	</section>
+	<!-- {/if} -->
+	<section class="cards">
+		<button class="nes-btn is-primary" on:click={nextPhase}>{phaseName(phase)}</button>
 		{#each shown as card}
 			<PlayingCard {card} highlight={findCard(highlight, card)} />
 		{/each}
@@ -172,23 +230,23 @@
 </section>
 
 <style lang="scss">
-	.info {
-		justify-content: space-between;
-		display: flex;
-		font-size: 20px;
-		width: 90%;
-		position: absolute;
-		left: 9%;
-	}
-	.leave {
-		height: 30px;
-		color: white;
-		background-color: #ff3e00;
-		border: 0;
-		margin-top: 5px;
-	}
+	// .info {
+	// 	justify-content: space-between;
+	// 	display: flex;
+	// 	font-size: 20px;
+	// 	width: 90%;
+	// 	position: absolute;
+	// 	left: 9%;
+	// }
+	// .leave {
+	// 	height: 30px;
+	// 	color: white;
+	// 	background-color: #ff3e00;
+	// 	border: 0;
+	// 	margin-top: 5px;
+	// }
 	.board {
-		margin-top: 40px;
+		padding: 50px;
 		display: grid;
 		grid-template:
 			'player player player'
@@ -197,49 +255,66 @@
 			'you you you';
 		grid-template-columns: repeat(3, 0.33fr);
 		grid-template-rows: repeat(4, 0.25fr);
-		background-color: #31663c;
-		height: 100%;
-		width: 100%;
-		padding: 50px;
-		row-gap: 125px;
+		height: 100vh;
+		width: 100vw;
+		color: white;
+		image-rendering: pixelated;
+
+		.text-balloon {
+			position: absolute;
+			top: -150px;
+			height: 75px;
+			min-width: 125px;
+			color: black;
+		}
 
 		.player {
 			display: flex;
 			flex-direction: column;
 			grid-area: 'player';
 			justify-content: center;
-			color: white;
 			.hand {
 				display: flex;
 				flex-direction: row;
-				.card-shadow {
-					box-shadow: 5px 8px 0px black;
-				}
+				position: relative;
 			}
 		}
 
+		.card-shadow {
+			box-shadow: 5px 8px 0px black;
+		}
+
+		.chip {
+			image-rendering: pixelated;
+			height: 35px;
+			width: 35px;
+		}
 		.help {
+			position: relative;
 			grid-area: help;
-			display: flex;
-			justify-content: center;
-			flex-direction: column;
-			text-align: center;
-			grid-column-start: 1;
-			grid-column-end: 4;
-			h1 {
-				font-weight: bold;
-				font-size: 3em;
-			}
-			h3 {
-				font-size: 2.2em;
-			}
+			padding: 25px;
+			// display: flex;
+			// justify-content: center;
+			// flex-direction: column;
+			// text-align: center;
+			// grid-column-start: 1;
+			// grid-column-end: 4;
+			// h1 {
+			// 	font-weight: bold;
+			// 	font-size: 3em;
+			// }
+			// h3 {
+			// 	font-size: 2.2em;
+			// }
 		}
 
 		.you {
 			grid-area: you;
 			grid-column-start: 1;
 			grid-column-end: 4;
-			justify-content: center;
+			image-rendering: pixelated;
+			height: 200px;
+			border: 3px solid black;
 		}
 
 		.cards {
@@ -253,6 +328,9 @@
 				height: 100%;
 				width: 100%;
 			}
+		}
+		.actions {
+			padding: 25px;
 		}
 	}
 </style>

@@ -30,7 +30,7 @@
 		&.highlight {
 			transition: transform 0.35s ease-out;
 			border: 3px solid blue;
-			border-radius: 7px;
+			border-radius: 15px;
 			transform: scale(1.15);
 			margin: 0 25px;
 		}

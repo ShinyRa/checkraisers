@@ -23,6 +23,8 @@
 
 	const registerUser = async () => {
 		await UserClient.register(user).then((res) => {
+			console.log(res);
+
 			messageType = Object.keys(res)[0];
 			message = res[Object.keys(res)[0]];
 		});
@@ -74,14 +76,12 @@
 	section {
 		height: 100vh;
 		width: 100vw;
-		background-color: #31663c;
+		background-color: #ececec;
 	}
 	.nes-container {
 		max-width: 725px;
 		margin: 75px auto;
-	}
-	p.title {
-		background-color: #ececec !important;
+		background-color: white;
 	}
 
 	.nes-field {
