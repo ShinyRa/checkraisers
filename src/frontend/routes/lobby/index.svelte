@@ -12,7 +12,8 @@
 </script>
 
 <script lang='ts'>
-    import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
+    import { goto } from "$app/navigation";
+import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { onMount } from "svelte";
     import { get, writable, type Writable } from "svelte/store";
 
@@ -29,6 +30,11 @@
         if(matchName){
             $socketStore.emit('new-match', {matchName: matchName, bigBlind: bigBlind, maxPlayers: maxPlayers})
         }
+    }
+
+    const joinGame = (slug) => {
+        console.log("slug: ",slug)
+        goto(`/lobby/match/${slug}`)
     }
 
     $socketStore.on('matches-list', (data) => {
@@ -54,13 +60,14 @@
                 </thead>
                 <tbody>
                     {#each $matches as match }
+                    {console.log(match)}
                         <tr>
                             <td>{match['name']}</td>
                             <td>{Object.keys(match['players']).length}/{match['maxPlayers']}</td>
                             <td>${match['bigBlind']}</td>
                             <!--nog een guard fixen-->
                             {#if Object.keys(match['players']).length < match['maxPlayers']}
-                                <td><a href={`/lobby/match/${match['name']}`} class='p2 button'>join</a></td>
+                                <td><button class='button' on:click={() => {joinGame(match['name'])}}>join</button></td>
                             {/if}
                         </tr>
 				    {/each}

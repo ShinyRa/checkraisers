@@ -9,7 +9,7 @@
 </script>
 
 <section class="player" class:you>
-	<h1>{player.name}</h1>
+	<h1>{player.username}</h1>
 	{#each player.hand.cards as card}
 		<PlayingCard
 			{card}

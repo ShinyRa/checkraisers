@@ -44,6 +44,7 @@ io.on('connection', function (socket) {
 	socket.on('leave-match', (data) => {
 		delete matches[data.matchName].players[data.email];
 		io.in('lobby').emit('matches-list', matches);
+		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});
 
 	socket.on('join-match', async (data) => {
@@ -55,8 +56,8 @@ io.on('connection', function (socket) {
 			chips: userData['chips'],
 			profilePicture: userData['profilePicture']
 		};
-		io.in(data.matchName).emit('player-joined', matches[data.matchName]);
 		io.in('lobby').emit('matches-list', matches);
+		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});
 
 	socket.on('join-lobby', () => {

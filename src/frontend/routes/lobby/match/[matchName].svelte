@@ -11,7 +11,6 @@
 </script>
 
 <script lang="ts">
-	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/logic/api/deck';
@@ -22,8 +21,9 @@
 	import { page, session } from '$app/stores';
 	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 	import { goto } from '$app/navigation';
-	import { writable } from 'svelte/store';
+	import { writable, type Writable } from 'svelte/store';
 	import PlayingCard from '../../../components/card/PlayingCard.svelte';
+	import Util from '$lib/logic/frontend/generic/Util';
 	
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -33,23 +33,21 @@
 	let phase = 0;
 	let matchData = writable();
 	const matchName = $page.params['matchName']
-
-	let players
+	console.log("page params ",$page.params)
+	let players: Writable<Array<Player>> = writable([])
 
 	$socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
 
-	const returnToLobby = () => {
-		$socketStore.emit('leave-match', {
-			matchName: matchName,
-			email: $userStore.getUserData().email
+	const createPlayers = (array) => {
+		const updatedArray = []
+		array.forEach(val => {
+			updatedArray.push(new Player(val['email'],val['username'], val['profilePicture'], val['chips']))
 		});
-		goto('/lobby');
-	};
+		return updatedArray
+	}
 
-	$socketStore.on('player-joined', (data) => {
+	$socketStore.on('match-data', (data) => {
 		$matchData = data;
-		players = [$matchData['players']];
-		console.log(players)
 		startGame();
 	});
 
@@ -62,8 +60,10 @@
 		highlight = [];
 		const data = deckAPI.shuffleDeck();
 
+		players.set(createPlayers(Util.objectToArray($matchData['players'])))
+
 		deck = data.deck;
-		players.forEach((player) => {
+		$players.forEach((player) => {
 			[1, 2].forEach(() => player.hand.deal(deck.draw()));
 		});
 		players = players;
@@ -90,12 +90,12 @@
 			drawCard();
 		}
 		if (phase === 4) {
-			const { winner, winningHand } = evaluationAPI.evaluate(players, shown);
+			const { winner, winningHand } = evaluationAPI.evaluate($players, shown);
 			highlight = winningHand.score.getCards();
 			playerWon = `${winner.name} won!`;
 			playerScore = winningHand.score.print();
 
-			players.forEach((player, index) => {
+			$players.forEach((player, index) => {
 				player.hand.reveal();
 				players[index] = player;
 			});
@@ -123,6 +123,13 @@
 	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
 		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
 
+		const returnToLobby = () => {
+		$socketStore.emit('leave-match', {
+			matchName: matchName,
+			email: $userStore.getUserData().email
+		});
+		goto('/lobby');
+	};
 </script>
 
 <div class="info">
@@ -131,10 +138,12 @@
 </div>
 
 <section class="board">
-	{#if players}
-		{#each players as player}
-			<section class="player" class:you={player.name === players[0].name}>
-				<h1>{player.name}</h1>
+		{#each $players as player}
+			<section class="player" class:you={player.email === $session['email']}>
+				<div class="is-flex">
+					<img class="image is-rounded is-48x48 " src={player.profilePicture} alt="avatar"/>
+					<h1>{player.username}</h1>
+				</div>
 				<div class="hand">
 					{#each player.hand.cards as card}
 						<div class="card-shadow">
@@ -142,9 +151,9 @@
 						</div>
 					{/each}
 				</div>
+				<p class="mt-3">total chips: {player.totalChips}</p>
 			</section>
 		{/each}
-	{/if}
 	{#if phase === 4}
 		<section class="help" in:slide={{ duration: 275, easing: quintOut }}>
 			<h1>{playerWon}</h1>
