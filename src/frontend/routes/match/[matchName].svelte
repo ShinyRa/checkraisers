@@ -25,7 +25,7 @@
 	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 	import { goto } from '$app/navigation';
 	import { writable } from 'svelte/store';
-	import { assets, assets as assetsPath } from '$app/paths';
+	import { assets as assetsPath } from '$app/paths';
 
 	let deck: CardDeck;
 	let shown: Array<PlayingCardData> = [];
@@ -132,8 +132,11 @@
 		goto('/lobby');
 	};
 
-	const takeAction = (action: string) => {
+	const takeAction = (action: string, sound: string) => {
+		const audio = new Audio(assetsPath + '/audio/' + sound);
+		audio.play();
 		actionMessage = action;
+		nextPhase()
 		setTimeout(() => {
 			actionMessage = null;
 		}, 2500);
@@ -174,13 +177,19 @@
 				{/each}
 				{#if isYou}
 					<div class="actions">
-						<a class="nes-btn" href="#" on:click={() => takeAction('I call')}>Call ($0)</a>
-						<a class="nes-btn" href="#" on:click={() => takeAction('I fold')}>Fold</a>
-						<a class="nes-btn" href="#" on:click={() => takeAction('I Raise with $250')}
-							>Raise ($250)</a
+						<a class="nes-btn" href="#" on:click={() => takeAction('I call', 'call.wav')}
+							>Call ($0)</a
 						>
-						<a class="nes-btn" href="#" on:click={() => takeAction("I'm all in for $15.000")}
-							>All In ($15000)</a
+						<a class="nes-btn" href="#" on:click={() => takeAction('I fold', 'fold.wav')}>Fold</a>
+						<a
+							class="nes-btn"
+							href="#"
+							on:click={() => takeAction('I Raise with $250', 'raise.wav')}>Raise ($250)</a
+						>
+						<a
+							class="nes-btn"
+							href="#"
+							on:click={() => takeAction("I'm all in for $15.000", 'allin.wav')}>All In ($15000)</a
 						>
 					</div>
 				{/if}
