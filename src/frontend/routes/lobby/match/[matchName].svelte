@@ -35,7 +35,6 @@
 	let phase = 0;
 	let matchData = writable();
 	const matchName = $page.params['matchName']
-	console.log("page params ",$page.params)
 	let players: Writable<Array<Player>> = writable([])
 	let actionMessage;
 	let load;
@@ -52,11 +51,11 @@
 
 	$socketStore.on('match-data', (data) => {
 		$matchData = data;
+		startGame();
 	})
 
 	onMount(() => {
 		load = true;
-		startGame();
 	});
 
 	const startGame = () => {
@@ -69,6 +68,7 @@
 		const data = deckAPI.shuffleDeck();
 
 		players.set(createPlayers(Util.objectToArray($matchData['players'])))
+		console.log($players)
 
 		deck = data.deck;
 		$players.forEach((player) => {
@@ -148,17 +148,12 @@
 			actionMessage = null;
 		}, 2500);
 	};
-
-	$socketStore.on('player-joined', (data) => {
-		$matchData = data;
-		console.log(matchData);
-	});
 </script>
 
-<!-- <div class="info">
+<div class="info">
 	<p>Match name: {matchName}</p>
 	<button on:click={returnToLobby} class="button leave">leave match</button>
-</div> -->
+</div>
 
 <section class="board" style={'background-image: url(' + assetsPath + '/rug.png);'}>
 	{#each $players as player}
@@ -230,21 +225,21 @@
 </section>
 
 <style lang="scss">
-	// .info {
-	// 	justify-content: space-between;
-	// 	display: flex;
-	// 	font-size: 20px;
-	// 	width: 90%;
-	// 	position: absolute;
-	// 	left: 9%;
-	// }
-	// .leave {
-	// 	height: 30px;
-	// 	color: white;
-	// 	background-color: #ff3e00;
-	// 	border: 0;
-	// 	margin-top: 5px;
-	// }
+	.info {
+		justify-content: space-between;
+		display: flex;
+		font-size: 20px;
+		width: 90%;
+		position: absolute;
+		left: 9%;
+	}
+	.leave {
+		height: 30px;
+		color: white;
+		background-color: #ff3e00;
+		border: 0;
+		margin-top: 5px;
+	}
 	.board {
 		padding: 50px;
 		display: grid;

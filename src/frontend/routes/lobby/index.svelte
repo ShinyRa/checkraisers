@@ -13,7 +13,7 @@
 
 <script lang='ts'>
     import { goto } from "$app/navigation";
-import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
+    import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { onMount } from "svelte";
     import { get, writable, type Writable } from "svelte/store";
 
@@ -60,7 +60,6 @@ import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
                 </thead>
                 <tbody>
                     {#each $matches as match }
-                    {console.log(match)}
                         <tr>
                             <td>{match['name']}</td>
                             <td>{Object.keys(match['players']).length}/{match['maxPlayers']}</td>
