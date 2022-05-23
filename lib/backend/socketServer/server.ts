@@ -12,11 +12,30 @@ const io = new Server(port, {
 });
 
 console.log('server started');
+
+//  TODO match
+//  - current round / max rounds
+//  - creater of match
+//	- current phase
+
 type Match = {
+	host?: Player['email'];
+	phase?: number;
 	name?: string;
 	bigBlind?: number;
 	maxPlayers?: number;
+	rounds?: Round;
 	players?: Record<string, Player>;
+};
+
+type Round = {
+	maxRounds: number;
+	currentRound: {
+		roundsPlayed: number;
+		potSize: number;
+		playersPlaying: Record<string, Player>;
+		currentPlayerMove: Match['players'];
+	};
 };
 
 type Player = {
