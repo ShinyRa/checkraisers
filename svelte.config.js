@@ -18,15 +18,6 @@ const config = {
 			routes: './src/frontend/routes' // /frontend/routes folder as routing entry point
 		},
 		vite: {
-			plugins: [
-				{
-					name: 'socket-io',
-					// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-					configureServer(server) {
-						import('./lib/backend/socketServer/server.cjs');
-					}
-				}
-			],
 			resolve: {
 				alias: {
 					'xmlhttprequest-ssl': './node_modules/engine.io-client/lib/xmlhttprequest.js'

@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/svelte';
 
-import { CardState } from '../../entities/poker_rules/deck/card/state/CardState';
+import { CardState } from '../../../../backend/entities/poker_rules/deck/card/state/CardState';
 
-import { default as PlayingCardData } from '../../entities/poker_rules/deck/card/PlayingCard';
+import { default as PlayingCardData } from '../../../../backend/entities/poker_rules/deck/card/PlayingCard';
 import PlayingCard from '../../../../../src/frontend/components/card/PlayingCard.svelte';
 
 let card: PlayingCardData;

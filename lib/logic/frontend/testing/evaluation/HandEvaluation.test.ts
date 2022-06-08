@@ -1,5 +1,5 @@
-import PlayingCard from '../../entities/poker_rules/deck/card/PlayingCard';
-import { PlayerHand } from '../../entities/poker_rules/hand/PlayerHand';
+import PlayingCard from '../../../../backend/entities/poker_rules/deck/card/PlayingCard';
+import { PlayerHand } from '../../../../backend/entities/poker_rules/hand/PlayerHand';
 
 let hero;
 let villain;

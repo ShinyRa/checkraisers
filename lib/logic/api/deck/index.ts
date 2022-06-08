@@ -1,4 +1,4 @@
-import CardDeck from '../../frontend/entities/poker_rules/deck/CardDeck';
+import CardDeck from '../../../backend/entities/poker_rules/deck/CardDeck';
 
 export const deckAPI = {
 	shuffleDeck(): Record<string, CardDeck> {

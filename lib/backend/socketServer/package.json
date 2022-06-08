@@ -1,0 +1,18 @@
+{
+	"scripts": {
+		"start": "npx ts-node server.ts"
+	},
+	"name": "SocketServer",
+	"version": "1.0.0",
+	"main": "server.ts",
+	"author": "Auke Steenman",
+	"license": "MIT",
+	"dependencies": {
+		"@types/express": "^4.17.13",
+		"@types/node": "^17.0.41",
+		"mongodb": "^4.7.0",
+		"socket.io": "^4.5.1",
+		"ts-node": "^10.8.1",
+		"typescript": "^4.7.3"
+	}
+}

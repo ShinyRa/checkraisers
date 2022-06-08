@@ -39,6 +39,6 @@
 		"lib/**/*.test.ts",
 		"lib/**/*.js"
 	],
-	"exclude": ["lib/backend/socketServer/server.cjs"],
+	"exclude": ["lib/backend/entities/server.cjs"],
 	"extends": "./.svelte-kit/tsconfig.json"
 }

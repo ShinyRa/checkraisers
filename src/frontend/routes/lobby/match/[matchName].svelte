@@ -15,11 +15,23 @@
     import { page, session } from "$app/stores";
     import { assets as assetsPath } from '$app/paths';
     import { socketStore } from "$lib/logic/frontend/entities/stores";
+    import { writable } from "svelte/store";
 
+    let matchData = writable();
     const matchName = $page.params['matchName']
 
+    $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
+
+    $socketStore.on('match-data', (data) => {
+		$matchData = data;
+        console.log($matchData)
+	})
+
     const leaveMatch = () => {
-        console.log('test')
+        $socketStore.emit('leave-match', {
+			matchName: matchName,
+			email: $session['email']
+		});
         goto('/lobby')
     }
 

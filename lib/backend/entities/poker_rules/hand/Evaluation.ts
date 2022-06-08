@@ -1,16 +1,7 @@
-import {
-	FullHouse,
-	High,
-	Pair,
-	Quads,
-	Straight,
-	TwoPair,
-	Trips,
-	Flush
-} from './evaluation/ranks';
+import { FullHouse, High, Pair, Quads, Straight, TwoPair, Trips, Flush } from './evaluation/ranks';
 
 import PlayingCard from '../deck/card/PlayingCard';
-import { PlayerHand } from '../hand/PlayerHand';
+import { PlayerHand } from './PlayerHand';
 import { HandRank } from './evaluation/HandRank';
 
 import { CardSuit } from '../deck/card/identity/CardSuit';

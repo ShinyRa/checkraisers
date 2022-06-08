@@ -1,4 +1,4 @@
-import CardDeck from '../../entities/poker_rules/deck/CardDeck';
+import CardDeck from '../../../../backend/entities/poker_rules/deck/CardDeck';
 
 let deck: CardDeck;
 

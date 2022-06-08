@@ -1,7 +1,7 @@
-import Player from '../../entities/poker_rules/Player';
-import { PlayerAction } from '../../entities/poker_rules/round/action/PlayerAction';
-import { PlayerActionEnum } from '../../entities/poker_rules/round/action/PlayerActionEnum';
-import { ActionStack } from '../../entities/poker_rules/round/ActionStack';
+import Player from '../../../../backend/entities/poker_rules/Player';
+import { PlayerAction } from '../../../../backend/entities/poker_rules/round/action/PlayerAction';
+import { PlayerActionEnum } from '../../../../backend/entities/poker_rules/round/action/PlayerActionEnum';
+import { ActionStack } from '../../../../backend/entities/poker_rules/round/ActionStack';
 
 let stack;
 const players = [Player.mock(), Player.mock()];

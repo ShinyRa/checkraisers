@@ -16,9 +16,9 @@
 	import { quintOut } from 'svelte/easing';
 	import { deckAPI } from '$lib/logic/api/deck';
 	import { evaluationAPI } from '$lib/logic/api/evaluation';
-	import CardDeck from '$lib/logic/frontend/entities/poker_rules/deck/CardDeck';
-	import Player from '$lib/logic/frontend/entities/poker_rules/Player';
-	import { default as PlayingCardData } from '$lib/logic/frontend/entities/poker_rules/deck/card/PlayingCard';
+	import CardDeck from '$lib/backend/entities/poker_rules/deck/CardDeck';
+	import Player from '$lib/backend/entities/poker_rules/Player';
+	import { default as PlayingCardData } from '$lib/backend/entities/poker_rules/deck/card/PlayingCard';
 	import { page, session } from '$app/stores';
 	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
 	import { goto } from '$app/navigation';
