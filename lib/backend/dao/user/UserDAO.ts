@@ -12,6 +12,18 @@ class UserDAO extends BaseDAO {
 		super();
 	}
 
+	public getProfile = async (email: string): Promise<unknown> => {
+		await this.openDbConnection();
+		const db = await this.getCollection('users');
+		const user = await db
+			.findOne({ email: email }, { projection: { _id: 0, password: 0 } })
+			.then((result) => {
+				return result ? result : false;
+			});
+		await this.closeDbConnection();
+		return user;
+	};
+
 	private updateAvatar = async (oldAvatar: string, user: Partial<User>): Promise<string> => {
 		const timePreset = Date.now();
 		const oldAvatarPath = `${this.ASSET_PATH}${oldAvatar}`;

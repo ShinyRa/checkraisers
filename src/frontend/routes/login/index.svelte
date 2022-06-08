@@ -32,6 +32,7 @@
 				currentUser.setUserData(res);
 				return currentUser;
 			});
+			console.log($userStore.getUserData())
 			$session['authenticated'] = true;
 			await goto('/profile');
 		}

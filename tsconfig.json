@@ -37,7 +37,9 @@
 		"src/global.d.ts",
 		"lib/**/*.ts",
 		"lib/**/*.test.ts",
-		"lib/**/*.js"
+		"lib/**/*.js",
+		"lib/backend/socketServer/server.mjs",
+		"lib/backend/socketServer/compiled/socketServer/server.js"
 	],
 	"exclude": ["lib/backend/entities/server.cjs"],
 	"extends": "./.svelte-kit/tsconfig.json"

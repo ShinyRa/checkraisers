@@ -1,5 +1,7 @@
-import { Collection, MongoClient } from 'mongodb';
 import { Server } from 'socket.io';
+import UserDAO from '../dao/user/UserDAO';
+import { Phase } from '../entities/poker_rules/round/Phase';
+import Player from '../entities/poker_rules/Player';
 
 // Localhost
 const port = 3001;
@@ -20,7 +22,6 @@ console.log('server started');
 
 type Match = {
 	host?: Player['email'];
-	phase?: number;
 	name?: string;
 	bigBlind?: number;
 	maxPlayers?: number;
@@ -29,35 +30,40 @@ type Match = {
 };
 
 type Round = {
-	maxRounds: number;
-	currentRound: {
-		roundsPlayed: number;
-		potSize: number;
-		playersPlaying: Record<string, Player>;
-		currentPlayerMove: Match['players'];
-	};
-};
-
-type Player = {
-	email: string;
-	username: string;
-	chips: number;
-	profilePicture: string;
+	phase: Phase;
+	roundsPlayed: number;
+	potSize: number;
+	playersPlaying: Record<string, Player>;
+	currentPlayerMove: Match['players'];
 };
 
 const matches: Match = {};
+const userDAO: UserDAO = new UserDAO();
 
 io.on('connection', function (socket) {
 	io.to(socket.id).emit('matches-list', matches);
 
 	socket.on('new-match', (data) => {
+		const round: Round = {
+			phase: Phase.PRE_FLOP,
+			roundsPlayed: 0,
+			potSize: 0,
+			playersPlaying: {},
+			currentPlayerMove: {}
+		};
 		matches[data.matchName] = {
+			host: data.host,
 			name: data.matchName,
 			bigBlind: data.bigBlind,
 			maxPlayers: data.maxPlayers,
+			rounds: round,
 			players: {}
 		};
 		io.in('lobby').emit('matches-list', matches);
+	});
+
+	socket.on('disconnect', () => {
+		console.log('disconnected');
 	});
 
 	socket.on('leave-match', (data) => {
@@ -67,14 +73,16 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('join-match', async (data) => {
-		const userData = await Database.getProfile(data.email);
+		const userData = await userDAO.getProfile(data.email);
 		socket.join(data.matchName);
-		matches[data.matchName].players[userData['email']] = {
-			email: userData['email'],
-			username: userData['username'],
-			chips: userData['chips'],
-			profilePicture: userData['profilePicture']
-		};
+		console.log('na het joinen: ', socket.rooms);
+		const newPlayer = new Player(
+			userData['email'],
+			userData['username'],
+			userData['profilePicture'],
+			userData['chips']
+		);
+		matches[data.matchName].players[newPlayer.email] = newPlayer;
 		io.in('lobby').emit('matches-list', matches);
 		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});
@@ -88,40 +96,3 @@ io.on('connection', function (socket) {
 		socket.disconnect();
 	});
 });
-
-class Database {
-	private static client: MongoClient;
-
-	public static getProfile = async (email: string): Promise<unknown> => {
-		await this.openDbConnection();
-		const db = await this.getCollection('users');
-		const user = await db
-			.findOne({ email: email }, { projection: { _id: 0, password: 0 } })
-			.then((result) => {
-				return result ? result : false;
-			});
-		await this.closeDbConnection();
-
-		return user;
-	};
-
-	private static getCollection = async (collection: string): Promise<Collection> => {
-		return await this.client.db('local').collection(collection);
-	};
-
-	private static openDbConnection = async (): Promise<void> => {
-		try {
-			this.client = await MongoClient.connect('mongodb://127.0.0.1:27017/');
-		} catch (err) {
-			console.log(err);
-		}
-	};
-
-	private static closeDbConnection = async (): Promise<void> => {
-		try {
-			this.client.close();
-		} catch (err) {
-			console.log(err);
-		}
-	};
-}

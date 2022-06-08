@@ -1,7 +1,9 @@
 {
 	"scripts": {
-		"start": "npx ts-node server.ts"
+		"start": "node compiled/socketServer/server.js",
+		"compile": "tsc server.ts --outDir compiled"
 	},
+	"outDir": "compiled",
 	"name": "SocketServer",
 	"version": "1.0.0",
 	"main": "server.ts",
@@ -13,6 +15,6 @@
 		"mongodb": "^4.7.0",
 		"socket.io": "^4.5.1",
 		"ts-node": "^10.8.1",
-		"typescript": "^4.7.3"
+		"typescript": "^4.8.0-dev.20220608"
 	}
 }

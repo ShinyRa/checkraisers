@@ -13,6 +13,7 @@
 
 <script lang='ts'>
     import { goto } from "$app/navigation";
+    import { session } from "$app/stores";
     import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { onMount } from "svelte";
     import { get, writable, type Writable } from "svelte/store";
@@ -28,13 +29,12 @@
 
     const createGame = () => {
         if(matchName){
-            $socketStore.emit('new-match', {matchName: matchName, bigBlind: bigBlind, maxPlayers: maxPlayers})
+            $socketStore.emit('new-match', {host: $session['email'], matchName: matchName, bigBlind: bigBlind, maxPlayers: maxPlayers})
         }
     }
 
-    const joinGame = (slug) => {
-        console.log("slug: ",slug)
-        goto(`/lobby/match/${slug}`)
+    const joinGame = (matchName) => {
+        goto(`/lobby/match/${matchName}`)
     }
 
     $socketStore.on('matches-list', (data) => {
