@@ -18,10 +18,16 @@
     import { writable, type Writable } from "svelte/store";
     import { onDestroy } from "svelte";
     import Player from "$lib/backend/entities/poker_rules/Player";
+	import PlayingCard from '../../../components/card/PlayingCard.svelte';
 
     let matchData = writable();
     let players: Writable<Player[]> = writable();
     const matchName = $page.params['matchName'];
+
+
+    const startMatch = () => {
+        $socketStore.emit('start-match', {email: $session['email'],  matchName: matchName})
+    }
 
     //socket io logic below
     $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
@@ -29,7 +35,6 @@
     $socketStore.on('match-data', (data) => {
 		$matchData = data;
         $players = Object.values(data['players'])
-        console.log($players)
         console.log($matchData)
 	})
 
@@ -47,7 +52,6 @@
 			email: $session['email']
 		});
     })
-
     let preview: string = `${assetsPath}/avatars/`;
 </script>
 
@@ -66,24 +70,31 @@
     <div class="grid opponent-layout">
         {#if $players}
             {#each $players as player}
-                <div class="opponent">
-                    <div class="oponent-info">
-                        <div>
-                            <p>username: {player.username}</p>
-                            <p>chips: {player.totalChips}</p>
+                {#if player.email !== $session['email']}
+                    <div class="opponent">
+                        <div class="oponent-info">
+                            <div>
+                                <p>username: {player.username}</p>
+                                <p>chips: {player.totalChips}</p>
+                            </div>
+                            <figure class="image is-square is-64x64 pt-1">
+                                <img
+                                    class="is-rounded"
+                                    src="{preview}{player.profilePicture}"
+                                    alt="d"
+                                />
+                            </figure>
                         </div>
-                        <figure class="image is-square is-64x64 pt-1">
-                            <img
-                                class="is-rounded"
-                                src="{preview}{player.profilePicture}"
-                                alt="d"
-                            />
-                        </figure>
+                        {#if $matchData['started'] && player.hand}
+                            <div class="card-holder">
+                                {player.hand.reveal()}
+                                {#each player.hand.cards as card}
+                                    <PlayingCard {card} highlight/>
+                                {/each}
+                            </div>
+                        {/if}
                     </div>
-                    <div class="card-holder">
-                        testing
-                    </div>
-                </div>
+                {/if}
             {/each}
         {/if}
     </div>
@@ -91,11 +102,35 @@
     <div class="grid community">
     </div>
 
-    <div class="grid you">
-    </div>
+    {#if $players}
+        {#each $players as player}
+            {#if player.email === $session['email']}
+                <div class="grid you-layout" style={'background-image: url(' + assetsPath + '/wood.png)'}>
+                    <p>{player.username}</p>
+                    <div class="actions">
+						<a class="nes-btn action-button" href="#" on:click={() => takeAction('I call', 'call.wav')}
+							>Call ($0)</a
+						>
+						<a class="nes-btn action-button" href="#" on:click={() => takeAction('I fold', 'fold.wav')}>Fold</a>
+						<a
+							class="nes-btn action-button"
+							href="#"
+							on:click={() => takeAction('I Raise with $250', 'raise.wav')}>Raise ($250)</a
+						>
+						<a
+							class="nes-btn action-button"
+							href="#"
+							on:click={() => takeAction("I'm all in for $15.000", 'allin.wav')}>All In ($15000)</a
+						>
+					</div>
 
-
-
+                    {#if $matchData['host'] === $session['email'] && !$matchData['started']}
+                        <button class="nes-btn start is-success" on:click={() => startMatch()}>Start match</button>
+                    {/if}
+                </div>
+            {/if}
+        {/each}
+    {/if}
 
 </section>
 
@@ -125,7 +160,6 @@
 
     .oponent-layout{
         display: flex;
-        grid-area: oponent;
 		flex-direction: column;
 		justify-content: center;
     }
@@ -139,6 +173,29 @@
             flex-direction: row;
         }
     }
+
+    .you-layout{
+        justify-content: space-around;
+        display: flex;
+        padding: 20px;
+		image-rendering: pixelated;
+		height: 200px;
+		border: 3px solid black;
+        .actions{
+            display: flex;
+        }
+        .action-button{
+            margin: 10px;
+            height: fit-content;
+        }
+        .start{
+            height: fit-content;
+            padding: 30px;
+        }
+    }
+
+
+
 
 
     // row:     v (vertical)

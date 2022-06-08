@@ -14,8 +14,8 @@
 	import { onMount } from 'svelte';
 	import { fade, fly, slide } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
-	import { deckAPI } from '$lib/logic/api/deck';
-	import { evaluationAPI } from '$lib/logic/api/evaluation';
+	import { deckAPI } from '$lib/backend/entities/poker_rules/deck/deckAPI';
+	import { evaluationAPI } from '$lib/backend/entities/poker_rules/round/evaluation';
 	import CardDeck from '$lib/backend/entities/poker_rules/deck/CardDeck';
 	import Player from '$lib/backend/entities/poker_rules/Player';
 	import { default as PlayingCardData } from '$lib/backend/entities/poker_rules/deck/card/PlayingCard';
