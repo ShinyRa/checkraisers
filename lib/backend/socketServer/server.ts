@@ -29,7 +29,7 @@ const handOutCards = (players: Player[]) => {
 	const data = deckAPI.shuffleDeck();
 	players.forEach((player) => {
 		[1, 2].forEach(() => player.hand.deal(data.deck.draw()));
-		console.log(player.hand);
+		console.log(players);
 	});
 };
 

@@ -86,14 +86,15 @@
                             </figure>
                         </div>
 
-                        {console.log("data: ",$matchData['started'])}
-                        {#if $matchData['started']}
-                            <div class="card-holder">
+                        <div class="card-holder">
+                            {#if $matchData['started']}
                                 {#each player.hand.cards as card}
                                     <PlayingCard {card} highlight/>
                                 {/each}
-                            </div>
-                        {/if}
+                            {:else}
+                                <p> match not started yet</p>
+                            {/if}
+                        </div>
                     </div>
                 {/if}
             {/each}
