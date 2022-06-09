@@ -16,52 +16,49 @@ const io = new Server(port, {
 
 console.log('server started');
 
-const objectToArray = (object) => {
-	const keys = Object.keys(object);
-	const array = [];
-	keys.forEach((val) => {
-		array.push(object[val]);
-	});
-	return array;
-};
-
-const handOutCards = (players: Player[]) => {
+const handOutCards = (players: Player[]): Player[] => {
 	const data = deckAPI.shuffleDeck();
 	players.forEach((player) => {
 		[1, 2].forEach(() => player.hand.deal(data.deck.draw()));
-		console.log(players);
 	});
+	return players;
 };
 
-type Match = {
+const findPlayer = (players: Player[], email: string): Player | false => {
+	let res: Player | false = false;
+	players.forEach((player) => {
+		if (player.email === email) res = player;
+	});
+	return res;
+};
+
+export type Match = {
 	started?: boolean;
 	host?: Player['email'];
 	name?: string;
 	bigBlind?: number;
 	maxPlayers?: number;
 	rounds?: Round;
-	players?: Record<string, Player>;
+	players?: Player[];
 };
 
 type Round = {
 	phase: Phase;
 	roundsPlayed: number;
 	potSize: number;
-	currentPlayerMove: Match['players'];
+	currentPlayerMove: Player['email'];
 };
 
 const matches: Match = {};
 const userDAO: UserDAO = new UserDAO();
 
 io.on('connection', function (socket) {
-	io.to(socket.id).emit('matches-list', matches);
-
 	socket.on('new-match', (data) => {
 		const round: Round = {
-			phase: Phase.PRE_FLOP,
-			roundsPlayed: 0,
 			potSize: 0,
-			currentPlayerMove: {}
+			currentPlayerMove: '',
+			phase: Phase.PRE_FLOP,
+			roundsPlayed: 0
 		};
 		matches[data.matchName] = {
 			started: false,
@@ -70,44 +67,55 @@ io.on('connection', function (socket) {
 			bigBlind: data.bigBlind,
 			maxPlayers: data.maxPlayers,
 			rounds: round,
-			players: {}
+			players: []
 		};
 		io.in('lobby').emit('matches-list', matches);
 	});
 
 	socket.on('start-match', (data) => {
-		const match = matches[data.matchName];
-		match.started = true;
-		match.players = objectToArray(match.players);
-		match.rounds.currentPlayerMove = matches[data.matchName].players[data.email];
-		handOutCards(match.players);
+		matches[data.matchName].started = true;
+		matches[data.matchName].rounds.currentPlayerMove = matches[data.matchName].host;
+		matches[data.matchName].players = handOutCards(matches[data.matchName].players);
 		io.in('lobby').emit('matches-list', matches);
 		io.in(data.matchName).emit('match-data', matches[data.matchName]);
+	});
+
+	socket.on('get-match-data', (data) => {
+		socket.join(data.matchName);
+		io.to(socket.id).emit('match-data', matches[data.matchName]);
 	});
 
 	socket.on('join-match', async (data) => {
 		const userData = await userDAO.getProfile(data.email);
-		socket.join(data.matchName);
-		console.log('na het joinen: ', socket.rooms);
-		const newPlayer = new Player(
-			userData['email'],
-			userData['username'],
-			userData['profilePicture'],
-			userData['chips']
-		);
-		matches[data.matchName].players[newPlayer.email] = newPlayer;
-		io.in('lobby').emit('matches-list', matches);
-		io.in(data.matchName).emit('match-data', matches[data.matchName]);
+		if (!findPlayer(matches[data.matchName].players, data.email)) {
+			socket.leave('lobby');
+			socket.join(data.matchName);
+			const newPlayer = new Player(
+				userData['email'],
+				userData['username'],
+				userData['profilePicture'],
+				userData['chips']
+			);
+			matches[data.matchName].players.push(newPlayer);
+			io.in('lobby').emit('matches-list', matches);
+			io.in(data.matchName).emit('match-data', matches[data.matchName]);
+		} else {
+			io.to(socket.id).emit('match-data', matches[data.matchName]);
+		}
 	});
 
 	socket.on('leave-match', (data) => {
-		delete matches[data.matchName].players[data.email];
+		matches[data.matchName].players.forEach((player, index) => {
+			if (player.email === data.email) {
+				matches[data.matchName].players.splice(index, 1);
+			}
+		});
 		io.in('lobby').emit('matches-list', matches);
 		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});
 
 	socket.on('disconnect', () => {
-		console.log('disconnected');
+		console.log('disconnected user: ', socket.id);
 	});
 
 	socket.on('join-lobby', () => {
@@ -116,6 +124,6 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('leave-lobby', () => {
-		socket.disconnect();
+		socket.leave('lobby');
 	});
 });

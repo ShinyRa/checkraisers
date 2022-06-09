@@ -23,8 +23,6 @@
 
 	const registerUser = async () => {
 		await UserClient.register(user).then((res) => {
-			console.log(res);
-
 			messageType = Object.keys(res)[0];
 			message = res[Object.keys(res)[0]];
 		});

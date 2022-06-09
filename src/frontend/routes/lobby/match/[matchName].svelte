@@ -12,115 +12,155 @@
 
 <script lang='ts'>
     import { goto } from "$app/navigation";
-    import { page, session } from "$app/stores";
+    import { navigating, page, session } from "$app/stores";
     import { assets as assetsPath } from '$app/paths';
     import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { writable, type Writable } from "svelte/store";
-    import { onDestroy } from "svelte";
+    import { onDestroy, onMount } from "svelte";
     import Player from "$lib/backend/entities/poker_rules/Player";
-	import PlayingCard from '../../../components/card/PlayingCard.svelte';
+    import CardHolder from '../../../components/player/CardHolder.svelte';
+    import { PlayerHand } from "$lib/backend/entities/poker_rules/hand/PlayerHand";
+    import PlayingCard from "$lib/backend/entities/poker_rules/deck/card/PlayingCard";
+    import { CardIdentity } from "$lib/backend/entities/poker_rules/deck/card/identity/CardIdentity";
+    import { Phase } from "$lib/backend/entities/poker_rules/round/Phase";
+    import { browser } from "$app/env";
 
-    let matchData = writable();
-    let players: Writable<Player[]> = writable();
+    type Match = {
+        started?: boolean;
+        host?: Player['email'];
+        name?: string;
+        bigBlind?: number;
+        maxPlayers?: number;
+        rounds?: Round;
+        players?: Player[];
+    };
+
+    type Round = {
+        phase: Phase;
+        roundsPlayed: number;
+        potSize: number;
+        currentPlayerMove: Player | null;
+    };
+
+    let matchData: Writable<Match> = writable();
     const matchName = $page.params['matchName'];
+    let preview: string = `${assetsPath}/avatars/`;
 
+    //Rebuilding of the backend Player array
+    const rebuildPlayers = (players: Player[]): Player[] =>{
+        const rebuildHand = (cards: Array<any>): PlayingCard[] => {
+            const cardArray: PlayingCard[] = [];
+            cards.forEach((card) => {
+                cardArray.push(new PlayingCard(new CardIdentity(card.identity.suit, card.identity.value), card.state))
+            })
+            return cardArray
+        }
+
+        let newPlayerArray: Player[] = []
+        players.forEach((player) => {
+            const rebuildplayer = new Player(
+                player.email, 
+                player.username,
+                player.profilePicture,
+                player.totalChips,
+                new PlayerHand(rebuildHand(player.hand.cards))
+            )
+            newPlayerArray.push(rebuildplayer)
+        })
+        return newPlayerArray
+    }
+
+    //socket io logic below
+    onMount( () => {
+        if(browser && JSON.parse(localStorage.getItem("playing"))){
+            $socketStore.emit('get-match-data', {email: $session['email'],  matchName: matchName})
+        }else{
+            $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
+            browser && localStorage.setItem("playing", "true");
+        }
+	});
 
     const startMatch = () => {
         $socketStore.emit('start-match', {email: $session['email'],  matchName: matchName})
     }
 
-    //socket io logic below
-    $socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
-
     $socketStore.on('match-data', (data) => {
-		$matchData = data;
-        $players = Object.values(data['players'])
-        console.log($matchData)
+        $matchData = data;
+        $matchData.players = rebuildPlayers(data['players'])
 	})
 
     const leaveMatch = () => {
+        browser && localStorage.setItem('playing', "false");
         $socketStore.emit('leave-match', {
-			matchName: matchName,
-			email: $session['email']
+            email: $session['email'],
+			matchName: matchName
 		});
         goto('/lobby')
     }
 
-    onDestroy(() => {
-        $socketStore.emit('leave-match', {
-			matchName: matchName,
-			email: $session['email']
-		});
-    })
-    let preview: string = `${assetsPath}/avatars/`;
 </script>
 
 <section class="table" style={'background-image: url(' + assetsPath + '/rug.png);'}>
-
-    <div class="grid info-layout">
-        <div class='match-name'>
-            <p>Match: {matchName}</p>
+    {#if $matchData}
+        <div class="grid info-layout">
+            <div class='match-name'>
+                <p>Match: {matchName}</p>
+            </div>
+        
+            <div class='leave-match'>
+                <button on:click={leaveMatch} class="button leave">leave match</button>
+            </div>
         </div>
-    
-        <div class='leave-match'>
-            <button on:click={leaveMatch} class="button leave">leave match</button>
-        </div>
-    </div>
 
-    <div class="grid opponent-layout">
-        {#if $players}
-            {#each $players as player}
-                {#if player.email !== $session['email']}
-                    <div class="opponent">
-                        <div class="oponent-info">
-                            <div>
-                                <p>username: {player.username}</p>
-                                <p>chips: {player.totalChips}</p>
+        <div class="grid opponent-layout">
+            {#if $matchData.players}
+                {#each $matchData.players as player}
+                    {#if player.email !== $session['email']}
+                        <div class="opponent">
+                            <div class="oponent-info">
+                                <div>
+                                    <p>username: {player.username}</p>
+                                    <p>chips: {player.totalChips}</p>
+                                </div>
+                                <figure class="image is-square is-64x64 pt-1">
+                                    <img
+                                        class="is-rounded"
+                                        src="{preview}{player.profilePicture}"
+                                        alt="d"
+                                    />
+                                </figure>
                             </div>
-                            <figure class="image is-square is-64x64 pt-1">
-                                <img
-                                    class="is-rounded"
-                                    src="{preview}{player.profilePicture}"
-                                    alt="d"
-                                />
-                            </figure>
+                            <CardHolder matchData={$matchData} player={player} />
                         </div>
+                    {/if}
+                {/each}
+            {/if}
+        </div>
 
-                        <div class="card-holder">
-                            {#if $matchData['started']}
-                                {#each player.hand.cards as card}
-                                    <PlayingCard {card} highlight/>
-                                {/each}
-                            {:else}
-                                <p> match not started yet</p>
-                            {/if}
+        <div class="grid community">
+        </div>
+
+        {#if $matchData.players}
+            {#each $matchData.players as player}
+                {#if player.email === $session['email']}
+                    <div class="grid you-layout" style={'background-image: url(' + assetsPath + '/wood.png)'}>
+                        <CardHolder matchData={$matchData} player={player} />
+                        <p>{player.username}</p>
+                        <div class="actions">
+                            <button class="nes-btn action-button">Call ($0)</button>
+                            <button class="nes-btn action-button">Fold</button>
+                            <button class="nes-btn action-button">Raise ($250)</button>
+                            <button class="nes-btn action-button">All In ($15000)</button>
                         </div>
+                        {#if $matchData.host === $session['email'] && !$matchData.started}
+                            <button class="nes-btn start is-success" on:click={() => startMatch()}>Start match</button>
+                        {/if}
                     </div>
                 {/if}
             {/each}
         {/if}
-    </div>
-
-    <div class="grid community">
-    </div>
-
-    {#if $players}
-        {#each $players as player}
-            {#if player.email === $session['email']}
-                <div class="grid you-layout" style={'background-image: url(' + assetsPath + '/wood.png)'}>
-                    <p>{player.username}</p>
-                    <div class="actions">
-						<button class="nes-btn action-button">Call ($0)</button>
-						<button class="nes-btn action-button">Fold</button>
-						<button class="nes-btn action-button">Raise ($250)</button>
-						<button class="nes-btn action-button">All In ($15000)</button>
-					</div>
-                    {#if $matchData['host'] === $session['email'] && !$matchData['started']}
-                        <button class="nes-btn start is-success" on:click={() => startMatch()}>Start match</button>
-                    {/if}
-                </div>
-            {/if}
-        {/each}
+    {:else}
+        <p>Loading...</p>
     {/if}
 </section>
 

@@ -68,7 +68,6 @@
 		const data = deckAPI.shuffleDeck();
 
 		players.set(createPlayers(Util.objectToArray($matchData['players'])))
-		console.log($players)
 
 		deck = data.deck;
 		$players.forEach((player) => {
