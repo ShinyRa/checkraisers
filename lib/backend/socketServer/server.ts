@@ -29,8 +29,8 @@ const handOutCards = (players: Player[]) => {
 	const data = deckAPI.shuffleDeck();
 	players.forEach((player) => {
 		[1, 2].forEach(() => player.hand.deal(data.deck.draw()));
+		console.log(player.hand);
 	});
-	console.log(players);
 };
 
 type Match = {
@@ -47,7 +47,6 @@ type Round = {
 	phase: Phase;
 	roundsPlayed: number;
 	potSize: number;
-	playersPlaying: Array<Player>;
 	currentPlayerMove: Match['players'];
 };
 
@@ -62,7 +61,6 @@ io.on('connection', function (socket) {
 			phase: Phase.PRE_FLOP,
 			roundsPlayed: 0,
 			potSize: 0,
-			playersPlaying: [],
 			currentPlayerMove: {}
 		};
 		matches[data.matchName] = {
@@ -80,9 +78,9 @@ io.on('connection', function (socket) {
 	socket.on('start-match', (data) => {
 		const match = matches[data.matchName];
 		match.started = true;
-		match.rounds.playersPlaying = objectToArray(match.players);
+		match.players = objectToArray(match.players);
 		match.rounds.currentPlayerMove = matches[data.matchName].players[data.email];
-		handOutCards(match.rounds.playersPlaying);
+		handOutCards(match.players);
 		io.in('lobby').emit('matches-list', matches);
 		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});

@@ -6,6 +6,8 @@
 
 	export let card: PlayingCard;
 	export let highlight: boolean;
+
+	console.log("playingcard: ", card)
 </script>
 
 <div

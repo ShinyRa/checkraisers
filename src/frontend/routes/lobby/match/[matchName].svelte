@@ -85,9 +85,10 @@
                                 />
                             </figure>
                         </div>
-                        {#if $matchData['started'] && player.hand}
+
+                        {console.log("data: ",$matchData['started'])}
+                        {#if $matchData['started']}
                             <div class="card-holder">
-                                {player.hand.reveal()}
                                 {#each player.hand.cards as card}
                                     <PlayingCard {card} highlight/>
                                 {/each}
@@ -108,22 +109,11 @@
                 <div class="grid you-layout" style={'background-image: url(' + assetsPath + '/wood.png)'}>
                     <p>{player.username}</p>
                     <div class="actions">
-						<a class="nes-btn action-button" href="#" on:click={() => takeAction('I call', 'call.wav')}
-							>Call ($0)</a
-						>
-						<a class="nes-btn action-button" href="#" on:click={() => takeAction('I fold', 'fold.wav')}>Fold</a>
-						<a
-							class="nes-btn action-button"
-							href="#"
-							on:click={() => takeAction('I Raise with $250', 'raise.wav')}>Raise ($250)</a
-						>
-						<a
-							class="nes-btn action-button"
-							href="#"
-							on:click={() => takeAction("I'm all in for $15.000", 'allin.wav')}>All In ($15000)</a
-						>
+						<button class="nes-btn action-button">Call ($0)</button>
+						<button class="nes-btn action-button">Fold</button>
+						<button class="nes-btn action-button">Raise ($250)</button>
+						<button class="nes-btn action-button">All In ($15000)</button>
 					</div>
-
                     {#if $matchData['host'] === $session['email'] && !$matchData['started']}
                         <button class="nes-btn start is-success" on:click={() => startMatch()}>Start match</button>
                     {/if}
@@ -131,7 +121,6 @@
             {/if}
         {/each}
     {/if}
-
 </section>
 
 <style lang='scss'>
