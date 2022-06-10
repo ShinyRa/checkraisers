@@ -48,6 +48,15 @@ export class ActionStack {
 		return this.players.indexOf(player);
 	}
 
+	findCurrentTurnIndex(): number {
+		for (let i = 0; i < this.actions.length; i++) {
+			if (this.actions[i].getType() === PlayerActionEnum.PENDING) {
+				return i;
+			}
+		}
+		return -1;
+	}
+
 	/**
 	 * Push player action to the stack
 	 *
@@ -68,11 +77,13 @@ export class ActionStack {
 
 		if (actionEnum === PlayerActionEnum.FOLD) {
 			this.foldedMask[playerIndex] = true;
+			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum);
 		}
 
 		if (actionEnum === PlayerActionEnum.CALL) {
 			chips = this.findCallForPlayer(player);
 			this.stakes[playerIndex] += chips;
+			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
 		}
 
 		if (actionEnum === PlayerActionEnum.ALLIN || actionEnum === PlayerActionEnum.RAISE) {
@@ -82,6 +93,7 @@ export class ActionStack {
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
 			this.stakes[playerIndex] += chips;
+			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
 			this.players.map((p) => {
 				if (this.hasActionsRemaining(p) && player != p) {
 					pendingTurns.push(new PlayerAction(p));
@@ -89,8 +101,8 @@ export class ActionStack {
 			});
 		}
 
-		this.actions.push(new PlayerAction(player, actionEnum, chips));
-		pendingTurns.map((action) => this.actions.push(action));
+		// this.actions.push(new PlayerAction(player, actionEnum, chips));
+		// pendingTurns.map((action) => this.actions.push(action));
 	}
 
 	findCallForPlayer(player: Player): number {
