@@ -12,38 +12,25 @@
 
 <script lang='ts'>
     import { goto } from "$app/navigation";
-    import { navigating, page, session } from "$app/stores";
+    import { page, session } from "$app/stores";
     import { assets as assetsPath } from '$app/paths';
     import { socketStore, userStore } from "$lib/logic/frontend/entities/stores";
     import { writable, type Writable } from "svelte/store";
-    import { onDestroy, onMount } from "svelte";
+    import { onMount } from "svelte";
     import Player from "$lib/backend/entities/poker_rules/Player";
     import CardHolder from '../../../components/player/CardHolder.svelte';
     import { PlayerHand } from "$lib/backend/entities/poker_rules/hand/PlayerHand";
     import PlayingCard from "$lib/backend/entities/poker_rules/deck/card/PlayingCard";
     import { CardIdentity } from "$lib/backend/entities/poker_rules/deck/card/identity/CardIdentity";
-    import { Phase } from "$lib/backend/entities/poker_rules/round/Phase";
     import { browser } from "$app/env";
+    import type { Match } from "$lib/logic/frontend/components/match/Match";
+    import { HostState } from "$lib/logic/frontend/components/match/HostState";
+    import NotificationMatch from "../../../components/match/NotificationMatch.svelte";
+    import { fly } from 'svelte/transition';
+	import { quintOut } from 'svelte/easing';
 
-    type Match = {
-        started?: boolean;
-        host?: Player['email'];
-        name?: string;
-        bigBlind?: number;
-        maxPlayers?: number;
-        rounds?: Round;
-        players?: Player[];
-    };
-
-    type Round = {
-        phase: Phase;
-        roundsPlayed: number;
-        potSize: number;
-        currentPlayerMove: Player | null;
-    };
-
-    let matchData: Writable<Match> = writable();
     const matchName = $page.params['matchName'];
+    let matchData: Writable<Match> = writable();
     let preview: string = `${assetsPath}/avatars/`;
 
     //Rebuilding of the backend Player array
@@ -70,6 +57,10 @@
         return newPlayerArray
     }
 
+    const hideMessage = async() => {
+        $matchData.message = null
+    }
+
     //socket io logic below
     onMount( () => {
         if(browser && JSON.parse(localStorage.getItem("playing"))){
@@ -80,16 +71,37 @@
         }
 	});
 
-    const startMatch = () => {
+    const startMatch = async() => {
         $socketStore.emit('start-match', {email: $session['email'],  matchName: matchName})
+        $matchData.message = HostState.STARTED
+    }
+
+    const pauseMatch = async() => {
+        $socketStore.emit('pause-match', {email: $session['email'],  matchName: matchName})
+        $matchData.message = HostState.PAUSED
+    }
+
+    const stopMatch = () => {
+        $socketStore.emit('stop-match', {email: $session['email'],  matchName: matchName})
+    }
+
+    const resumeMatch = async() => {
+        $socketStore.emit('resume-match', {email: $session['email'],  matchName: matchName})
+        $matchData.message = HostState.STARTED
     }
 
     $socketStore.on('match-data', (data) => {
-        $matchData = data;
-        $matchData.players = rebuildPlayers(data['players'])
+        if(data === "exit"){
+            browser && localStorage.setItem('playing', "false");
+            goto('/lobby')
+        }else{
+            $matchData = data;
+            $matchData.players = rebuildPlayers(data['players'])
+        }
 	})
 
     const leaveMatch = () => {
+        $matchData = null
         browser && localStorage.setItem('playing', "false");
         $socketStore.emit('leave-match', {
             email: $session['email'],
@@ -97,7 +109,6 @@
 		});
         goto('/lobby')
     }
-
 </script>
 
 <section class="table" style={'background-image: url(' + assetsPath + '/rug.png);'}>
@@ -105,6 +116,10 @@
         <div class="grid info-layout">
             <div class='match-name'>
                 <p>Match: {matchName}</p>
+            </div>
+
+            <div class="host-message">
+                <NotificationMatch message={$matchData.message} />
             </div>
         
             <div class='leave-match'>
@@ -116,7 +131,7 @@
             {#if $matchData.players}
                 {#each $matchData.players as player}
                     {#if player.email !== $session['email']}
-                        <div class="opponent">
+                        <div class="opponent" in:fly={{ duration: 1500, x: 0, y: -40, easing: quintOut }}>
                             <div class="oponent-info">
                                 <div>
                                     <p>username: {player.username}</p>
@@ -150,17 +165,26 @@
                             <button class="nes-btn action-button">Call ($0)</button>
                             <button class="nes-btn action-button">Fold</button>
                             <button class="nes-btn action-button">Raise ($250)</button>
-                            <button class="nes-btn action-button">All In ($15000)</button>
+                            <button class="nes-btn action-button">All In ({player.totalChips})</button>
                         </div>
-                        {#if $matchData.host === $session['email'] && !$matchData.started}
-                            <button class="nes-btn start is-success" on:click={() => startMatch()}>Start match</button>
+                        {#if $matchData.host === $session['email']}
+                            <div class="host-control">
+                                {#if !$matchData.started}
+                                    <button class="nes-btn host-button is-success" on:click={() => startMatch()}>Start match</button>
+                                {:else if $matchData['message'] === HostState.STARTED || $matchData['message'] === HostState.RESUMED}
+                                    <button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}>Pause match</button>
+                                    <button class="nes-btn host-button is-error" on:click={() => stopMatch()}>Stop match</button>
+                                {:else if $matchData['message'] === HostState.PAUSED}
+                                    <button class="nes-btn host-button is-success" on:click={() => resumeMatch()}>Resume match</button>
+                                {/if}
+                            </div>
                         {/if}
                     </div>
                 {/if}
             {/each}
         {/if}
     {:else}
-        <p>Loading...</p>
+        <p class="is-size-3 nes-text has-text-centered mt-6">Loading...</p>
     {/if}
 </section>
 
@@ -188,6 +212,13 @@
         justify-self: right;
     }
 
+    .host-message{
+        grid-area: 1 / 3;
+        display: flex;
+        justify-self: center;
+        text-align: center;
+    }
+
     .oponent-layout{
         display: flex;
 		flex-direction: column;
@@ -209,7 +240,7 @@
         display: flex;
         padding: 20px;
 		image-rendering: pixelated;
-		height: 200px;
+		height: auto;
 		border: 3px solid black;
         .actions{
             display: flex;
@@ -218,11 +249,18 @@
             margin: 10px;
             height: fit-content;
         }
-        .start{
+        .host-control{
+        display: flex;
+        flex-direction: column;
+        .host-button{
+            margin-top: 20px;
             height: fit-content;
-            padding: 30px;
+            padding: 10px;
+        }
         }
     }
+
+
 
 
 

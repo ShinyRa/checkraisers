@@ -60,7 +60,7 @@
                 </thead>
                 <tbody>
                     {#each $matches as match }
-                        <tr>
+                        <tr class={match['host'] === $session['email'] ? 'nes-text is-success' : ''}>
                             <td>{match['name']}</td>
                             <td>{Object.keys(match['players']).length}/{match['maxPlayers']}</td>
                             <td>${match['bigBlind']}</td>

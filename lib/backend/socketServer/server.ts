@@ -35,6 +35,7 @@ const findPlayer = (players: Player[], email: string): Player | false => {
 export type Match = {
 	started?: boolean;
 	host?: Player['email'];
+	message?: string | null;
 	name?: string;
 	bigBlind?: number;
 	maxPlayers?: number;
@@ -63,6 +64,7 @@ io.on('connection', function (socket) {
 		matches[data.matchName] = {
 			started: false,
 			host: data.host,
+			message: null,
 			name: data.matchName,
 			bigBlind: data.bigBlind,
 			maxPlayers: data.maxPlayers,
@@ -73,9 +75,28 @@ io.on('connection', function (socket) {
 	});
 
 	socket.on('start-match', (data) => {
+		matches[data.matchName].message = 'The round has started!';
 		matches[data.matchName].started = true;
 		matches[data.matchName].rounds.currentPlayerMove = matches[data.matchName].host;
 		matches[data.matchName].players = handOutCards(matches[data.matchName].players);
+		io.in('lobby').emit('matches-list', matches);
+		io.in(data.matchName).emit('match-data', matches[data.matchName]);
+	});
+
+	socket.on('pause-match', (data) => {
+		matches[data.matchName].message = 'The round has been paused...';
+		io.in('lobby').emit('matches-list', matches);
+		io.in(data.matchName).emit('match-data', matches[data.matchName]);
+	});
+
+	socket.on('stop-match', (data) => {
+		io.in(data.matchName).emit('match-data', 'exit');
+		delete matches[data.matchName];
+		io.in('lobby').emit('matches-list', matches);
+	});
+
+	socket.on('resume-match', (data) => {
+		matches[data.matchName].message = 'The round has been resumed!';
 		io.in('lobby').emit('matches-list', matches);
 		io.in(data.matchName).emit('match-data', matches[data.matchName]);
 	});
