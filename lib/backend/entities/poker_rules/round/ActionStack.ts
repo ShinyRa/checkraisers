@@ -28,15 +28,13 @@ export class ActionStack {
 	 *
 	 */
 	currentPlayerTurn(): string | false {
-		let playerTurn;
-		this.actions.forEach((action) => {
-			console.log(action);
-			if (action.action === PlayerActionEnum.PENDING) {
-				playerTurn = action.player.email;
-				return;
+		for (let i = 0; i < this.actions.length; i++) {
+			if (this.actions[i].getType() === PlayerActionEnum.PENDING) {
+				return this.actions[i].player.email;
 			}
-		});
-		return playerTurn;
+		}
+
+		return false;
 	}
 
 	/**
@@ -63,7 +61,6 @@ export class ActionStack {
 	 * @param action PlayerAction
 	 */
 	push(player: Player, actionEnum: PlayerActionEnum, chips?: number): void {
-		const pendingTurns = [];
 		const playerIndex = this.findPlayerIndex(player);
 		// If player participates in this action stack
 		if (!this.players.includes(player)) {
@@ -96,13 +93,10 @@ export class ActionStack {
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
 			this.players.map((p) => {
 				if (this.hasActionsRemaining(p) && player != p) {
-					pendingTurns.push(new PlayerAction(p));
+					this.actions.push(new PlayerAction(p));
 				}
 			});
 		}
-
-		// this.actions.push(new PlayerAction(player, actionEnum, chips));
-		// pendingTurns.map((action) => this.actions.push(action));
 	}
 
 	findCallForPlayer(player: Player): number {
@@ -114,6 +108,14 @@ export class ActionStack {
 
 		const diff = myStakes - highestBid;
 		return diff < 0 ? Math.abs(diff) : 0;
+	}
+
+	nextPhase(): void {
+		this.players.map((player) => {
+			if (this.hasActionsRemaining(player)) {
+				this.actions.push(new PlayerAction(player));
+			}
+		});
 	}
 
 	/**

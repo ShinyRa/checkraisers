@@ -8,8 +8,8 @@
 
 	let user = $userStore.getUserData();
 
-	if(!$page.routeId.includes('match')){
-		browser && localStorage.setItem("playing", "false");
+	if ($page.routeId && $page.routeId.indexOf('match') != 0) {
+		browser && localStorage.setItem('playing', 'false');
 	}
 
 	userStore.subscribe((val) => {

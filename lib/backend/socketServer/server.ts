@@ -159,6 +159,7 @@ io.on('connection', function (socket) {
 			//TODO evalutation.
 			if (matches[data.matchName].rounds.phase !== 4) {
 				matches[data.matchName].rounds.phase = matches[data.matchName].rounds.phase + 1;
+				actionStack.nextPhase();
 			} else {
 				actionStack = new ActionStack(matches[data.matchName].players);
 				matches[data.matchName].rounds.phase = 0;
