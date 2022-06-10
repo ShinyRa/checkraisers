@@ -6,6 +6,13 @@ export class PlayerAction {
 	action: PlayerActionEnum;
 	chips: number;
 
+	/**
+	 * Create new PlayerAction
+	 *
+	 * @param player Player
+	 * @param action PlayerActionEnum
+	 * @param chips  number
+	 */
 	constructor(player: Player, action?: PlayerActionEnum, chips?: number) {
 		this.player = player;
 		this.action = action ?? PlayerActionEnum.PENDING;
@@ -15,14 +22,29 @@ export class PlayerAction {
 		}
 	}
 
+	/**
+	 * Print player action as string
+	 *
+	 * @returns string
+	 */
 	print(): string {
 		return `PlayerAction: ${this.getType()}, with chips: ${this.chips}`;
 	}
 
+	/**
+	 * Get type of PlayerAction
+	 *
+	 * @returns PlayerActionEnum
+	 */
 	getType(): PlayerActionEnum {
 		return this.action;
 	}
 
+	/**
+	 * If PlayerAction is resolved
+	 *
+	 * @returns
+	 */
 	isResolved(): boolean {
 		return this.action !== PlayerActionEnum.PENDING;
 	}

@@ -1,23 +1,42 @@
-import { PlayerAction } from '../../../../backend/entities/poker_rules/round/action/PlayerAction';
-import { PlayerActionEnum } from '../../../../backend/entities/poker_rules/round/action/PlayerActionEnum';
-import { ActionStack } from '../../../../backend/entities/poker_rules/round/ActionStack';
+import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
+import { ActionStack } from '$lib/backend/entities/poker_rules/round/ActionStack';
 
-// let stack;
-// beforeAll(() => {
-// 	stack = new ActionStack();
-// });
+let stack;
+const players = [Player.mock(), Player.mock()];
+players[0].totalChips = 2000;
+players[1].totalChips = 1000;
 
-describe('Action stack unit tests', () => {
-	// it('should add actions to the stack', () => {
-	// 	const action = new PlayerAction(PlayerActionEnum.FOLD);
-	// 	stack.push(action);
-	// 	expect(stack.length).toEqual(1);
-	// });
-	// it('should be able to deterimine pot size', () => {
-	// 	stack.push(new PlayerAction(PlayerActionEnum.CALL, 50));
-	// 	stack.push(new PlayerAction(PlayerActionEnum.CALL, 50));
-	// 	stack.push(new PlayerAction(PlayerActionEnum.RAISE, 100));
-	// 	stack.push(new PlayerAction(PlayerActionEnum.ALLIN, 2000));
-	// 	expect(stack.potSize).toEqual(2200);
-	// });
+beforeEach(() => {
+	stack = new ActionStack(players);
+});
+
+describe('ActionStack unit tests', () => {
+	it('should track the correct amount of actions taken', () => {
+		stack.push(players[0], PlayerActionEnum.CALL);
+		stack.push(players[1], PlayerActionEnum.CALL);
+
+		expect(stack.length()).toEqual(2);
+	});
+
+	it('should track the correct potsize for all actions', () => {
+		stack.push(players[0], PlayerActionEnum.RAISE, 200);
+		stack.push(players[1], PlayerActionEnum.RAISE, 200);
+		expect(stack.potSize).toEqual(400);
+	});
+
+	it('should be able to determine certain properties of the action stack', () => {
+		stack.push(players[0], PlayerActionEnum.RAISE, 2000);
+		stack.push(players[1], PlayerActionEnum.ALLIN);
+		expect(stack.length()).toEqual(3);
+		expect(stack.potSize()).toEqual(3000);
+	});
+
+	it('should be add pending playeractions succesfully', () => {
+		stack.push(players[0], PlayerActionEnum.RAISE, 2000);
+		stack.push(players[1], PlayerActionEnum.ALLIN);
+
+		expect(stack.length()).toEqual(3);
+		expect(stack.actions[0].chips).toEqual(2000);
+		expect(stack.actions[1].chips).toEqual(1000);
+	});
 });
