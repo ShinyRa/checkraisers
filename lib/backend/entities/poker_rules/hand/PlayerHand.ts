@@ -42,7 +42,8 @@ class PlayerHand implements Hand, IRankable<PlayerHand, HandRank> {
 	 * @param board PlayingCard[]
 	 */
 	estimate = (board: PlayingCard[]): void => {
-		this.score = HandEvaluation.findScore(board, this);
+		const handEval = new HandEvaluation();
+		this.score = handEval.findScore(board, this);
 	};
 
 	/**

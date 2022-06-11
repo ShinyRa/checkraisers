@@ -18,9 +18,9 @@ export type Match = {
 type Round = {
 	deck: CardDeck;
 	phase: Phase;
-	roundsPlayed: number;
 	currentPlayerMove: Player['email'] | false;
 	communityCards: PlayingCard[];
+	winner: Record<string, any> | null;
 	actionStack: ActionStack | null;
 	potSize: number;
 };

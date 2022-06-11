@@ -27,7 +27,6 @@ class BaseDto {
 		if (customRequestOptions) {
 			requestOptions = { ...requestOptions, ...customRequestOptions };
 		}
-
 		return await fetch(url, requestOptions)
 			.then((resp) => {
 				return resp.json();

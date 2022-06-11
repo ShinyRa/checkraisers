@@ -31,6 +31,7 @@
 	import { quintOut } from 'svelte/easing';
 	import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
 	import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
+	import UserClient from '$lib/logic/clients/user/UserClient';
 
 	const matchName = $page.params['matchName'];
 	let matchData: Writable<Match> = writable();
@@ -60,6 +61,9 @@
 				break;
 			case 3:
 				phaseName = 'River';
+				break;
+			case 4:
+				phaseName = 'Evaluate';
 				break;
 			default:
 				phaseName = 'Phase not found';
@@ -104,6 +108,11 @@
 		$matchData.message = HostState.STARTED;
 	};
 
+	const replay = async () => {
+		$socketStore.emit('replay-match', { email: $session['email'], matchName: matchName });
+		$matchData.message = HostState.STARTED;
+	};
+
 	const pauseMatch = async () => {
 		$socketStore.emit('pause-match', { email: $session['email'], matchName: matchName });
 		$matchData.message = HostState.PAUSED;
@@ -118,7 +127,7 @@
 		$matchData.message = HostState.STARTED;
 	};
 
-	const takeAction = (action: PlayerActionEnum, amount?: number) => {
+	const takeAction = async (action: PlayerActionEnum, amount?: number) => {
 		const actionObject = amount
 			? { playerAction: action, chips: amount }
 			: { playerAction: action };
@@ -128,14 +137,18 @@
 			action: actionObject
 		});
 	};
-
-	$socketStore.on('match-data', (data) => {
-		console.log(data);
+	$socketStore.on('match-data', async (data) => {
+		const profile = await UserClient.getProfile({ email: $session['email'] });
+		userStore.update((currentUser) => {
+			currentUser.setUserData(profile);
+			return currentUser;
+		});
 		if (data === 'exit') {
 			goto('/lobby');
 		} else {
 			$matchData = data;
 			$matchData.players = rebuildPlayers(data['players']);
+			console.log($matchData);
 			$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
 		}
 	});
@@ -157,7 +170,6 @@
 			<div class="match-name">
 				<p>Match: {matchName}</p>
 			</div>
-
 			<div class="host-message">
 				{#key $matchData.message}
 					<NotificationMatch message={$matchData.message} />
@@ -244,6 +256,7 @@
 								{/if}
 							</div>
 						{/if}
+						{$matchData.host === $session['email']}
 						{#if $matchData.host === $session['email']}
 							<div class="host-control">
 								{#if !$matchData.started}
@@ -251,9 +264,13 @@
 										>Start match</button
 									>
 								{:else if $matchData['message'] === HostState.STARTED || $matchData['message'] === HostState.RESUMED}
-									<button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}
-										>Pause match</button
-									>
+									{#if $matchData.host === $session['email'] && $matchData.rounds.winner}
+										<button class="nes-btn is-success" on:click={() => replay()}>Play again</button>
+									{:else}
+										<button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}
+											>Pause match</button
+										>
+									{/if}
 									<button class="nes-btn host-button is-error" on:click={() => stopMatch()}
 										>Stop match</button
 									>

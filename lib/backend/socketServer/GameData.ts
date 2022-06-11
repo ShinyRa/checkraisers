@@ -1,10 +1,12 @@
 import { ActionStack } from '../entities/poker_rules/round/ActionStack';
 import { Phase } from '../entities/poker_rules/round/Phase';
+import { evaluationAPI } from '../entities/poker_rules/round/evaluationAPI';
 import CardDeck from '../entities/poker_rules/deck/CardDeck';
 import { deckAPI } from '../entities/poker_rules/deck/deckAPI';
 import Player from '../entities/poker_rules/Player';
 import { PlayerActionEnum } from '../entities/poker_rules/round/action/PlayerActionEnum';
 import PlayingCard from '../entities/poker_rules/deck/card/PlayingCard';
+import PlayerDAO from '../dao/user/PlayerDAO';
 
 type Match = {
 	started?: boolean;
@@ -22,6 +24,7 @@ type Round = {
 	phase: Phase;
 	currentPlayerMove: Player['email'] | false;
 	communityCards: PlayingCard[];
+	winner: Record<string, any> | null;
 	actionStack: ActionStack | null;
 	potSize: number;
 };
@@ -33,9 +36,11 @@ class GameData {
 		resumed: 'The round has been resumed!'
 	};
 	private matches: Match;
+	private playerDAO: PlayerDAO;
 
 	constructor() {
 		this.matches = {};
+		this.playerDAO = new PlayerDAO();
 	}
 
 	/**
@@ -56,6 +61,7 @@ class GameData {
 			const rounds = {
 				deck: {},
 				communityCards: [],
+				winner: null,
 				currentPlayerMove: '',
 				phase: Phase.PRE_FLOP,
 				actionStack: null,
@@ -151,25 +157,32 @@ class GameData {
 		}
 	};
 
-	playerAction = (
+	replay = async (matchName: string): Promise<void> => {
+		const match = this.getSpecificMatch(matchName);
+		if (match && match.rounds.phase === Phase.EVALUATE) {
+			this.matches[matchName] = await this.newPhase(match);
+			this.matches[matchName].message = this.roundMessage.started;
+		}
+	};
+
+	playerAction = async (
 		email: string,
 		matchName: string,
 		action: PlayerActionEnum,
 		chips?: number
-	): boolean => {
+	): Promise<boolean> => {
 		const specificMatch = this.getSpecificMatch(matchName);
 		const player = this.findPlayer(matchName, email);
 		if (specificMatch && player) {
 			specificMatch.rounds.actionStack.push(player, action, chips);
 			specificMatch.rounds.potSize = specificMatch.rounds.actionStack.potSize();
-
 			if (specificMatch.rounds.actionStack.currentPlayerTurn()) {
 				specificMatch.rounds.currentPlayerMove =
 					specificMatch.rounds.actionStack.currentPlayerTurn();
 				this.matches[matchName] = specificMatch;
 			} else {
 				delete this.matches[matchName];
-				this.matches[matchName] = this.newPhase(specificMatch);
+				this.matches[matchName] = await this.newPhase(specificMatch);
 			}
 			return true;
 		} else {
@@ -177,12 +190,29 @@ class GameData {
 		}
 	};
 
-	newPhase = (match: Match): Match => {
+	newPhase = async (match: Match): Promise<Match> => {
 		let newMatch;
 		if (match.rounds.phase === Phase.RIVER) {
-			console.log('new match');
+			match.rounds.phase = Phase.EVALUATE;
+			match.rounds.currentPlayerMove = '';
+			match.rounds.winner = evaluationAPI.evaluate(match.players, match.rounds.communityCards);
+			for (let i = 0; i < match.players.length; i++) {
+				const playerIndex = match.rounds.actionStack.findPlayerIndex(match.players[i]);
+				const chipsSpent = match.rounds.actionStack.stakes[playerIndex];
+				match.players[i].totalChips = match.players[i].totalChips - chipsSpent;
+				await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
+				if (match.players[i].email === match.rounds.winner['winner'].email) {
+					this.playerDAO.updateChipAmount(
+						match.players[i].totalChips + match.rounds.potSize,
+						match.players[i].email
+					);
+					match.players[i].totalChips === match.rounds.potSize;
+				}
+			}
+			return match;
+		} else if (match.rounds.phase === Phase.EVALUATE) {
 			newMatch = this.newRound(match);
-			match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+			newMatch.rounds.currentPlayerMove = newMatch.rounds.actionStack.currentPlayerTurn();
 			return newMatch;
 		} else {
 			match.rounds.phase += 1;
@@ -195,6 +225,7 @@ class GameData {
 			} else {
 				this.drawCommunityCards(match);
 			}
+			console.log('laatste else voor return: ', match);
 			return match;
 		}
 	};
@@ -204,15 +235,19 @@ class GameData {
 		this.newMatch(match.host, match.name, match.bigBlind, match.maxPlayers);
 		const newMatch = this.getSpecificMatch(match.name);
 		if (newMatch) {
-			newMatch.rounds.deck = this.createDeckforMatch(match);
-			newMatch.players = this.handOutCards(match.players, match.rounds.deck);
+			newMatch.rounds.deck = this.createDeckforMatch(newMatch);
+			match.players.forEach((player) => {
+				player.hand.cards = [];
+			});
+			newMatch.players = this.handOutCards(match.players, newMatch.rounds.deck);
 			newMatch.rounds.actionStack = new ActionStack(match.players);
 			newMatch.rounds.phase = Phase.PRE_FLOP;
 			newMatch.rounds.potSize = 0;
 			newMatch.rounds.communityCards = [];
 			newMatch.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+			newMatch.started = true;
+			return newMatch;
 		}
-		console.log(match);
 		return match;
 	};
 

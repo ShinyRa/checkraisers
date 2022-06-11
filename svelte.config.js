@@ -18,6 +18,9 @@ const config = {
 			routes: './src/frontend/routes' // /frontend/routes folder as routing entry point
 		},
 		vite: {
+			define: {
+				global: {}
+			},
 			resolve: {
 				alias: {
 					'xmlhttprequest-ssl': './node_modules/engine.io-client/lib/xmlhttprequest.js'
