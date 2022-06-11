@@ -1,4 +1,4 @@
-import GameData from 'GameData';
+import GameData from './GameData';
 import { Server } from 'socket.io';
 import UserDAO from '../dao/user/UserDAO';
 import Player from '../entities/poker_rules/Player';
@@ -15,7 +15,7 @@ const io = new Server(port, {
 
 console.log('server started');
 
-let gameData: GameData;
+const gameData: GameData = new GameData();
 const userDAO: UserDAO = new UserDAO();
 
 io.on('connection', function (socket) {
@@ -23,7 +23,7 @@ io.on('connection', function (socket) {
 	 * Creates a new match on the server
 	 */
 	socket.on('new-match', (data) => {
-		gameData = new GameData(data.host, data.matchName, data.bigBlind, data.maxPlayers);
+		gameData.newMatch(data.host, data.matchName, data.bigBlind, data.maxPlayers);
 		io.in('lobby').emit('matches-list', gameData.getMatches());
 	});
 
@@ -96,7 +96,7 @@ io.on('connection', function (socket) {
 	 * @param data {email, matchName}
 	 */
 	socket.on('resume-match', (data) => {
-		gameData.pauseMatch(data.matchName);
+		gameData.resumeMatch(data.matchName);
 		io.in('lobby').emit('matches-list', gameData.getMatches());
 		io.in(data.matchName).emit('match-data', gameData.getSpecificMatch(data.matchName));
 	});

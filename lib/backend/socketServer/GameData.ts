@@ -1,9 +1,9 @@
+import { ActionStack } from '../entities/poker_rules/round/ActionStack';
+import { Phase } from '../entities/poker_rules/round/Phase';
 import CardDeck from '../entities/poker_rules/deck/CardDeck';
 import { deckAPI } from '../entities/poker_rules/deck/deckAPI';
 import Player from '../entities/poker_rules/Player';
 import { PlayerActionEnum } from '../entities/poker_rules/round/action/PlayerActionEnum';
-import { ActionStack } from '../entities/poker_rules/round/ActionStack';
-import { Phase } from '../entities/poker_rules/round/Phase';
 
 type Match = {
 	started?: boolean;
@@ -33,39 +33,48 @@ class GameData {
 	};
 	private matches: Match;
 
+	constructor() {
+		this.matches = {};
+	}
+
 	/**
-	 * Create new match object.
+	 * Create a new match;
 	 *
 	 * @param host
 	 * @param name
 	 * @param bigBlind
 	 * @param maxPlayers
 	 */
-	constructor(
-		host: Match['host'],
-		matchName: Match['name'],
-		bigBlind: Match['bigBlind'],
-		maxPlayers: Match['maxPlayers']
-	) {
-		const rounds = {
-			deck: {},
-			currentPlayerMove: '',
-			phase: Phase.PRE_FLOP,
-			roundsPlayed: 0,
-			actionStack: null,
-			potSize: 0
-		};
-		this.matches = {
-			started: false,
-			host: host,
-			message: null,
-			name: matchName,
-			bigBlind: bigBlind,
-			maxPlayers: maxPlayers,
-			rounds: rounds,
-			players: []
-		};
-	}
+	newMatch = (
+		host?: Match['host'],
+		matchName?: Match['name'],
+		bigBlind?: Match['bigBlind'],
+		maxPlayers?: Match['maxPlayers']
+	): boolean => {
+		if (!this.getSpecificMatch[matchName]) {
+			const rounds = {
+				deck: {},
+				currentPlayerMove: '',
+				phase: Phase.PRE_FLOP,
+				roundsPlayed: 0,
+				actionStack: null,
+				potSize: 0
+			};
+			this.matches[matchName] = {
+				started: false,
+				host: host,
+				message: null,
+				name: matchName,
+				bigBlind: bigBlind,
+				maxPlayers: maxPlayers,
+				rounds: rounds,
+				players: []
+			};
+			return true;
+		} else {
+			return false;
+		}
+	};
 
 	/**
 	 * Adds data to the previously created match. If "MatchData" returns no match object, the function return false.
@@ -109,7 +118,7 @@ class GameData {
 		}
 	};
 
-	ResumeMatch = (matchName: string): boolean => {
+	resumeMatch = (matchName: string): boolean => {
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
 			specificMatch.message = this.roundMessage.resumed;
@@ -249,12 +258,8 @@ class GameData {
 	 *
 	 * @param specificMatch
 	 */
-	getMatches = (): Match | false => {
-		if (this.matches) {
-			return this.matches;
-		} else {
-			return false;
-		}
+	getMatches = (): Match => {
+		return this.matches;
 	};
 }
 export default GameData;
