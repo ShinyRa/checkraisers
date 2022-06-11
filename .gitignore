@@ -9,6 +9,7 @@ node_modules
 /package
 /coverage
 /static/avatars
+/lib/backend/socketServer/compiled
 
 # Secrets
 .env
