@@ -8,8 +8,7 @@ node_modules
 /.svelte-kit
 /package
 /coverage
-!/static/avatars/default
-static/avatars
+static/avatars/uploads
 lib/backend/socketServer/compiled/
 # Secrets
 .env
