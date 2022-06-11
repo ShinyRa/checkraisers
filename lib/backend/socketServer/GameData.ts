@@ -206,7 +206,7 @@ class GameData {
 						match.players[i].totalChips + match.rounds.potSize,
 						match.players[i].email
 					);
-					match.players[i].totalChips === match.rounds.potSize;
+					match.players[i].totalChips + match.rounds.potSize;
 				}
 			}
 			return match;
