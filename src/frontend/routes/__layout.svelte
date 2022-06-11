@@ -1,16 +1,9 @@
 <script>
-	import { base } from '$app/paths';
 	import { goto } from '$app/navigation';
 	import { assets as assetsPath } from '$app/paths';
 	import { userStore } from '$lib/logic/frontend/entities/stores';
-	import { page } from '$app/stores';
-	import { browser } from '$app/env';
 
 	let user = $userStore.getUserData();
-
-	if ($page.routeId && $page.routeId.indexOf('match') != 0) {
-		browser && localStorage.setItem('playing', 'false');
-	}
 
 	userStore.subscribe((val) => {
 		user = val.getUserData();

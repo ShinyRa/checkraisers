@@ -14,7 +14,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
-	import { socketStore, userStore } from '$lib/logic/frontend/entities/stores';
+	import { socketStore } from '$lib/logic/frontend/entities/stores';
 	import { onMount } from 'svelte';
 	import { get, writable, type Writable } from 'svelte/store';
 
@@ -43,6 +43,7 @@
 	};
 
 	$socketStore.on('matches-list', (data) => {
+		console.log(data);
 		$matches = Object.values(data);
 	});
 </script>

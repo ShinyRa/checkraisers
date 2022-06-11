@@ -71,12 +71,8 @@
 
 	//socket io logic below
 	onMount(() => {
-		if (browser && JSON.parse(localStorage.getItem('playing'))) {
-			$socketStore.emit('get-match-data', { email: $session['email'], matchName: matchName });
-		} else {
-			$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
-			browser && localStorage.setItem('playing', 'true');
-		}
+		console.log('join-match')
+		$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
 	});
 
 	const startMatch = async () => {
@@ -112,7 +108,6 @@
 	$socketStore.on('match-data', (data) => {
 		console.log(data);
 		if (data === 'exit') {
-			browser && localStorage.setItem('playing', 'false');
 			goto('/lobby');
 		} else {
 			$matchData = data;
