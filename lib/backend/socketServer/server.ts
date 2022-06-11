@@ -154,15 +154,18 @@ io.on('connection', function (socket) {
 		if (actionStack.currentPlayerTurn()) {
 			matches[data.matchName].rounds.currentPlayerMove = actionStack.currentPlayerTurn();
 		} else {
-			console.log('done!');
 			//If everyone is done in showdown create new action stack and set the phase back to preflop
 			//TODO evalutation.
 			if (matches[data.matchName].rounds.phase !== 4) {
 				matches[data.matchName].rounds.phase = matches[data.matchName].rounds.phase + 1;
 				actionStack.nextPhase();
+				matches[data.matchName].rounds.potSize = 0;
+				matches[data.matchName].rounds.currentPlayerMove = actionStack.currentPlayerTurn();
 			} else {
 				actionStack = new ActionStack(matches[data.matchName].players);
 				matches[data.matchName].rounds.phase = 0;
+				matches[data.matchName].rounds.potSize = 0;
+				matches[data.matchName].rounds.currentPlayerMove = actionStack.currentPlayerTurn();
 			}
 		}
 		matches[data.matchName].rounds.actionStack = actionStack;

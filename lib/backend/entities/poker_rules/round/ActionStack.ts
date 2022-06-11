@@ -33,7 +33,6 @@ export class ActionStack {
 				return this.actions[i].player.email;
 			}
 		}
-
 		return false;
 	}
 
