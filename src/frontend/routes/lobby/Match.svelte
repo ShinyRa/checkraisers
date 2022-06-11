@@ -51,7 +51,7 @@
 		<div class="game-details">
 			<img
 				class="rug"
-				src={assetsPath + '/table/rug/rug_' + Math.floor(Math.random() * 9 + 1) + '.png'}
+				src={assetsPath + '/table/rug/rug_' + Math.floor(Math.random() * 14 + 1) + '.png'}
 			/>
 			<img
 				class="match"
