@@ -46,7 +46,7 @@ io.on('connection', function (socket) {
 	socket.on('join-match', async (data) => {
 		const userData = await userDAO.getProfile(data.email);
 		//is this if statement even necessary anymore? The "get-match-data" handles this use case now.
-		if ((gameData.findPlayer(data.matchName, data.email), data.email)) {
+		if (!gameData.findPlayer(data.matchName, data.email)) {
 			socket.leave('lobby');
 			socket.join(data.matchName);
 			const newPlayer = new Player(

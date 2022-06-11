@@ -4,6 +4,7 @@ import CardDeck from '../entities/poker_rules/deck/CardDeck';
 import { deckAPI } from '../entities/poker_rules/deck/deckAPI';
 import Player from '../entities/poker_rules/Player';
 import { PlayerActionEnum } from '../entities/poker_rules/round/action/PlayerActionEnum';
+import PlayingCard from '../entities/poker_rules/deck/card/PlayingCard';
 
 type Match = {
 	started?: boolean;
@@ -17,10 +18,10 @@ type Match = {
 };
 
 type Round = {
-	deck: Record<string, CardDeck>;
+	deck: CardDeck;
 	phase: Phase;
-	roundsPlayed: number;
 	currentPlayerMove: Player['email'] | false;
+	communityCards: PlayingCard[];
 	actionStack: ActionStack | null;
 	potSize: number;
 };
@@ -54,9 +55,9 @@ class GameData {
 		if (!this.getSpecificMatch[matchName]) {
 			const rounds = {
 				deck: {},
+				communityCards: [],
 				currentPlayerMove: '',
 				phase: Phase.PRE_FLOP,
-				roundsPlayed: 0,
 				actionStack: null,
 				potSize: 0
 			};
@@ -92,11 +93,22 @@ class GameData {
 			specificMatch.rounds.deck = this.createDeckforMatch(specificMatch);
 			specificMatch.rounds.currentPlayerMove = specificMatch.rounds.actionStack.currentPlayerTurn();
 			specificMatch.players = this.handOutCards(specificMatch.players, specificMatch.rounds.deck);
+
 			this.matches[matchName] = specificMatch;
 			return true;
 		} else {
 			return false;
 		}
+	};
+
+	drawCommunityCards = (match: Match): Match => {
+		if (match.rounds.communityCards.length < 5) {
+			const newCard = match.rounds.deck.draw();
+			newCard.reveal();
+			match.rounds.communityCards = [...match.rounds.communityCards, newCard];
+			return match;
+		}
+		return match;
 	};
 
 	deleteMatch = (matchName: string): boolean => {
@@ -145,7 +157,7 @@ class GameData {
 		action: PlayerActionEnum,
 		chips?: number
 	): boolean => {
-		let specificMatch = this.getSpecificMatch(matchName);
+		const specificMatch = this.getSpecificMatch(matchName);
 		const player = this.findPlayer(matchName, email);
 		if (specificMatch && player) {
 			specificMatch.rounds.actionStack.push(player, action, chips);
@@ -154,14 +166,11 @@ class GameData {
 			if (specificMatch.rounds.actionStack.currentPlayerTurn()) {
 				specificMatch.rounds.currentPlayerMove =
 					specificMatch.rounds.actionStack.currentPlayerTurn();
+				this.matches[matchName] = specificMatch;
 			} else {
-				if (specificMatch.rounds.phase !== 4) {
-					specificMatch = this.newPhase(specificMatch);
-				} else {
-					specificMatch = this.newRound(specificMatch);
-				}
+				delete this.matches[matchName];
+				this.matches[matchName] = this.newPhase(specificMatch);
 			}
-			this.matches[matchName] = specificMatch;
 			return true;
 		} else {
 			return false;
@@ -169,21 +178,41 @@ class GameData {
 	};
 
 	newPhase = (match: Match): Match => {
-		if (match.rounds.phase === Phase.SHOWDOWN) {
-			match.rounds.phase = Phase.PRE_FLOP;
+		let newMatch;
+		if (match.rounds.phase === Phase.RIVER) {
+			console.log('new match');
+			newMatch = this.newRound(match);
+			match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+			return newMatch;
 		} else {
 			match.rounds.phase += 1;
+			match.rounds.actionStack.nextPhase();
+			match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+			if (match.rounds.phase === Phase.FLOP) {
+				this.drawCommunityCards(match);
+				this.drawCommunityCards(match);
+				this.drawCommunityCards(match);
+			} else {
+				this.drawCommunityCards(match);
+			}
+			return match;
 		}
-		match.rounds.actionStack.nextPhase();
-		match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
-		return match;
 	};
 
 	newRound = (match: Match): Match => {
-		match.rounds.actionStack = new ActionStack(match.players);
-		match.rounds.phase = Phase.PRE_FLOP;
-		match.rounds.potSize = 0;
-		match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+		delete this.matches[match.name];
+		this.newMatch(match.host, match.name, match.bigBlind, match.maxPlayers);
+		const newMatch = this.getSpecificMatch(match.name);
+		if (newMatch) {
+			newMatch.rounds.deck = this.createDeckforMatch(match);
+			newMatch.players = this.handOutCards(match.players, match.rounds.deck);
+			newMatch.rounds.actionStack = new ActionStack(match.players);
+			newMatch.rounds.phase = Phase.PRE_FLOP;
+			newMatch.rounds.potSize = 0;
+			newMatch.rounds.communityCards = [];
+			newMatch.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+		}
+		console.log(match);
 		return match;
 	};
 
@@ -204,16 +233,17 @@ class GameData {
 	};
 
 	findPlayer = (matchName: string, email: string): Player | false => {
-		let res: Player | false = false;
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
-			specificMatch.players.forEach((player) => {
-				if (player.email === email) res = player;
-			});
+			for (let i = 0; i < specificMatch.players.length; i++) {
+				if (specificMatch.players[i].email === email) {
+					return specificMatch.players[i];
+				}
+			}
+			return false;
 		} else {
 			return false;
 		}
-		return res;
 	};
 
 	/**
@@ -222,9 +252,9 @@ class GameData {
 	 * @param players
 	 * @param deckData
 	 */
-	handOutCards = (players: Player[], deckData: Record<string, CardDeck>): Player[] => {
+	handOutCards = (players: Player[], deck: CardDeck): Player[] => {
 		players.forEach((player) => {
-			[1, 2].forEach(() => player.hand.deal(deckData.deck.draw()));
+			[1, 2].forEach(() => player.hand.deal(deck.draw()));
 		});
 		return players;
 	};
@@ -234,8 +264,8 @@ class GameData {
 	 *
 	 * @param specificMatch
 	 */
-	createDeckforMatch = (specificMatch: Match): Record<string, CardDeck> => {
-		specificMatch.rounds.deck = deckAPI.shuffleDeck();
+	createDeckforMatch = (specificMatch: Match): CardDeck => {
+		specificMatch.rounds.deck = deckAPI.shuffleDeck().deck;
 		return specificMatch.rounds.deck;
 	};
 

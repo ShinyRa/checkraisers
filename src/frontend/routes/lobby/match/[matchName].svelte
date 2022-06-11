@@ -26,9 +26,11 @@
 	import type { Match } from '$lib/logic/frontend/components/match/Match';
 	import { HostState } from '$lib/logic/frontend/components/match/HostState';
 	import NotificationMatch from '../../../components/match/NotificationMatch.svelte';
+	import CPlayingCard from '../../../components/card/PlayingCard.svelte';
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
+	import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
 
 	const matchName = $page.params['matchName'];
 	let matchData: Writable<Match> = writable();
@@ -43,18 +45,40 @@
 		}
 	};
 
-	//Rebuilding of the backend Player array
-	const rebuildPlayers = (players: Player[]): Player[] => {
-		const rebuildHand = (cards: Array<any>): PlayingCard[] => {
-			const cardArray: PlayingCard[] = [];
-			cards.forEach((card) => {
-				cardArray.push(
-					new PlayingCard(new CardIdentity(card.identity.suit, card.identity.value), card.state)
-				);
-			});
-			return cardArray;
-		};
+	const getPhase = (phase: Phase): string => {
+		console.log(phase);
+		let phaseName;
+		switch (phase) {
+			case 0:
+				phaseName = 'Pre flop';
+				break;
+			case 1:
+				phaseName = 'Flop';
+				break;
+			case 2:
+				phaseName = 'Turn';
+				break;
+			case 3:
+				phaseName = 'River';
+				break;
+			default:
+				phaseName = 'Phase not found';
+		}
+		return phaseName;
+	};
 
+	//Rebuilding of the backend Player array
+	const rebuildCards = (cards: Array<any>): PlayingCard[] => {
+		const cardArray: PlayingCard[] = [];
+		cards.forEach((card) => {
+			cardArray.push(
+				new PlayingCard(new CardIdentity(card.identity.suit, card.identity.value), card.state)
+			);
+		});
+		return cardArray;
+	};
+
+	const rebuildPlayers = (players: Player[]): Player[] => {
 		let newPlayerArray: Player[] = [];
 		players.forEach((player) => {
 			const rebuildplayer = new Player(
@@ -62,7 +86,7 @@
 				player.username,
 				player.profilePicture,
 				player.totalChips,
-				new PlayerHand(rebuildHand(player.hand.cards))
+				new PlayerHand(rebuildCards(player.hand.cards))
 			);
 			newPlayerArray.push(rebuildplayer);
 		});
@@ -71,7 +95,7 @@
 
 	//socket io logic below
 	onMount(() => {
-		console.log('join-match')
+		console.log('join-match');
 		$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
 	});
 
@@ -112,6 +136,7 @@
 		} else {
 			$matchData = data;
 			$matchData.players = rebuildPlayers(data['players']);
+			$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
 		}
 	});
 
@@ -166,7 +191,9 @@
 		</div>
 
 		<div class="grid community">
-			{$matchData.rounds.potSize}
+			{#each $matchData.rounds.communityCards as card}
+				<CPlayingCard {card} highlight={false} />
+			{/each}
 		</div>
 
 		{#if $matchData.players}
