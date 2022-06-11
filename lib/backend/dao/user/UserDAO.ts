@@ -4,7 +4,20 @@ import { type User } from '../../entities/user/User';
 import * as jwt from 'jsonwebtoken';
 
 class UserDAO extends BaseDAO {
-	private DEFAULT_AVATAR = 'default.png';
+	private DEFAULT_AVATARS = [
+		'default/default_1.png',
+		'default/default_2.png',
+		'default/default_3.png',
+		'default/default_4.png',
+		'default/default_5.png',
+		'default/default_6.png',
+		'default/default_7.png',
+		'default/default_8.png',
+		'default/default_9.png',
+		'default/default_10.png',
+		'default/default_11.png',
+		'default/default_12.png'
+	];
 	private ASSET_PATH = './static/avatars/';
 	private DEFAULT_CHIP_AMOUNT = 1000;
 
@@ -31,9 +44,9 @@ class UserDAO extends BaseDAO {
 
 		await this.writeToDisk(
 			user.profilePicture as File,
-			oldAvatar !== this.DEFAULT_AVATAR ? oldAvatarPath : newAvatarPath
+			!this.DEFAULT_AVATARS.includes(oldAvatar) ? oldAvatarPath : newAvatarPath
 		);
-		if (oldAvatar !== this.DEFAULT_AVATAR) this.renameFile(oldAvatarPath, newAvatarPath);
+		if (!this.DEFAULT_AVATARS.includes(oldAvatar)) this.renameFile(oldAvatarPath, newAvatarPath);
 		return `${user.email}_${timePreset}.png`;
 	};
 
@@ -108,7 +121,7 @@ class UserDAO extends BaseDAO {
 			if (!userPresent) {
 				user.password = this.hash(user.password);
 				user.chips = this.DEFAULT_CHIP_AMOUNT;
-				user.profilePicture = this.DEFAULT_AVATAR;
+				user.profilePicture = this.DEFAULT_AVATARS[Math.floor(Math.random() * 11) + 1];
 				const res = await db.insertOne(user);
 				await this.closeDbConnection();
 				return res.acknowledged
