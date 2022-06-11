@@ -8,10 +8,9 @@ node_modules
 /.svelte-kit
 /package
 /coverage
-/static/avatars
-!/static/avatars/default/*
-/lib/backend/socketServer/compiled/*
-
+!/static/avatars/default
+static/avatars
+lib/backend/socketServer/compiled/
 # Secrets
 .env
 .env.*
