@@ -33,7 +33,7 @@
 				return currentUser;
 			});
 			$session['authenticated'] = true;
-			await goto('/profile');
+			await goto('/');
 		}
 	};
 </script>

@@ -9,11 +9,6 @@
 		user = val.getUserData();
 	});
 
-	const routes = [
-		{ title: 'profile', route: '/profile' },
-		{ title: 'lobby', route: '/lobby' }
-	];
-
 	const gotoProfile = async () => {
 		await goto('/profile');
 	};
@@ -23,54 +18,71 @@
 	};
 </script>
 
-<section class="hero ">
-	<div class="hero-body is-flex is-justify-content-space-between">
-		<div>
-			<p class="title">PokerApp</p>
-			<p class="subtitle">By Auke & Tijs</p>
+{#if user}
+	<nav class="navbar" role="navigation" aria-label="main navigation">
+		<div class="navbar-start">
+			<a class="navbar-item" href="#">
+				<img src={assetsPath + '/logo_icon.png'} alt="Checkraisers" />
+				<span class="logo-title">Checkraisers</span>
+			</a>
 		</div>
-		{#if user}
-			<div class="is-flex">
-				<div class="pt-0 mr-3">
-					<p class="is-size-5">{user.username}</p>
-					<p class="is-size-6">chips: {user.chips}</p>
+		<div class="navbar-end">
+			<a class="navbar-item" href="#" on:click={gotoProfile}>
+				<div class="profile">
+					<div class="details">
+						<span>{user.username}</span>
+						<span>chips: {user.chips}</span>
+					</div>
+					<div class="picture">
+						<img
+							class="is-rounded"
+							src="{assetsPath}/avatars/{user.profilePicture}"
+							alt="profile"
+							style="image-rendering: pixelated; aspect-ratio: 1 / 1;"
+						/>
+					</div>
 				</div>
-				<figure class="image is-square is-48x48 pt-1 is-clickable" on:click={gotoProfile}>
-					<img
-						class="is-rounded"
-						src="{assetsPath}/avatars/{user.profilePicture}"
-						alt="d"
-						style="image-rendering: pixelated;"
-					/>
-				</figure>
-				<button class="is-size-7 mt-3 ml-3 button" on:click={logout}>logout</button>
-			</div>
-		{/if}
-	</div>
-</section>
-<main>
-	<!-- {#if user}
-		<aside class="menu">
-			<ul class="menu-list">
-				{#each routes as { title, route }}
-					<li>
-						<a href={null} on:click={() => goto(`${base}${route}`)}>{title}</a>
-					</li>
-				{/each}
-			</ul>
-		</aside>
-	{/if} -->
+			</a>
+			<a class="navbar-item" href="#" on:click={logout}>
+				<button class="nes-btn is-error">logout</button>
+			</a>
+		</div>
+	</nav>
+{/if}
 
+<main>
 	<slot />
 </main>
 
 <style lang="scss">
-	$svelte: #ff3e00;
-	.hero {
-		background-color: $svelte;
-		p {
-			color: white;
+	.navbar {
+		position: fixed;
+		border-bottom: 2px solid black;
+		width: 100%;
+	}
+	.navbar-item {
+		display: flex;
+		justify-content: center;
+	}
+	.navbar-item img {
+		max-height: 3rem !important;
+	}
+	.profile {
+		display: flex;
+		flex-direction: row;
+		text-align: right;
+		.details {
+			margin-right: 25px;
+			display: flex;
+			flex-direction: column;
 		}
+	}
+
+	.logo-title {
+		margin-left: 7px;
+	}
+	.is-rounded {
+		border-radius: 100%;
 	}
 
 	.button {
