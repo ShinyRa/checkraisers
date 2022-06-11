@@ -16,12 +16,16 @@
 	const logout = async () => {
 		await goto('/logout');
 	};
+
+	const home = async () => {
+		await goto('/');
+	};
 </script>
 
 {#if user}
 	<nav class="navbar" role="navigation" aria-label="main navigation">
 		<div class="navbar-start">
-			<a class="navbar-item" href="#">
+			<a class="navbar-item" href="#" on:click={home}>
 				<img src={assetsPath + '/logo_icon.png'} alt="Checkraisers" />
 				<span class="logo-title">Checkraisers</span>
 			</a>
