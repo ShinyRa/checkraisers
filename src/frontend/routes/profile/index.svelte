@@ -55,8 +55,12 @@
 			return currentUser;
 		});
 		updated = res['ok'];
-		await Util.sleep(1000);
-		goto('/lobby');
+		console.log(updated);
+
+		if (updated) {
+			await Util.sleep(2000);
+			goto('/login');
+		}
 	};
 </script>
 

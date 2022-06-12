@@ -8,27 +8,11 @@
 	const isHovering = () => (hover = true);
 	const isNotHovering = () => (hover = false);
 	const getTableAssetForPlayers = (players: number, maxPlayers): string => {
-		if (players == 0) {
-			return 'table_0.png';
-		}
-		if (players == 1) {
-			return 'table_1.png';
-		}
-		if (players == 2) {
-			return 'table_2.png';
-		}
-		if (players == 3) {
-			return 'table_3.png';
-		}
-		if (players == 4) {
-			return 'table_4.png';
-		}
-		if (players == 5) {
-			return 'table_4.png';
-		}
-		if (players == maxPlayers) {
+		if (players >= 6) {
 			return 'table_5.png';
 		}
+
+		return `table_${players}.png`;
 	};
 </script>
 

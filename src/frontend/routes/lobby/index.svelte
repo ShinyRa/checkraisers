@@ -19,7 +19,7 @@
 	import { onMount } from 'svelte';
 	import { get, writable, type Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import Match from './Match.svelte';
+	import Table from './Table.svelte';
 
 	let matchName;
 	let matches: Writable<Array<string>> = writable([]);
@@ -142,7 +142,7 @@
 		</div>
 
 		{#each $matches as match}
-			<Match
+			<Table
 				{match}
 				click={() => {
 					joinGame(match['name']);
