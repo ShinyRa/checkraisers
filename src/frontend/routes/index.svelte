@@ -29,7 +29,7 @@
 			timer = !timer;
 		}, 750);
 		document.onkeydown = () => {
-			// keypressed = true;
+			keypressed = true;
 		};
 		document.onclick = () => {
 			keypressed = true;
