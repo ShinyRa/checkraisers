@@ -25,13 +25,13 @@
 {#if user}
 	<nav class="navbar" role="navigation" aria-label="main navigation">
 		<div class="navbar-start">
-			<a class="navbar-item" href="#" on:click={home}>
+			<button class="navbar-item" on:click={home}>
 				<img src={assetsPath + '/logo_icon.png'} alt="Checkraisers" />
 				<span class="logo-title">Checkraisers</span>
-			</a>
+			</button>
 		</div>
 		<div class="navbar-end">
-			<a class="navbar-item" href="#" on:click={gotoProfile}>
+			<button class="navbar-item" href="#" on:click={gotoProfile}>
 				<div class="profile">
 					<div class="details">
 						<span>{user.username}</span>
@@ -46,10 +46,10 @@
 						/>
 					</div>
 				</div>
-			</a>
-			<a class="navbar-item" href="#" on:click={logout}>
+			</button>
+			<button class="navbar-item" href="#" on:click={logout}>
 				<button class="nes-btn is-error">logout</button>
-			</a>
+			</button>
 		</div>
 	</nav>
 {/if}
@@ -59,6 +59,14 @@
 </main>
 
 <style lang="scss">
+	$svelte: #ff3e00;
+	button.navbar-item:hover {
+		color: $svelte;
+	}
+	button.navbar-item {
+		border: none;
+		background: white;
+	}
 	.navbar {
 		position: fixed;
 		border-bottom: 2px solid black;

@@ -153,6 +153,7 @@
 </section>
 
 <style lang="scss">
+	$svelte: #ff3e00;
 	section.background {
 		min-height: 100vh;
 		width: 100vw;
@@ -186,6 +187,7 @@
 			flex-direction: row;
 			margin-bottom: 2rem;
 			.game-details {
+				color: white;
 				display: flex;
 				flex-direction: column;
 				.match {
@@ -207,7 +209,7 @@
 				}
 				.details {
 					padding-top: 25px;
-					color: white;
+					// color: white;
 					z-index: 2;
 				}
 				.player-count {
@@ -218,6 +220,9 @@
 					z-index: 2;
 					color: white;
 				}
+			}
+			.game-details:hover {
+				color: $svelte;
 			}
 		}
 		.nes-btn {
