@@ -157,13 +157,30 @@ class GameData {
 		}
 	};
 
-	replay = async (matchName: string): Promise<void> => {
-		const match = this.getSpecificMatch(matchName);
-		if (match && match.rounds.phase === Phase.EVALUATE) {
-			this.matches[matchName] = await this.newPhase(match);
-			this.matches[matchName].message = this.roundMessage.started;
-		}
-	};
+	// playerAction = async (
+	// 	email: string,
+	// 	matchName: string,
+	// 	action: PlayerActionEnum,
+	// 	chips?: number
+	// ): Promise<boolean> => {
+	// 	const specificMatch = this.getSpecificMatch(matchName);
+	// 	const player = this.findPlayer(matchName, email);
+	// 	if (specificMatch && player) {
+	// 		specificMatch.rounds.actionStack.push(player, action, chips);
+	// 		specificMatch.rounds.potSize = specificMatch.rounds.actionStack.potSize();
+	// 		if (specificMatch.rounds.actionStack.currentPlayerTurn()) {
+	// 			specificMatch.rounds.currentPlayerMove =
+	// 				specificMatch.rounds.actionStack.currentPlayerTurn();
+	// 			this.matches[matchName] = specificMatch;
+	// 		} else {
+	// 			delete this.matches[matchName];
+	// 			this.matches[matchName] = await this.newPhase(specificMatch);
+	// 		}
+	// 		return true;
+	// 	} else {
+	// 		return false;
+	// 	}
+	// };
 
 	playerAction = async (
 		email: string,
@@ -174,8 +191,13 @@ class GameData {
 		const specificMatch = this.getSpecificMatch(matchName);
 		const player = this.findPlayer(matchName, email);
 		if (specificMatch && player) {
-			specificMatch.rounds.actionStack.push(player, action, chips);
+			//gaat alles goed in de actionstack?
+			chips
+				? specificMatch.rounds.actionStack.push(player, action, chips)
+				: specificMatch.rounds.actionStack.push(player, action);
+
 			specificMatch.rounds.potSize = specificMatch.rounds.actionStack.potSize();
+
 			if (specificMatch.rounds.actionStack.currentPlayerTurn()) {
 				specificMatch.rounds.currentPlayerMove =
 					specificMatch.rounds.actionStack.currentPlayerTurn();
@@ -190,30 +212,39 @@ class GameData {
 		}
 	};
 
+	//Dit werkt
+	replay = async (matchName: string): Promise<void> => {
+		const match = this.getSpecificMatch(matchName);
+		if (match && match.rounds.phase === Phase.EVALUATE) {
+			this.matches[matchName] = this.newRound(match);
+		}
+	};
+
+	//Hier kan een bug in zitten.
+	updatePlayerChips = async (match: Match): Promise<Match> => {
+		for (let i = 0; i < match.players.length; i++) {
+			const playerIndex = match.rounds.actionStack.findPlayerIndex(match.players[i]);
+			const chipsSpent = match.rounds.actionStack.stakes[playerIndex];
+			match.players[i].totalChips = match.players[i].totalChips - chipsSpent;
+			await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
+			if (match.players[i].email === match.rounds.winner['winner'].email) {
+				this.playerDAO.updateChipAmount(
+					match.players[i].totalChips + match.rounds.potSize,
+					match.players[i].email
+				);
+				match.players[i].totalChips + match.rounds.potSize;
+			}
+		}
+		return match;
+	};
+
+	//Dit werkt.
 	newPhase = async (match: Match): Promise<Match> => {
-		let newMatch;
 		if (match.rounds.phase === Phase.RIVER) {
 			match.rounds.phase = Phase.EVALUATE;
 			match.rounds.currentPlayerMove = '';
 			match.rounds.winner = evaluationAPI.evaluate(match.players, match.rounds.communityCards);
-			for (let i = 0; i < match.players.length; i++) {
-				const playerIndex = match.rounds.actionStack.findPlayerIndex(match.players[i]);
-				const chipsSpent = match.rounds.actionStack.stakes[playerIndex];
-				match.players[i].totalChips = match.players[i].totalChips - chipsSpent;
-				await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
-				if (match.players[i].email === match.rounds.winner['winner'].email) {
-					this.playerDAO.updateChipAmount(
-						match.players[i].totalChips + match.rounds.potSize,
-						match.players[i].email
-					);
-					match.players[i].totalChips + match.rounds.potSize;
-				}
-			}
-			return match;
-		} else if (match.rounds.phase === Phase.EVALUATE) {
-			newMatch = this.newRound(match);
-			newMatch.rounds.currentPlayerMove = newMatch.rounds.actionStack.currentPlayerTurn();
-			return newMatch;
+			await this.updatePlayerChips(match);
 		} else {
 			match.rounds.phase += 1;
 			match.rounds.actionStack.nextPhase();
@@ -225,11 +256,11 @@ class GameData {
 			} else {
 				this.drawCommunityCards(match);
 			}
-			console.log('laatste else voor return: ', match);
-			return match;
 		}
+		return match;
 	};
 
+	// Dit werkt.
 	newRound = (match: Match): Match => {
 		delete this.matches[match.name];
 		this.newMatch(match.host, match.name, match.bigBlind, match.maxPlayers);
@@ -242,9 +273,10 @@ class GameData {
 			newMatch.players = this.handOutCards(match.players, newMatch.rounds.deck);
 			newMatch.rounds.actionStack = new ActionStack(match.players);
 			newMatch.rounds.phase = Phase.PRE_FLOP;
+			newMatch.message = this.roundMessage.started;
 			newMatch.rounds.potSize = 0;
 			newMatch.rounds.communityCards = [];
-			newMatch.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
+			newMatch.rounds.currentPlayerMove = newMatch.rounds.actionStack.currentPlayerTurn();
 			newMatch.started = true;
 			return newMatch;
 		}

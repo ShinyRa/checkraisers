@@ -89,9 +89,12 @@ export class ActionStack {
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
 			this.stakes[playerIndex] += chips;
+			console.log('stakes: ', chips);
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
+			console.log('deze player pushed op de stack: ', player);
 			this.players.map((p) => {
-				if (this.hasActionsRemaining(p) && player != p) {
+				if (this.hasActionsRemaining(p) && player.email != p.email) {
+					console.log('mensen die nieuwe action krijgen: ', p.username);
 					this.actions.push(new PlayerAction(p));
 				}
 			});
@@ -110,8 +113,10 @@ export class ActionStack {
 	}
 
 	nextPhase(): void {
+		console.log('-----next phase----------');
 		this.players.map((player) => {
 			if (this.hasActionsRemaining(player)) {
+				console.log('deze mensen krijgen een nieuwe beurt: ', player.username);
 				this.actions.push(new PlayerAction(player));
 			}
 		});
