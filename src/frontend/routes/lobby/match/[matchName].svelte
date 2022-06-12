@@ -37,6 +37,7 @@
 	let preview: string = `${assetsPath}/avatars/`;
 	let raiseAmount = 0;
 	let playerTurn = writable(false);
+	let actionMessage = writable('');
 
 	const raiseHandler = (amount: number, totalChips: number) => {
 		if (amount) {
@@ -301,7 +302,7 @@
 						transition:fade={{ duration: 250 }}
 						class="nes-balloon from-left text-balloon action-bubble"
 					>
-						message
+						m
 					</p>
 				{/if}
 			{/each}
@@ -313,7 +314,6 @@
 
 <style lang="scss">
 	.table {
-		overflow: hidden;
 		padding: 20px;
 		display: grid;
 		grid-template-rows: 10vh repeat(3, 30%);
@@ -349,6 +349,7 @@
 	}
 
 	.oponent-layout {
+		grid-area: 1;
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
