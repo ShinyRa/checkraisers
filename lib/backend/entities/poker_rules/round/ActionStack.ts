@@ -58,6 +58,20 @@ export class ActionStack {
 		return -1;
 	}
 
+	getPlayersByTurnOrder(): Player[] {
+		const ordered = [];
+		let index = this.bigBlindIndex;
+		for (let nr = 0; nr < this.players.length; nr++) {
+			if (index > this.players.length - 1) {
+				index = 0;
+			}
+			ordered.push(this.players[index]);
+			index++;
+		}
+
+		return ordered;
+	}
+
 	/**
 	 * Push player action to the stack
 	 *
@@ -94,7 +108,8 @@ export class ActionStack {
 			}
 			this.stakes[playerIndex] += chips;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
-			this.players.map((p) => {
+
+			this.getPlayersByTurnOrder().map((p) => {
 				if (this.hasActionsRemaining(p) && player.email != p.email) {
 					this.actions.push(new PlayerAction(p));
 				}
@@ -114,7 +129,7 @@ export class ActionStack {
 	}
 
 	nextPhase(): void {
-		this.players.map((player) => {
+		this.getPlayersByTurnOrder().map((player) => {
 			if (this.hasActionsRemaining(player)) {
 				this.actions.push(new PlayerAction(player));
 			}
@@ -134,8 +149,10 @@ export class ActionStack {
 		return (
 			filtered.filter(
 				(action) =>
-					action.getType() == PlayerActionEnum.RAISE || action.getType() == PlayerActionEnum.CALL
-			).length > 0
+					action.getType() === PlayerActionEnum.ALLIN ||
+					action.getType() === PlayerActionEnum.FOLD ||
+					action.getType() === PlayerActionEnum.PENDING
+			).length == 0
 		);
 	}
 

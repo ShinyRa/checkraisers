@@ -99,7 +99,7 @@ class GameData {
 			specificMatch.rounds.actionStack = new ActionStack(
 				specificMatch.players,
 				specificMatch.bigBlind,
-				Math.floor(Math.random() * specificMatch.players.length + 1)
+				Math.floor(Math.random() * specificMatch.players.length)
 			);
 			specificMatch.rounds.deck = this.createDeckforMatch(specificMatch);
 			specificMatch.rounds.currentPlayerMove = specificMatch.rounds.actionStack.currentPlayerTurn();
