@@ -3,8 +3,8 @@ import { PlayerAction } from '$lib/backend/entities/poker_rules/round/action/Pla
 import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
 
 const players = [
-	new Player('email', 'Player', 'asdf', 2000),
-	new Player('email', 'Player 2', 'asdf', 1000)
+	new Player('email1', 'Player', 'asdf', 2000),
+	new Player('email2', 'Player 2', 'asdf', 1000)
 ];
 describe('Action stack unit tests', () => {
 	it('should add the correct number of chips to the pot for folding', () => {

@@ -7,20 +7,23 @@ export class ActionStack {
 	actions: PlayerAction[];
 	stakes: number[];
 	foldedMask: boolean[];
-	bigBlindMask: boolean[];
+	bigBlindIndex: number;
+	bigBlind: number;
 
 	/**
 	 * Create new ActionStack
 	 *
 	 * @param players
 	 */
-	constructor(players: Player[]) {
+	constructor(players: Player[], bigBlind: number, bigBlindIndex: number) {
+		this.bigBlindIndex = bigBlindIndex;
 		this.players = players;
 		this.actions = [];
 		[...new Array(this.players.length)].forEach((_, i) => {
 			this.actions.push(new PlayerAction(this.players[i]));
 		});
 		this.stakes = [...new Array(this.players.length)].fill(0);
+		this.stakes[bigBlindIndex] += bigBlind;
 		this.foldedMask = [...new Array(this.players.length)].fill(false);
 	}
 
@@ -66,42 +69,33 @@ export class ActionStack {
 		if (!this.players.includes(player)) {
 			return;
 		}
-
 		// If raised and no chips are provided
 		if (actionEnum === PlayerActionEnum.RAISE && chips <= 0) {
 			return;
 		}
-
 		if (actionEnum === PlayerActionEnum.FOLD) {
 			this.foldedMask[playerIndex] = true;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum);
 		}
-
 		if (actionEnum === PlayerActionEnum.CALL) {
 			chips = this.findCallForPlayer(player);
 			this.stakes[playerIndex] += chips;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
 		}
-
 		if (actionEnum === PlayerActionEnum.ALLIN || actionEnum === PlayerActionEnum.RAISE) {
 			chips =
 				actionEnum === PlayerActionEnum.ALLIN
 					? // I don't like the TSC compiler.
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
-
 			let call = 0;
 			if ((call = this.findCallForPlayer(player)) > 0) {
 				this.stakes[playerIndex] += call;
 			}
-
 			this.stakes[playerIndex] += chips;
-			console.log('stakes: ', chips);
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
-			console.log('deze player pushed op de stack: ', player);
 			this.players.map((p) => {
 				if (this.hasActionsRemaining(p) && player.email != p.email) {
-					console.log('mensen die nieuwe action krijgen: ', p.username);
 					this.actions.push(new PlayerAction(p));
 				}
 			});
@@ -120,10 +114,8 @@ export class ActionStack {
 	}
 
 	nextPhase(): void {
-		console.log('-----next phase----------');
 		this.players.map((player) => {
 			if (this.hasActionsRemaining(player)) {
-				console.log('deze mensen krijgen een nieuwe beurt: ', player.username);
 				this.actions.push(new PlayerAction(player));
 			}
 		});
@@ -137,11 +129,12 @@ export class ActionStack {
 	 * @returns boolean
 	 */
 	hasActionsRemaining(player: Player): boolean {
+		const filtered = this.actions.filter((action) => action.player.email == player.email);
+
 		return (
-			this.actions.filter(
+			filtered.filter(
 				(action) =>
-					(action.player === player && action.getType() !== PlayerActionEnum.ALLIN) ||
-					action.getType() === PlayerActionEnum.FOLD
+					action.getType() == PlayerActionEnum.RAISE || action.getType() == PlayerActionEnum.CALL
 			).length > 0
 		);
 	}

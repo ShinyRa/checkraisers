@@ -14,6 +14,7 @@ type Match = {
 	message?: string | null;
 	name?: string;
 	bigBlind?: number;
+	bigBlindIndex?: number;
 	maxPlayers?: number;
 	rounds?: Round;
 	players?: Player[];
@@ -95,7 +96,11 @@ class GameData {
 		if (specificMatch) {
 			specificMatch.message = this.roundMessage.started;
 			specificMatch.started = true;
-			specificMatch.rounds.actionStack = new ActionStack(specificMatch.players);
+			specificMatch.rounds.actionStack = new ActionStack(
+				specificMatch.players,
+				specificMatch.bigBlind,
+				Math.floor(Math.random() * specificMatch.players.length + 1)
+			);
 			specificMatch.rounds.deck = this.createDeckforMatch(specificMatch);
 			specificMatch.rounds.currentPlayerMove = specificMatch.rounds.actionStack.currentPlayerTurn();
 			specificMatch.players = this.handOutCards(specificMatch.players, specificMatch.rounds.deck);
@@ -272,7 +277,11 @@ class GameData {
 				player.hand.cards = [];
 			});
 			newMatch.players = this.handOutCards(match.players, newMatch.rounds.deck);
-			newMatch.rounds.actionStack = new ActionStack(match.players);
+			newMatch.rounds.actionStack = new ActionStack(
+				match.players,
+				match.bigBlind,
+				this.findNewBigBlindIndex(match.players, match.bigBlindIndex)
+			);
 			newMatch.rounds.phase = Phase.PRE_FLOP;
 			newMatch.message = this.roundMessage.started;
 			newMatch.rounds.potSize = 0;
@@ -282,6 +291,13 @@ class GameData {
 			return newMatch;
 		}
 		return match;
+	};
+
+	findNewBigBlindIndex = (players: Player[], bigBlindIndex: number): number => {
+		if (bigBlindIndex >= players.length - 1) {
+			return 0;
+		}
+		return bigBlindIndex + 1;
 	};
 
 	leaveMatch = (matchName: string, email: string): boolean => {
