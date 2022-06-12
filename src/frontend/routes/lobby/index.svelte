@@ -76,7 +76,7 @@
 	};
 </script>
 
-<section style={'background-image: url(' + assetsPath + '/wood_floor.jpg)'}>
+<section class="background" style={'background-image: url(' + assetsPath + '/wood_floor.jpg)'}>
 	{#if overlay}
 		<div class="modal is-active" transition:fade>
 			<div class="modal-background" />
@@ -153,7 +153,7 @@
 </section>
 
 <style lang="scss">
-	section {
+	section.background {
 		min-height: 100vh;
 		width: 100vw;
 		margin: 0 auto;
