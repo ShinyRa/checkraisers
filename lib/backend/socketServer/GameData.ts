@@ -191,7 +191,7 @@ class GameData {
 		const specificMatch = this.getSpecificMatch(matchName);
 		const player = this.findPlayer(matchName, email);
 		if (specificMatch && player) {
-			//gaat alles goed in de actionstack?
+			//Hier zit een bug. de volgorde wordt niet goed bijgehouden met het raisen waarschijnlijk te maken hoe "nextPhase" werkt in de action stack
 			chips
 				? specificMatch.rounds.actionStack.push(player, action, chips)
 				: specificMatch.rounds.actionStack.push(player, action);
@@ -238,7 +238,7 @@ class GameData {
 		return match;
 	};
 
-	//Dit werkt.
+	//Hier zit een bug
 	newPhase = async (match: Match): Promise<Match> => {
 		if (match.rounds.phase === Phase.RIVER) {
 			match.rounds.phase = Phase.EVALUATE;
@@ -247,6 +247,7 @@ class GameData {
 			await this.updatePlayerChips(match);
 		} else {
 			match.rounds.phase += 1;
+			//hier zit de bug
 			match.rounds.actionStack.nextPhase();
 			match.rounds.currentPlayerMove = match.rounds.actionStack.currentPlayerTurn();
 			if (match.rounds.phase === Phase.FLOP) {
