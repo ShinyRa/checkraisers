@@ -19,23 +19,23 @@ describe('ActionStack unit tests', () => {
 		stack.push(players[0], PlayerActionEnum.CALL);
 		stack.push(players[1], PlayerActionEnum.CALL);
 
-		console.log(stack);
-
 		expect(stack.length()).toEqual(2);
 	});
 
-	// it('should track the correct potsize for all actions', () => {
-	// 	stack.push(players[0], PlayerActionEnum.RAISE, 200);
-	// 	stack.push(players[1], PlayerActionEnum.RAISE, 200);
-	// 	expect(stack.potSize).toEqual(400);
-	// });
+	it('should track the correct potsize for all actions', () => {
+		stack.push(players[0], PlayerActionEnum.RAISE, 200);
+		stack.push(players[1], PlayerActionEnum.RAISE, 200);
+		console.log(stack);
 
-	// it('should be able to determine certain properties of the action stack', () => {
-	// 	stack.push(players[0], PlayerActionEnum.RAISE, 2000);
-	// 	stack.push(players[1], PlayerActionEnum.ALLIN);
-	// 	expect(stack.length()).toEqual(3);
-	// 	expect(stack.potSize()).toEqual(3000);
-	// });
+		expect(stack.potSize()).toEqual(600);
+	});
+
+	it('should be able to determine certain properties of the action stack', () => {
+		stack.push(players[0], PlayerActionEnum.RAISE, 2000);
+		stack.push(players[1], PlayerActionEnum.ALLIN);
+		expect(stack.length()).toEqual(3);
+		expect(stack.potSize()).toEqual(3000);
+	});
 
 	// it('should be add pending playeractions succesfully', () => {
 	// 	stack.push(players[0], PlayerActionEnum.RAISE, 2000);

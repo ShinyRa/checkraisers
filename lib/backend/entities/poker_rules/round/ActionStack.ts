@@ -7,6 +7,7 @@ export class ActionStack {
 	actions: PlayerAction[];
 	stakes: number[];
 	foldedMask: boolean[];
+	bigBlindMask: boolean[];
 
 	/**
 	 * Create new ActionStack
@@ -88,6 +89,12 @@ export class ActionStack {
 					? // I don't like the TSC compiler.
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
+
+			let call = 0;
+			if ((call = this.findCallForPlayer(player)) > 0) {
+				this.stakes[playerIndex] += call;
+			}
+
 			this.stakes[playerIndex] += chips;
 			console.log('stakes: ', chips);
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
