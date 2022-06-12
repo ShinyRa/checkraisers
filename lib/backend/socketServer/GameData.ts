@@ -7,9 +7,10 @@ import Player from '../entities/poker_rules/Player';
 import { PlayerActionEnum } from '../entities/poker_rules/round/action/PlayerActionEnum';
 import PlayingCard from '../entities/poker_rules/deck/card/PlayingCard';
 import PlayerDAO from '../dao/user/PlayerDAO';
+import { GameState } from './GameState';
 
 type Match = {
-	started?: boolean;
+	state?: GameState;
 	host?: Player['email'];
 	message?: string | null;
 	name?: string;
@@ -69,9 +70,9 @@ class GameData {
 				potSize: 0
 			};
 			this.matches[matchName] = {
-				started: false,
+				state: GameState.NOT_STARTED,
 				host: host,
-				message: null,
+				message: '',
 				name: matchName,
 				bigBlind: bigBlind,
 				maxPlayers: maxPlayers,
@@ -95,12 +96,12 @@ class GameData {
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
 			specificMatch.message = this.roundMessage.started;
-			specificMatch.started = true;
 			specificMatch.rounds.actionStack = new ActionStack(
 				specificMatch.players,
 				specificMatch.bigBlind,
 				Math.floor(Math.random() * specificMatch.players.length)
 			);
+			specificMatch.state = GameState.STARTED;
 			specificMatch.rounds.deck = this.createDeckforMatch(specificMatch);
 			specificMatch.rounds.currentPlayerMove = specificMatch.rounds.actionStack.currentPlayerTurn();
 			specificMatch.players = this.handOutCards(specificMatch.players, specificMatch.rounds.deck);
@@ -134,6 +135,7 @@ class GameData {
 	pauseMatch = (matchName: string): boolean => {
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
+			specificMatch.state = GameState.PAUSED;
 			specificMatch.message = this.roundMessage.paused;
 			this.matches[matchName] = specificMatch;
 		} else {
@@ -144,6 +146,7 @@ class GameData {
 	resumeMatch = (matchName: string): boolean => {
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
+			specificMatch.state = GameState.STARTED;
 			specificMatch.message = this.roundMessage.resumed;
 			this.matches[matchName] = specificMatch;
 		} else {
@@ -161,31 +164,6 @@ class GameData {
 			return false;
 		}
 	};
-
-	// playerAction = async (
-	// 	email: string,
-	// 	matchName: string,
-	// 	action: PlayerActionEnum,
-	// 	chips?: number
-	// ): Promise<boolean> => {
-	// 	const specificMatch = this.getSpecificMatch(matchName);
-	// 	const player = this.findPlayer(matchName, email);
-	// 	if (specificMatch && player) {
-	// 		specificMatch.rounds.actionStack.push(player, action, chips);
-	// 		specificMatch.rounds.potSize = specificMatch.rounds.actionStack.potSize();
-	// 		if (specificMatch.rounds.actionStack.currentPlayerTurn()) {
-	// 			specificMatch.rounds.currentPlayerMove =
-	// 				specificMatch.rounds.actionStack.currentPlayerTurn();
-	// 			this.matches[matchName] = specificMatch;
-	// 		} else {
-	// 			delete this.matches[matchName];
-	// 			this.matches[matchName] = await this.newPhase(specificMatch);
-	// 		}
-	// 		return true;
-	// 	} else {
-	// 		return false;
-	// 	}
-	// };
 
 	playerAction = async (
 		email: string,
@@ -249,6 +227,16 @@ class GameData {
 			match.rounds.phase = Phase.EVALUATE;
 			match.rounds.currentPlayerMove = '';
 			match.rounds.winner = evaluationAPI.evaluate(match.players, match.rounds.communityCards);
+			match.message = match.rounds.winner.winningHand.score.print();
+			match.rounds.winner.winningHand = match.rounds.winner.winningHand.score.getCards();
+			match.state = GameState.EVALUATION;
+			for (let i = 0; i < match.players.length; i++) {
+				const shownCards = [];
+				for (let j = 0; j < match.players[i].hand.cards.length; j++) {
+					shownCards.push(match.players[i].hand.cards[j].flip());
+				}
+				match.players[i].hand.cards = shownCards;
+			}
 			await this.updatePlayerChips(match);
 		} else {
 			match.rounds.phase += 1;
@@ -287,7 +275,7 @@ class GameData {
 			newMatch.rounds.potSize = 0;
 			newMatch.rounds.communityCards = [];
 			newMatch.rounds.currentPlayerMove = newMatch.rounds.actionStack.currentPlayerTurn();
-			newMatch.started = true;
+			newMatch.state = GameState.STARTED;
 			return newMatch;
 		}
 		return match;
