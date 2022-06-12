@@ -8,10 +8,9 @@ import { CardSuit } from '../deck/card/identity/CardSuit';
 import { CardValue } from '../deck/card/identity/CardValue';
 
 class HandEvaluation {
-	static findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {
+	findScore = (tableCards: PlayingCard[], hand: PlayerHand): HandRank => {
 		const allCards = [...hand.cards, ...tableCards];
 		allCards.sort((card1, card2) => card1.compareTo(card2));
-
 		const valueScoring = this.createScoringArray(CardValue);
 
 		allCards.forEach(
@@ -89,33 +88,31 @@ class HandEvaluation {
 		return new High(hand, flat[flat.length - 1]);
 	};
 
-	private static findPair = (valueScoring): PlayingCard[] =>
+	private findPair = (valueScoring): PlayingCard[] =>
 		valueScoring.filter((value) => value.length === 2).flat();
 
-	private static findTwoPair = (valueScoring): PlayingCard[][] =>
+	private findTwoPair = (valueScoring): PlayingCard[][] =>
 		valueScoring.filter((value) => value.length === 2);
 
-	private static findTrips = (valueScoring): PlayingCard[] =>
+	private findTrips = (valueScoring): PlayingCard[] =>
 		valueScoring.filter((value) => value.length === 3).flat();
 
-	private static findFlush = (suitScoring): PlayingCard[] =>
+	private findFlush = (suitScoring): PlayingCard[] =>
 		suitScoring.filter((suit) => suit.length >= 5).flat();
 
-	private static isFlush = (suitScoring): boolean =>
-		suitScoring.find((suit) => suit.length >= 5) != null;
+	private isFlush = (suitScoring): boolean => suitScoring.find((suit) => suit.length >= 5) != null;
 
-	private static hasStraight = (valueScoring): boolean =>
-		this.findStraight(valueScoring).length > 0;
+	private hasStraight = (valueScoring): boolean => this.findStraight(valueScoring).length > 0;
 
-	private static straightIsFlush = (valueScoring): boolean => {
+	private straightIsFlush = (valueScoring): boolean => {
 		return valueScoring.filter((card) => card.getSuit() == valueScoring[0].getSuit()).length === 5;
 	};
 
-	private static straightIsRoyal = (valueScoring): boolean => {
+	private straightIsRoyal = (valueScoring): boolean => {
 		return valueScoring.reduce((acc, card) => acc + card.getValue(), 0) === 60;
 	};
 
-	private static findStraight = (valueScoring): PlayingCard[][] | null => {
+	private findStraight = (valueScoring): PlayingCard[][] | null => {
 		const straights = [];
 		// Insert aces in front of the array (It can make a straight with A-2-3-4-5 or 10-J-Q-K-A)
 		valueScoring = [valueScoring[valueScoring.length - 1], ...valueScoring];
@@ -136,15 +133,15 @@ class HandEvaluation {
 		return straights;
 	};
 
-	private static findFullHouse = (valueScoring): PlayingCard[][] => [
+	private findFullHouse = (valueScoring): PlayingCard[][] => [
 		valueScoring.filter((value) => value.length === 3).flat(),
 		valueScoring.filter((value) => value.length === 2).flat()
 	];
 
-	private static findQuads = (valueScoring): PlayingCard[] =>
+	private findQuads = (valueScoring): PlayingCard[] =>
 		valueScoring.filter((value) => value.length === 4).flat();
 
-	private static createScoringArray = (enumObject): Array<Array<PlayingCard | null>> =>
+	private createScoringArray = (enumObject): Array<Array<PlayingCard | null>> =>
 		new Array(Object.keys(enumObject).filter((key) => !isNaN(Number(enumObject[key]))).length).fill(
 			[]
 		);

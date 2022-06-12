@@ -25,16 +25,29 @@ class UserDAO extends BaseDAO {
 		super();
 	}
 
-	public getProfile = async (email: string): Promise<unknown> => {
-		await this.openDbConnection();
-		const db = await this.getCollection('users');
-		const user = await db
-			.findOne({ email: email }, { projection: { _id: 0, password: 0 } })
-			.then((result) => {
-				return result ? result : false;
-			});
-		await this.closeDbConnection();
-		return user;
+	public getProfile = async (user: Partial<User>, token: string): Promise<unknown> => {
+		const userClone: Partial<User> = user;
+		try {
+			if (this.verifyJWT(token, user.email)) {
+				await this.openDbConnection();
+				const db = await this.getCollection('users');
+				const user = await db
+					.findOne({ email: userClone.email }, { projection: { _id: 0, password: 0 } })
+					.then((result) => {
+						return result ? result : false;
+					});
+				await this.closeDbConnection();
+				return user
+					? this.httpResponse(HttpCode.SUCCESS, user)
+					: this.httpResponse(HttpCode.BAD_REQUEST, {
+							error: 'Something went wrong with getting a user'
+					  });
+			} else {
+				this.httpResponse(HttpCode.UNAUTHORIZED, { error: 'session compromised.' });
+			}
+		} catch (err) {
+			console.log('error: ', err);
+		}
 	};
 
 	private updateAvatar = async (oldAvatar: string, user: Partial<User>): Promise<string> => {

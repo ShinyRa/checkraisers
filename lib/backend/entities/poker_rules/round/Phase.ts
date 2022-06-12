@@ -3,5 +3,5 @@ export enum Phase {
 	FLOP,
 	TURN,
 	RIVER,
-	SHOWDOWN
+	EVALUATE
 }

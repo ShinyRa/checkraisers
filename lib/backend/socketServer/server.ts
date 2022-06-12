@@ -1,7 +1,7 @@
 import GameData from './GameData';
 import { Server } from 'socket.io';
-import UserDAO from '../dao/user/UserDAO';
 import Player from '../entities/poker_rules/Player';
+import PlayerDAO from '../dao/user/PlayerDAO';
 
 // Localhost
 const port = 3001;
@@ -16,7 +16,7 @@ const io = new Server(port, {
 console.log('server started');
 
 const gameData: GameData = new GameData();
-const userDAO: UserDAO = new UserDAO();
+const playerDAO: PlayerDAO = new PlayerDAO();
 
 io.on('connection', function (socket) {
 	/**
@@ -44,9 +44,8 @@ io.on('connection', function (socket) {
 	 * @param data {email, matchName}
 	 */
 	socket.on('join-match', async (data) => {
-		const userData = await userDAO.getProfile(data.email);
-		//is this if statement even necessary anymore? The "get-match-data" handles this use case now.
-		if ((gameData.findPlayer(data.matchName, data.email), data.email)) {
+		const userData = await playerDAO.getProfile(data.email);
+		if (!gameData.findPlayer(data.matchName, data.email)) {
 			socket.leave('lobby');
 			socket.join(data.matchName);
 			const newPlayer = new Player(
@@ -63,8 +62,18 @@ io.on('connection', function (socket) {
 		}
 	});
 
-	socket.on('player-action', (data) => {
-		gameData.playerAction(data.email, data.matchName, data.action.playerAction, data.action.chips);
+	socket.on('player-action', async (data) => {
+		await gameData.playerAction(
+			data.email,
+			data.matchName,
+			data.action.playerAction,
+			data.action.chips
+		);
+		io.in(data.matchName).emit('match-data', gameData.getSpecificMatch(data.matchName));
+	});
+
+	socket.on('replay-match', async (data) => {
+		await gameData.replay(data.matchName);
 		io.in(data.matchName).emit('match-data', gameData.getSpecificMatch(data.matchName));
 	});
 
@@ -99,16 +108,6 @@ io.on('connection', function (socket) {
 		gameData.resumeMatch(data.matchName);
 		io.in('lobby').emit('matches-list', gameData.getMatches());
 		io.in(data.matchName).emit('match-data', gameData.getSpecificMatch(data.matchName));
-	});
-
-	/**
-	 * Returns data of a specific match to a specific socket
-	 *
-	 * @param data {email, matchName}
-	 */
-	socket.on('get-match-data', (data) => {
-		socket.join(data.matchName);
-		io.to(socket.id).emit('match-data', gameData.getSpecificMatch(data.matchName));
 	});
 
 	/**

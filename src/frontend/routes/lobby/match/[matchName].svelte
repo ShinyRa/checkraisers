@@ -26,9 +26,12 @@
 	import type { Match } from '$lib/logic/frontend/components/match/Match';
 	import { HostState } from '$lib/logic/frontend/components/match/HostState';
 	import NotificationMatch from '../../../components/match/NotificationMatch.svelte';
+	import CPlayingCard from '../../../components/card/PlayingCard.svelte';
 	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
+	import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
+	import UserClient from '$lib/logic/clients/user/UserClient';
 
 	const matchName = $page.params['matchName'];
 	let matchData: Writable<Match> = writable();
@@ -43,18 +46,43 @@
 		}
 	};
 
-	//Rebuilding of the backend Player array
-	const rebuildPlayers = (players: Player[]): Player[] => {
-		const rebuildHand = (cards: Array<any>): PlayingCard[] => {
-			const cardArray: PlayingCard[] = [];
-			cards.forEach((card) => {
-				cardArray.push(
-					new PlayingCard(new CardIdentity(card.identity.suit, card.identity.value), card.state)
-				);
-			});
-			return cardArray;
-		};
+	const getPhase = (phase: Phase): string => {
+		console.log(phase);
+		let phaseName;
+		switch (phase) {
+			case 0:
+				phaseName = 'Pre flop';
+				break;
+			case 1:
+				phaseName = 'Flop';
+				break;
+			case 2:
+				phaseName = 'Turn';
+				break;
+			case 3:
+				phaseName = 'River';
+				break;
+			case 4:
+				phaseName = 'Evaluate';
+				break;
+			default:
+				phaseName = 'Phase not found';
+		}
+		return phaseName;
+	};
 
+	//Rebuilding of the backend Player array
+	const rebuildCards = (cards: Array<any>): PlayingCard[] => {
+		const cardArray: PlayingCard[] = [];
+		cards.forEach((card) => {
+			cardArray.push(
+				new PlayingCard(new CardIdentity(card.identity.suit, card.identity.value), card.state)
+			);
+		});
+		return cardArray;
+	};
+
+	const rebuildPlayers = (players: Player[]): Player[] => {
 		let newPlayerArray: Player[] = [];
 		players.forEach((player) => {
 			const rebuildplayer = new Player(
@@ -62,7 +90,7 @@
 				player.username,
 				player.profilePicture,
 				player.totalChips,
-				new PlayerHand(rebuildHand(player.hand.cards))
+				new PlayerHand(rebuildCards(player.hand.cards))
 			);
 			newPlayerArray.push(rebuildplayer);
 		});
@@ -71,12 +99,17 @@
 
 	//socket io logic below
 	onMount(() => {
-		console.log('join-match')
+		console.log('join-match');
 		$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
 	});
 
 	const startMatch = async () => {
 		$socketStore.emit('start-match', { email: $session['email'], matchName: matchName });
+		$matchData.message = HostState.STARTED;
+	};
+
+	const replay = async () => {
+		$socketStore.emit('replay-match', { email: $session['email'], matchName: matchName });
 		$matchData.message = HostState.STARTED;
 	};
 
@@ -94,7 +127,7 @@
 		$matchData.message = HostState.STARTED;
 	};
 
-	const takeAction = (action: PlayerActionEnum, amount?: number) => {
+	const takeAction = async (action: PlayerActionEnum, amount?: number) => {
 		const actionObject = amount
 			? { playerAction: action, chips: amount }
 			: { playerAction: action };
@@ -104,14 +137,19 @@
 			action: actionObject
 		});
 	};
-
-	$socketStore.on('match-data', (data) => {
-		console.log(data);
+	$socketStore.on('match-data', async (data) => {
+		const profile = await UserClient.getProfile({ email: $session['email'] });
+		userStore.update((currentUser) => {
+			currentUser.setUserData(profile);
+			return currentUser;
+		});
 		if (data === 'exit') {
 			goto('/lobby');
 		} else {
 			$matchData = data;
 			$matchData.players = rebuildPlayers(data['players']);
+			console.log($matchData);
+			$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
 		}
 	});
 
@@ -132,7 +170,6 @@
 			<div class="match-name">
 				<p>Match: {matchName}</p>
 			</div>
-
 			<div class="host-message">
 				{#key $matchData.message}
 					<NotificationMatch message={$matchData.message} />
@@ -166,7 +203,9 @@
 		</div>
 
 		<div class="grid community">
-			{$matchData.rounds.potSize}
+			{#each $matchData.rounds.communityCards as card}
+				<CPlayingCard {card} highlight={false} />
+			{/each}
 		</div>
 
 		{#if $matchData.players}
@@ -217,6 +256,7 @@
 								{/if}
 							</div>
 						{/if}
+						{$matchData.host === $session['email']}
 						{#if $matchData.host === $session['email']}
 							<div class="host-control">
 								{#if !$matchData.started}
@@ -224,9 +264,13 @@
 										>Start match</button
 									>
 								{:else if $matchData['message'] === HostState.STARTED || $matchData['message'] === HostState.RESUMED}
-									<button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}
-										>Pause match</button
-									>
+									{#if $matchData.host === $session['email'] && $matchData.rounds.winner}
+										<button class="nes-btn is-success" on:click={() => replay()}>Play again</button>
+									{:else}
+										<button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}
+											>Pause match</button
+										>
+									{/if}
 									<button class="nes-btn host-button is-error" on:click={() => stopMatch()}
 										>Stop match</button
 									>

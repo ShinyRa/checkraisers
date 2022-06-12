@@ -6,6 +6,5 @@ const userAPI = new UserDAO();
 export async function post({ request }) {
 	const token: string = await request.headers.get('cookie');
 	const slicedToken = token.slice(6);
-	const data = await request.formData();
-	return await userAPI.updateProfile(data, slicedToken);
+	return await userAPI.getProfile(await request.json(), slicedToken);
 }
