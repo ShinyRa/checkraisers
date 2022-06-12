@@ -3,9 +3,10 @@ import CardDeck from '$lib/backend/entities/poker_rules/deck/CardDeck';
 import Player from '$lib/backend/entities/poker_rules/Player';
 import { ActionStack } from '$lib/backend/entities/poker_rules/round/ActionStack';
 import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
+import { GameState } from './GameState';
 
 export type Match = {
-	started?: boolean;
+	state?: GameState;
 	host?: Player['email'];
 	message?: string | null;
 	name?: string;

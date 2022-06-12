@@ -11,6 +11,7 @@
 </script>
 
 <script lang="ts">
+	import { fade, fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { page, session } from '$app/stores';
 	import { assets as assetsPath } from '$app/paths';
@@ -24,19 +25,18 @@
 	import { CardIdentity } from '$lib/backend/entities/poker_rules/deck/card/identity/CardIdentity';
 	import { browser } from '$app/env';
 	import type { Match } from '$lib/logic/frontend/components/match/Match';
-	import { HostState } from '$lib/logic/frontend/components/match/HostState';
+	import { GameState } from '$lib/logic/frontend/components/match/GameState';
 	import NotificationMatch from '../../../components/match/NotificationMatch.svelte';
 	import CPlayingCard from '../../../components/card/PlayingCard.svelte';
-	import { fly } from 'svelte/transition';
 	import { quintOut } from 'svelte/easing';
 	import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
 	import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
-	import UserClient from '$lib/logic/clients/user/UserClient';
 
 	const matchName = $page.params['matchName'];
 	let matchData: Writable<Match> = writable();
 	let preview: string = `${assetsPath}/avatars/`;
 	let raiseAmount = 0;
+	let playerTurn = writable(false);
 
 	const raiseHandler = (amount: number, totalChips: number) => {
 		if (amount) {
@@ -97,6 +97,17 @@
 		return newPlayerArray;
 	};
 
+	const findCard = (winner, card: PlayingCard): boolean => {
+		if (winner) {
+			return (
+				winner.winningHand.find((highlight: PlayingCard) => highlight.print() == card.print()) !=
+				undefined
+			);
+		} else {
+			return false;
+		}
+	};
+
 	//socket io logic below
 	onMount(() => {
 		console.log('join-match');
@@ -105,17 +116,14 @@
 
 	const startMatch = async () => {
 		$socketStore.emit('start-match', { email: $session['email'], matchName: matchName });
-		$matchData.message = HostState.STARTED;
 	};
 
 	const replay = async () => {
 		$socketStore.emit('replay-match', { email: $session['email'], matchName: matchName });
-		$matchData.message = HostState.STARTED;
 	};
 
 	const pauseMatch = async () => {
 		$socketStore.emit('pause-match', { email: $session['email'], matchName: matchName });
-		$matchData.message = HostState.PAUSED;
 	};
 
 	const stopMatch = () => {
@@ -124,32 +132,43 @@
 
 	const resumeMatch = async () => {
 		$socketStore.emit('resume-match', { email: $session['email'], matchName: matchName });
-		$matchData.message = HostState.STARTED;
 	};
 
 	const takeAction = async (action: PlayerActionEnum, amount?: number) => {
 		const actionObject = amount
 			? { playerAction: action, chips: amount }
 			: { playerAction: action };
-		$socketStore.emit('player-action', {
-			email: $session['email'],
-			matchName: matchName,
-			action: actionObject
-		});
+		if ($playerTurn) {
+			$socketStore.emit('player-action', {
+				email: $session['email'],
+				matchName: matchName,
+				action: actionObject
+			});
+		}
 	};
+
 	$socketStore.on('match-data', async (data) => {
-		const profile = await UserClient.getProfile({ email: $session['email'] });
-		userStore.update((currentUser) => {
-			currentUser.setUserData(profile);
-			return currentUser;
-		});
 		if (data === 'exit') {
 			goto('/lobby');
 		} else {
 			$matchData = data;
 			$matchData.players = rebuildPlayers(data['players']);
-			console.log($matchData);
 			$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
+			$playerTurn = $matchData.rounds.currentPlayerMove === $session['email'];
+			let localUser = $userStore.getUserData();
+			for (let i = 0; i < $matchData.players.length; i++) {
+				if ($matchData.players[i].email === $session['email']) {
+					localUser.chips = $matchData.players[i].totalChips;
+					userStore.update((currentUser) => {
+						currentUser.setUserData(localUser);
+						return currentUser;
+					});
+				}
+			}
+			if ($matchData.rounds.winner) {
+				$matchData.rounds.winner.winningHand = rebuildCards($matchData.rounds.winner.winningHand);
+			}
+			console.log($matchData);
 		}
 	});
 
@@ -172,7 +191,7 @@
 			</div>
 			<div class="host-message">
 				{#key $matchData.message}
-					<NotificationMatch message={$matchData.message} />
+					<NotificationMatch match={$matchData} />
 				{/key}
 			</div>
 
@@ -195,16 +214,16 @@
 									<img class="is-rounded" src="{preview}{player.profilePicture}" alt="d" />
 								</figure>
 							</div>
-							<CardHolder matchData={$matchData} {player} />
+							<CardHolder {findCard} matchData={$matchData} {player} />
 						</div>
 					{/if}
 				{/each}
 			{/if}
 		</div>
 
-		<div class="grid community">
+		<div class="grid community-layout">
 			{#each $matchData.rounds.communityCards as card}
-				<CPlayingCard {card} highlight={false} />
+				<CPlayingCard {card} highlight={findCard($matchData.rounds.winner, card)} />
 			{/each}
 		</div>
 
@@ -213,75 +232,77 @@
 				{#if player.email === $session['email']}
 					<p class="is-invisible">{raiseHandler(raiseAmount, player.totalChips)}</p>
 					<div class="grid you-layout" style={'background-image: url(' + assetsPath + '/wood.png)'}>
-						<CardHolder matchData={$matchData} {player} />
+						<CardHolder {findCard} matchData={$matchData} {player} />
 						<p>{player.username}</p>
-						{#if $matchData.rounds.currentPlayerMove === $session['email']}
-							<div class="actions">
+						<div class="actions ">
+							<button
+								class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
+								on:click={() => takeAction(PlayerActionEnum.CALL)}>Call ($0)</button
+							>
+							<button
+								class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
+								on:click={() => takeAction(PlayerActionEnum.FOLD)}>Fold</button
+							>
+							<div class="action-raise">
 								<button
-									class="nes-btn action-button"
-									on:click={() => takeAction(PlayerActionEnum.CALL)}>Call ($0)</button
+									class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
+									on:click={() =>
+										takeAction(
+											raiseAmount >= player.totalChips
+												? PlayerActionEnum.ALLIN
+												: PlayerActionEnum.RAISE,
+											raiseAmount
+										)}
+									>{raiseAmount >= player.totalChips
+										? `All In: (${raiseAmount})`
+										: `Raise: (${raiseAmount})`}</button
 								>
-								<button
-									class="nes-btn action-button"
-									on:click={() => takeAction(PlayerActionEnum.FOLD)}>Fold</button
-								>
-								<div class="action-raise">
-									<button
-										class="nes-btn action-button "
-										on:click={() =>
-											takeAction(
-												raiseAmount >= player.totalChips
-													? PlayerActionEnum.ALLIN
-													: PlayerActionEnum.RAISE,
-												raiseAmount
-											)}
-										>{raiseAmount >= player.totalChips
-											? `All In: (${raiseAmount})`
-											: `Raise: (${raiseAmount})`}</button
-									>
-									<input
-										min="0"
-										max={player.totalChips}
-										bind:value={raiseAmount}
-										type="number"
-										class="nes-input raise-input"
-									/>
-								</div>
-								{#if raiseAmount < player.totalChips}
-									<button
-										class="nes-btn action-button"
-										on:click={() => takeAction(PlayerActionEnum.ALLIN)}
-										>All In ({player.totalChips})</button
-									>
-								{/if}
+								<input
+									min="0"
+									max={player.totalChips}
+									bind:value={raiseAmount}
+									type="number"
+									class="nes-input raise-input {$playerTurn ? '' : 'is-disabled'}"
+								/>
 							</div>
-						{/if}
-						{$matchData.host === $session['email']}
-						{#if $matchData.host === $session['email']}
-							<div class="host-control">
-								{#if !$matchData.started}
-									<button class="nes-btn host-button is-success" on:click={() => startMatch()}
-										>Start match</button
-									>
-								{:else if $matchData['message'] === HostState.STARTED || $matchData['message'] === HostState.RESUMED}
-									{#if $matchData.host === $session['email'] && $matchData.rounds.winner}
-										<button class="nes-btn is-success" on:click={() => replay()}>Play again</button>
-									{:else}
+							{#if raiseAmount < player.totalChips}
+								<button
+									class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
+									on:click={() => takeAction(PlayerActionEnum.ALLIN)}
+									>All In ({player.totalChips})</button
+								>
+							{/if}
+							{#if $matchData.host === $session['email']}
+								<div class="host-control">
+									{#if $matchData.state === GameState.NOT_STARTED}
+										<button class="nes-btn host-button is-success" on:click={() => startMatch()}
+											>Start match</button
+										>
+									{:else if $matchData.state === GameState.PAUSED}
+										<button class="nes-btn host-button is-success" on:click={() => resumeMatch()}
+											>Resume match</button
+										>
+									{:else if $matchData.state === GameState.STARTED}
 										<button class="nes-btn host-button is-warning" on:click={() => pauseMatch()}
 											>Pause match</button
 										>
+									{:else if $matchData.state === GameState.EVALUATION}
+										<button class="nes-btn is-success" on:click={() => replay()}>Play again</button>
 									{/if}
+
 									<button class="nes-btn host-button is-error" on:click={() => stopMatch()}
 										>Stop match</button
 									>
-								{:else if $matchData['message'] === HostState.PAUSED}
-									<button class="nes-btn host-button is-success" on:click={() => resumeMatch()}
-										>Resume match</button
-									>
-								{/if}
-							</div>
-						{/if}
+								</div>
+							{/if}
+						</div>
 					</div>
+					<p
+						transition:fade={{ duration: 250 }}
+						class="nes-balloon from-left text-balloon action-bubble"
+					>
+						message
+					</p>
 				{/if}
 			{/each}
 		{/if}
@@ -292,10 +313,14 @@
 
 <style lang="scss">
 	.table {
-		padding: 1em;
+		overflow: hidden;
+		padding: 20px;
+		display: grid;
+		grid-template-rows: 10vh repeat(3, 30%);
+		margin-top: 68px;
 		color: white;
 		width: 100vw;
-		height: 100vh;
+		height: 97vh;
 		image-rendering: pixelated;
 	}
 	.grid {
@@ -305,7 +330,9 @@
 	}
 
 	.info-layout {
-		padding-bottom: 40px;
+		padding: 20px;
+		margin-top: 2vh;
+		padding-bottom: 4vh;
 	}
 	.leave-match {
 		//position in grid
@@ -327,7 +354,7 @@
 		justify-content: center;
 	}
 	.opponent {
-		height: auto;
+		height: 300px;
 		padding: 20px;
 		font-size: 10px;
 		.oponent-info {
@@ -336,15 +363,20 @@
 			flex-direction: row;
 		}
 	}
+	.community-layout {
+		height: 183px;
+	}
 
 	.you-layout {
-		justify-content: space-around;
-		display: flex;
+		grid-area: 4 / 1 / 4 / 5;
+		width: 100%;
+		grid-area: 4;
+		border-radius: 1em;
 		padding: 20px;
 		image-rendering: pixelated;
-		height: auto;
 		border: 3px solid black;
 		.actions {
+			grid-area: 1 / 3 / 1 / 6;
 			display: flex;
 		}
 		.action-button {
@@ -359,12 +391,18 @@
 		.host-control {
 			display: flex;
 			flex-direction: column;
+			margin-right: auto;
 			.host-button {
 				margin-top: 20px;
 				height: fit-content;
 				padding: 10px;
 			}
 		}
+	}
+	.action-bubble {
+		height: auto;
+		color: black;
+		grid-area: 4;
 	}
 
 	// row:     v (vertical)

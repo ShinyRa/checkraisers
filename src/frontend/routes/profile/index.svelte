@@ -16,6 +16,8 @@
 	import { fly } from 'svelte/transition';
 	import { assets as assetsPath } from '$app/paths';
 	import { userStore } from '$lib/logic/frontend/entities/stores';
+	import Util from '$lib/logic/frontend/generic/Util';
+	import { goto } from '$app/navigation';
 
 	const MAXIUM_FILE_SIZE = 1500000;
 	let updated;
@@ -53,6 +55,8 @@
 			return currentUser;
 		});
 		updated = res['ok'];
+		await Util.sleep(1000);
+		goto('/lobby');
 	};
 </script>
 

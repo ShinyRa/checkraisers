@@ -34,25 +34,27 @@
 	let playerScore = '';
 	let phase = 0;
 	let matchData = writable();
-	const matchName = $page.params['matchName']
-	let players: Writable<Array<Player>> = writable([])
+	const matchName = $page.params['matchName'];
+	let players: Writable<Array<Player>> = writable([]);
 	let actionMessage;
 	let load;
 
-	$socketStore.emit('join-match', {email: $session['email'],  matchName: matchName})
+	$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
 
 	const createPlayers = (array) => {
-		const updatedArray = []
-		array.forEach(val => {
-			updatedArray.push(new Player(val['email'],val['username'], val['profilePicture'], val['chips']))
+		const updatedArray = [];
+		array.forEach((val) => {
+			updatedArray.push(
+				new Player(val['email'], val['username'], val['profilePicture'], val['chips'])
+			);
 		});
-		return updatedArray
-	}
+		return updatedArray;
+	};
 
 	$socketStore.on('match-data', (data) => {
 		$matchData = data;
 		startGame();
-	})
+	});
 
 	onMount(() => {
 		load = true;
@@ -67,7 +69,7 @@
 		highlight = [];
 		const data = deckAPI.shuffleDeck();
 
-		players.set(createPlayers(Util.objectToArray($matchData['players'])))
+		players.set(createPlayers(Util.objectToArray($matchData['players'])));
 
 		deck = data.deck;
 		$players.forEach((player) => {
@@ -130,7 +132,7 @@
 	const findCard = (highlight: PlayingCardData[], card: PlayingCardData) =>
 		highlight.find((highlight: PlayingCardData) => highlight.print() == card.print()) != undefined;
 
-		const returnToLobby = () => {
+	const returnToLobby = () => {
 		$socketStore.emit('leave-match', {
 			matchName: matchName,
 			email: $userStore.getUserData().email
@@ -142,7 +144,7 @@
 		const audio = new Audio(assetsPath + '/audio/' + sound);
 		audio.play();
 		actionMessage = action;
-		nextPhase()
+		nextPhase();
 		setTimeout(() => {
 			actionMessage = null;
 		}, 2500);

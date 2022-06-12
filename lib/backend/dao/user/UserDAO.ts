@@ -53,7 +53,7 @@ class UserDAO extends BaseDAO {
 	private updateAvatar = async (oldAvatar: string, user: Partial<User>): Promise<string> => {
 		const timePreset = Date.now();
 		const oldAvatarPath = `${this.ASSET_PATH}${oldAvatar}`;
-		const newAvatarPath = `${this.ASSET_PATH}/uploads/${user.email}_${timePreset}.png`;
+		const newAvatarPath = `${this.ASSET_PATH}uploads/${user.email}_${timePreset}.png`;
 
 		await this.writeToDisk(
 			user.profilePicture as File,
