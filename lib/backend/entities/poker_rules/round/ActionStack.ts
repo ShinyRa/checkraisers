@@ -113,7 +113,6 @@ export class ActionStack {
 	}
 
 	nextPhase(): void {
-		console.log('-----next phase----------');
 		this.players.map((player) => {
 			if (this.hasActionsRemaining(player)) {
 				console.log('deze mensen krijgen een nieuwe beurt: ', player.username);

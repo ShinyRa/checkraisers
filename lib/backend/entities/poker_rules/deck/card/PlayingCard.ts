@@ -37,7 +37,6 @@ class PlayingCard implements Card {
 		} else if (this.state === CardState.REVEALED) {
 			this.state = CardState.HIDDEN;
 		}
-
 		return this;
 	};
 

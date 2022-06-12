@@ -225,6 +225,13 @@ class GameData {
 			match.message = match.rounds.winner.winningHand.score.print();
 			match.rounds.winner.winningHand = match.rounds.winner.winningHand.score.getCards();
 			match.state = GameState.EVALUATION;
+			for (let i = 0; i < match.players.length; i++) {
+				const shownCards = [];
+				for (let j = 0; j < match.players[i].hand.cards.length; j++) {
+					shownCards.push(match.players[i].hand.cards[j].flip());
+				}
+				match.players[i].hand.cards = shownCards;
+			}
 			await this.updatePlayerChips(match);
 		} else {
 			match.rounds.phase += 1;
