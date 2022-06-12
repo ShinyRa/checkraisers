@@ -154,7 +154,7 @@
 
 <style lang="scss">
 	section {
-		height: auto;
+		min-height: 100vh;
 		width: 100vw;
 		margin: 0 auto;
 		background-size: 150px;
@@ -177,7 +177,6 @@
 		justify-content: center;
 		margin: 25px;
 		flex: 1 1 15rem;
-		position: relative;
 		display: flex;
 		flex-direction: column;
 		text-align: center;
