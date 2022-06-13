@@ -1,7 +1,6 @@
-import Player from '../Player';
+import type Player from '../Player';
 import { PlayerAction } from './action/PlayerAction';
 import { PlayerActionEnum } from './action/PlayerActionEnum';
-
 export class ActionStack {
 	players: Player[];
 	actions: PlayerAction[];

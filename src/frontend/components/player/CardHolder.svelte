@@ -1,5 +1,5 @@
 <script lang="ts">
-	import PlayingCard from '$lib/backend/entities/poker_rules/deck/card/PlayingCard';
+	import type PlayingCard from '$lib/backend/entities/poker_rules/deck/card/PlayingCard';
 	import { GameState } from '$lib/logic/frontend/components/match/GameState';
 	import type { Match } from '$lib/logic/frontend/components/match/Match';
 	import CPlayingCard from '../card/PlayingCard.svelte';

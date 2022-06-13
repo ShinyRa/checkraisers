@@ -30,7 +30,7 @@
 	import CPlayingCard from '../../../components/card/PlayingCard.svelte';
 	import { quintOut } from 'svelte/easing';
 	import { PlayerActionEnum } from '$lib/backend/entities/poker_rules/round/action/PlayerActionEnum';
-	import { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
+	import type { Phase } from '$lib/backend/entities/poker_rules/round/Phase';
 
 	const matchName = $page.params['matchName'];
 	let matchData: Writable<Match> = writable();
