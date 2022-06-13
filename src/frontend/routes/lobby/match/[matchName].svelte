@@ -277,7 +277,7 @@
 							<div class="actions ">
 								<button
 									class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
-									on:click={() => takeAction(PlayerActionEnum.CALL)}>Call ($0)</button
+									on:click={() => takeAction(PlayerActionEnum.CALL)}>Call</button
 								>
 								<button
 									class="nes-btn action-button {$playerTurn ? '' : 'is-disabled'}"
