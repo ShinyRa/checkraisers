@@ -7,8 +7,6 @@
 	export let matchData: Match;
 	export let cards: PlayingCard[];
 	export let findCard;
-
-	console.log(cards);
 </script>
 
 <section class="card-holder">

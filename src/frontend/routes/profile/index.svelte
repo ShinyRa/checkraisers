@@ -55,7 +55,6 @@
 			return currentUser;
 		});
 		updated = res['ok'];
-		console.log(updated);
 
 		if (updated) {
 			await Util.sleep(2000);

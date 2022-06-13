@@ -157,7 +157,12 @@ class GameData {
 	addPlayerToMatch = (matchName: string, player: Player): boolean => {
 		const specificMatch = this.getSpecificMatch(matchName);
 		if (specificMatch) {
-			specificMatch.players.push(player);
+			if (specificMatch.rounds.actionStack) {
+				specificMatch.rounds.actionStack.players.push(player);
+				specificMatch.players = specificMatch.rounds.actionStack.players;
+			} else {
+				specificMatch.players.push(player);
+			}
 			this.matches[matchName] = specificMatch;
 			return true;
 		} else {
@@ -175,9 +180,12 @@ class GameData {
 		const player = this.findPlayer(matchName, email);
 		if (specificMatch && player) {
 			//Hier zit een bug. de volgorde wordt niet goed bijgehouden met het raisen waarschijnlijk te maken hoe "nextPhase" werkt in de action stack
+
 			chips
 				? specificMatch.rounds.actionStack.push(player, action, chips)
 				: specificMatch.rounds.actionStack.push(player, action);
+
+			specificMatch.players = specificMatch.rounds.actionStack.players;
 
 			specificMatch.rounds.potSize = specificMatch.rounds.actionStack.potSize();
 
@@ -209,14 +217,10 @@ class GameData {
 			const playerIndex = match.rounds.actionStack.findPlayerIndex(match.players[i]);
 			const chipsSpent = match.rounds.actionStack.stakes[playerIndex];
 			match.players[i].totalChips = match.players[i].totalChips - chipsSpent;
-			await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
 			if (match.players[i].email === match.rounds.winner['winner'].email) {
-				this.playerDAO.updateChipAmount(
-					match.players[i].totalChips + match.rounds.potSize,
-					match.players[i].email
-				);
-				match.players[i].totalChips + match.rounds.potSize;
+				match.players[i].totalChips + match.rounds.actionStack.potSize();
 			}
+			await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
 		}
 		return match;
 	};

@@ -92,10 +92,14 @@ export class ActionStack {
 		}
 		if (actionEnum === PlayerActionEnum.CALL) {
 			chips = this.findCallForPlayer(player);
+			const playerIndex = this.findPlayerIndex(player);
+			this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - chips;
 			this.stakes[playerIndex] += chips;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);
 		}
 		if (actionEnum === PlayerActionEnum.ALLIN || actionEnum === PlayerActionEnum.RAISE) {
+			const playerIndex = this.findPlayerIndex(player);
+			this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - chips;
 			chips =
 				actionEnum === PlayerActionEnum.ALLIN
 					? // I don't like the TSC compiler.

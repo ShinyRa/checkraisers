@@ -50,7 +50,11 @@
 	};
 
 	$socketStore.on('matches-list', (data) => {
-		$matches = Object.values(data);
+		try {
+			$matches = Object.values(data);
+		} catch (err) {
+			console.log('lobby err: ', err);
+		}
 	});
 
 	const MAX_PLAYERS = 6;

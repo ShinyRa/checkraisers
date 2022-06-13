@@ -48,7 +48,6 @@
 	};
 
 	const getPhase = (phase: Phase): string => {
-		console.log(phase);
 		let phaseName;
 		switch (phase) {
 			case 0:
@@ -117,7 +116,6 @@
 
 	//socket io logic below
 	onMount(() => {
-		console.log('join-match');
 		$socketStore.emit('join-match', { email: $session['email'], matchName: matchName });
 	});
 
@@ -148,19 +146,15 @@
 		if ($playerTurn) {
 			switch (action) {
 				case PlayerActionEnum.CALL:
-					console.log('call');
 					$actionMessage = 'Je hebt gecalled';
 					break;
 				case PlayerActionEnum.RAISE:
-					console.log('raise');
 					$actionMessage = `Je hebt geraised met ${amount}`;
 					break;
 				case PlayerActionEnum.FOLD:
-					console.log('fold');
 					$actionMessage = 'Je hebt gefold';
 					break;
 				case PlayerActionEnum.ALLIN:
-					console.log('all-in');
 					$actionMessage = `Je bent all-in gegaan met ${amount}`;
 					break;
 				default:
@@ -176,27 +170,30 @@
 	};
 
 	$socketStore.on('match-data', async (data) => {
-		if (data === 'exit') {
-			goto('/lobby');
-		} else {
-			$matchData = data;
-			$matchData.players = rebuildPlayers(data['players']);
-			$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
-			$playerTurn = $matchData.rounds.currentPlayerMove === $session['email'];
-			let localUser = $userStore.getUserData();
-			for (let i = 0; i < $matchData.players.length; i++) {
-				if ($matchData.players[i].email === $session['email']) {
-					localUser.chips = $matchData.players[i].totalChips;
-					userStore.update((currentUser) => {
-						currentUser.setUserData(localUser);
-						return currentUser;
-					});
+		try {
+			if (data === 'exit') {
+				goto('/lobby');
+			} else {
+				$matchData = data;
+				$matchData.players = rebuildPlayers(data['players']);
+				$matchData.rounds.communityCards = rebuildCards($matchData.rounds.communityCards);
+				$playerTurn = $matchData.rounds.currentPlayerMove === $session['email'];
+				let localUser = $userStore.getUserData();
+				for (let i = 0; i < $matchData.players.length; i++) {
+					if ($matchData.players[i].email === $session['email']) {
+						localUser.chips = $matchData.players[i].totalChips;
+						userStore.update((currentUser) => {
+							currentUser.setUserData(localUser);
+							return currentUser;
+						});
+					}
+				}
+				if ($matchData.rounds.winner) {
+					$matchData.rounds.winner.winningHand = rebuildCards($matchData.rounds.winner.winningHand);
 				}
 			}
-			if ($matchData.rounds.winner) {
-				$matchData.rounds.winner.winningHand = rebuildCards($matchData.rounds.winner.winningHand);
-			}
-			console.log($matchData);
+		} catch (err) {
+			console.log('match data: ', err);
 		}
 	});
 
@@ -403,6 +400,7 @@
 		justify-content: center;
 	}
 	.opponent {
+		width: 97%;
 		background-repeat: round;
 		border: 4px solid black;
 		border-radius: 10px;
