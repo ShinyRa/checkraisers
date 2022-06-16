@@ -214,11 +214,8 @@ class GameData {
 	//Hier kan een bug in zitten.
 	updatePlayerChips = async (match: Match): Promise<Match> => {
 		for (let i = 0; i < match.players.length; i++) {
-			const playerIndex = match.rounds.actionStack.findPlayerIndex(match.players[i]);
-			const chipsSpent = match.rounds.actionStack.stakes[playerIndex];
-			match.players[i].totalChips = match.players[i].totalChips - chipsSpent;
 			if (match.players[i].email === match.rounds.winner['winner'].email) {
-				match.players[i].totalChips + match.rounds.actionStack.potSize();
+				match.players[i].totalChips += match.rounds.actionStack.potSize();
 			}
 			await this.playerDAO.updateChipAmount(match.players[i].totalChips, match.players[i].email);
 		}

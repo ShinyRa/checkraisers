@@ -155,7 +155,7 @@
 					$actionMessage = 'Je hebt gefold';
 					break;
 				case PlayerActionEnum.ALLIN:
-					$actionMessage = `Je bent all-in gegaan met ${amount}`;
+					$actionMessage = `Je bent all-in gegaan`;
 					break;
 				default:
 					$actionMessage = '';
@@ -199,7 +199,6 @@
 
 	const leaveMatch = () => {
 		$matchData = null;
-		browser && localStorage.setItem('playing', 'false');
 		$socketStore.emit('leave-match', {
 			email: $session['email'],
 			matchName: matchName

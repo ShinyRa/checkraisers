@@ -23,6 +23,7 @@ export class ActionStack {
 		});
 		this.stakes = [...new Array(this.players.length)].fill(0);
 		this.stakes[bigBlindIndex] += bigBlind;
+		this.players[bigBlindIndex].totalChips = this.players[bigBlindIndex].totalChips - bigBlind;
 		this.foldedMask = [...new Array(this.players.length)].fill(false);
 	}
 
@@ -99,15 +100,17 @@ export class ActionStack {
 		}
 		if (actionEnum === PlayerActionEnum.ALLIN || actionEnum === PlayerActionEnum.RAISE) {
 			const playerIndex = this.findPlayerIndex(player);
-			this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - chips;
+
 			chips =
 				actionEnum === PlayerActionEnum.ALLIN
 					? // I don't like the TSC compiler.
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
+			this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - chips;
 			let call = 0;
 			if ((call = this.findCallForPlayer(player)) > 0) {
 				this.stakes[playerIndex] += call;
+				this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - call;
 			}
 			this.stakes[playerIndex] += chips;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);

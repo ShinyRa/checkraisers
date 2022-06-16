@@ -2,11 +2,13 @@ import GameData from './GameData';
 import { Server } from 'socket.io';
 import Player from '../entities/poker_rules/Player';
 import PlayerDAO from '../dao/user/PlayerDAO';
+import * as http from 'http';
 
 // Localhost
+const httpServer = http.createServer().listen(3001, '0.0.0.0');
 const port = 3001;
 
-const io = new Server(port, {
+const io = new Server(httpServer, {
 	cors: {
 		origin: '*',
 		credentials: true
