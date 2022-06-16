@@ -22,7 +22,7 @@ type Match = {
 };
 
 type Round = {
-	deck: CardDeck;
+	deck: CardDeck | null;
 	phase: Phase;
 	currentPlayerMove: Player['email'] | false;
 	communityCards: PlayingCard[];

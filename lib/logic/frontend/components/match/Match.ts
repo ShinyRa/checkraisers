@@ -17,7 +17,7 @@ export type Match = {
 };
 
 type Round = {
-	deck: CardDeck;
+	deck: CardDeck | unknown;
 	phase: Phase;
 	currentPlayerMove: Player['email'] | false;
 	communityCards: PlayingCard[];

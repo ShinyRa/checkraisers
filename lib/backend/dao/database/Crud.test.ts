@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime';
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
-import UserDAO from '../../dao/user/UserDAO';
+import UserDAO from '../user/UserDAO';
 import { type User } from '../../entities/user/User';
 
 let user: User;

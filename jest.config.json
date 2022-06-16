@@ -1,4 +1,5 @@
 {
+	"setupFilesAfterEnv": ["<rootDir>/textEncoder.js"],
 	"testEnvironment": "jsdom",
 	"transform": {
 		"^.+\\.svelte$": [
