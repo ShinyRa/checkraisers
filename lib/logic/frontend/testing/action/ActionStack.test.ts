@@ -8,10 +8,10 @@ const players = [
 	new Player('test@test.nl', 'Player', 'asdf', 2000),
 	new Player('help@help.nl', 'Player 2', 'asdf', 1000)
 ];
-players[0].totalChips = 2000;
-players[1].totalChips = 1000;
 
 beforeEach(() => {
+	players[0].totalChips = 2000;
+	players[1].totalChips = 1000;
 	stack = new ActionStack(players, BIG_BLIND, 1);
 });
 
@@ -34,16 +34,17 @@ describe('ActionStack unit tests', () => {
 		stack.push(players[1], PlayerActionEnum.ALLIN);
 
 		expect(stack.length()).toEqual(2);
-		expect(stack.potSize()).toEqual(1075);
+		expect(stack.potSize()).toEqual(1000);
 	});
 
 	it('should be add pending playeractions succesfully', () => {
+		console.log(players[1].totalChips);
 		stack.push(players[0], PlayerActionEnum.RAISE, 2000);
 		stack.push(players[1], PlayerActionEnum.ALLIN);
 		stack.push(players[0], PlayerActionEnum.CALL);
 
 		expect(stack.length()).toEqual(3);
 		expect(stack.actions[0].chips).toEqual(2000);
-		expect(stack.actions[1].chips).toEqual(1000);
+		expect(stack.actions[1].chips).toEqual(925);
 	});
 });

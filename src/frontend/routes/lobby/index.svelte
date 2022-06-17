@@ -26,7 +26,6 @@
 	let overlay = false;
 
 	onMount(() => {
-		goto("/lobby");
 		$socketStore.emit('join-lobby');
 	});
 
@@ -81,81 +80,81 @@
 	};
 </script>
 
-	<section class="background" style={'background-image: url(' + assetsPath + '/wood_floor.jpg)'}>
-		{#if overlay}
-			<div class="modal is-active" transition:fade>
-				<div class="modal-background" />
-				<div class="modal-content">
-					<section class="nes-container with-title popup">
-						<p class="title">New table</p>
-						<div class="nes-field">
-							<label for="matchName">Name</label>
-							<input
-								class="nes-input"
-								name="matchName"
-								bind:value={matchName}
-								placeholder="game name"
-								required
-							/>
-						</div>
-
-						<div class="nes-field">
-							<label for="bigBlind">Big blind</label>
-							<input
-								on:change={(change) => bigBlindAmountHandler(parseInt(change.currentTarget.value))}
-								class="nes-input"
-								name="bigBlind"
-								type="number"
-								bind:value={$bigBlindAmount}
-								min={MIN_BIG_BLIND}
-								max={MAX_BIG_BLIND}
-								placeholder="big blind"
-								required
-							/>
-						</div>
-
-						<div class="nes-field">
-							<label for="maxPlayers">Max players</label>
-							<input
-								on:change={(change) => playerAmountHandler(parseInt(change.currentTarget.value))}
-								bind:value={$playerMatchAmount}
-								class="nes-input"
-								type="number"
-								name="maxPlayers"
-								placeholder="max players"
-								min={MIN_PLAYERS}
-								max={MAX_PLAYERS}
-								required
-							/>
-						</div>
-
-						<button class="nes-btn is-primary" on:click={createGame}>Create table</button>
-					</section>
-				</div>
-				<button class="modal-close is-large" on:click={popup} aria-label="close" />
-			</div>
-		{/if}
-
-		<div class="poker-tables">
-			<div class="poker-table nes-pointer">
-				<div class="header">
-					<div class="game-details" on:click={popup}>
-						<img class="match" src={assetsPath + '/table/table_0.png'} />
-						<span class="details">+ create new table</span>
+<section class="background" style={'background-image: url(' + assetsPath + '/wood_floor.jpg)'}>
+	{#if overlay}
+		<div class="modal is-active" transition:fade>
+			<div class="modal-background" />
+			<div class="modal-content">
+				<section class="nes-container with-title popup">
+					<p class="title">New table</p>
+					<div class="nes-field">
+						<label for="matchName">Name</label>
+						<input
+							class="nes-input"
+							name="matchName"
+							bind:value={matchName}
+							placeholder="game name"
+							required
+						/>
 					</div>
+
+					<div class="nes-field">
+						<label for="bigBlind">Big blind</label>
+						<input
+							on:change={(change) => bigBlindAmountHandler(parseInt(change.currentTarget.value))}
+							class="nes-input"
+							name="bigBlind"
+							type="number"
+							bind:value={$bigBlindAmount}
+							min={MIN_BIG_BLIND}
+							max={MAX_BIG_BLIND}
+							placeholder="big blind"
+							required
+						/>
+					</div>
+
+					<div class="nes-field">
+						<label for="maxPlayers">Max players</label>
+						<input
+							on:change={(change) => playerAmountHandler(parseInt(change.currentTarget.value))}
+							bind:value={$playerMatchAmount}
+							class="nes-input"
+							type="number"
+							name="maxPlayers"
+							placeholder="max players"
+							min={MIN_PLAYERS}
+							max={MAX_PLAYERS}
+							required
+						/>
+					</div>
+
+					<button class="nes-btn is-primary" on:click={createGame}>Create table</button>
+				</section>
+			</div>
+			<button class="modal-close is-large" on:click={popup} aria-label="close" />
+		</div>
+	{/if}
+
+	<div class="poker-tables">
+		<div class="poker-table nes-pointer">
+			<div class="header">
+				<div class="game-details" on:click={popup}>
+					<img class="match" src={assetsPath + '/table/table_0.png'} />
+					<span class="details">+ create new table</span>
 				</div>
 			</div>
-
-			{#each $matches as match}
-				<Table
-					{match}
-					click={() => {
-						joinGame(match['name']);
-					}}
-				/>
-			{/each}
 		</div>
-	</section>
+
+		{#each $matches as match}
+			<Table
+				{match}
+				click={() => {
+					joinGame(match['name']);
+				}}
+			/>
+		{/each}
+	</div>
+</section>
 
 <style lang="scss">
 	$svelte: #ff3e00;

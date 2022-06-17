@@ -5,9 +5,9 @@ import { MongoClient } from 'mongodb';
 import crypto from 'crypto';
 import jwt from 'jsonwebtoken';
 
-import { TextEncoder, TextDecoder } from 'util';
-global.TextEncoder = TextEncoder;
-global.TextDecoder = TextDecoder;
+// import { TextEncoder, TextDecoder } from 'util';
+// global.TextEncoder = TextEncoder;
+// global.TextDecoder = TextDecoder;
 
 export type Response = {
 	headers: Record<string, string>;

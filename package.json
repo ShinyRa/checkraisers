@@ -2,7 +2,7 @@
 	"name": "poker-app",
 	"version": "0.0.1",
 	"scripts": {
-		"dev": "svelte-kit dev --host 0.0.0.0",
+		"dev": "svelte-kit dev",
 		"build": "svelte-kit build",
 		"compileSocket": "tsc ./lib/backend/socketServer/server.ts",
 		"clean": "rm -rf node_modules && rm -rf .svelte-kit && rm -rf build",

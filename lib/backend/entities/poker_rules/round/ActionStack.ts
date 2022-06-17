@@ -106,11 +106,14 @@ export class ActionStack {
 					? // I don't like the TSC compiler.
 					  parseInt(player.totalChips as unknown as string)
 					: chips;
+
 			this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - chips;
-			let call = 0;
-			if ((call = this.findCallForPlayer(player)) > 0) {
-				this.stakes[playerIndex] += call;
-				this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - call;
+			if (actionEnum === PlayerActionEnum.RAISE) {
+				let call = 0;
+				if ((call = this.findCallForPlayer(player)) > 0) {
+					this.stakes[playerIndex] += call;
+					this.players[playerIndex].totalChips = this.players[playerIndex].totalChips - call;
+				}
 			}
 			this.stakes[playerIndex] += chips;
 			this.actions[this.findCurrentTurnIndex()] = new PlayerAction(player, actionEnum, chips);

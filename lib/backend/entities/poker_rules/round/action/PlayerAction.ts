@@ -17,9 +17,6 @@ export class PlayerAction {
 		this.player = player;
 		this.action = action ?? PlayerActionEnum.PENDING;
 		this.chips = chips ?? 0;
-		if (action === PlayerActionEnum.ALLIN) {
-			this.chips = player.totalChips;
-		}
 	}
 
 	/**
