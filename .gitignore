@@ -10,6 +10,10 @@ node_modules
 /coverage
 static/avatars/uploads
 lib/backend/socketServer/compiled/
+
+
+yarn.lock
+
 # Secrets
 .env
 .env.*

@@ -15,13 +15,16 @@
 		"test:coverage": "jest --passWithNoTests --coverage",
 		"depcheck": "depcheck",
 		"test:client": "jest --detectOpenHandles Client.test.ts",
-		"test:gameData": "jest --maxWorkers=1 --watch GameData.test.ts"
+		"test:gameData": "jest --maxWorkers=1 --watch GameData.test.ts",
+		"docker:build": "docker-compose rm -f && docker-compose up --detach --force-recreate",
+		"docker:launch": "docker run bruhgaming/poker-app:latest",
+		"docker:push": "yarn docker:build && docker commit poker-app && docker push bruhgaming/poker-app"
 	},
 	"devDependencies": {
 		"@babel/preset-env": "^7.16.11",
 		"@sveltejs/adapter-node": "^1.0.0-next.70",
 		"@sveltejs/adapter-static": "^1.0.0-next.26",
-		"@sveltejs/kit": "^@sveltejs/kit@1.0.0-next.287",
+		"@sveltejs/kit": "@sveltejs/kit@1.0.0-next.350",
 		"@testing-library/svelte": "^3.0.3",
 		"@testing-library/user-event": "^13.5.0",
 		"@types/jest": "^27.4.0",

@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  pokerapp:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - "80:3000"
+    image: bruhgaming/poker-app:latest
+    container_name: poker-app
