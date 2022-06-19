@@ -11,7 +11,7 @@
 </script>
 
 <script lang="ts">
-	import { fade, fly } from 'svelte/transition';
+	import { fly } from 'svelte/transition';
 	import { goto } from '$app/navigation';
 	import { page, session } from '$app/stores';
 	import { assets as assetsPath } from '$app/paths';
@@ -23,7 +23,6 @@
 	import { PlayerHand } from '$lib/backend/entities/poker_rules/hand/PlayerHand';
 	import PlayingCard from '$lib/backend/entities/poker_rules/deck/card/PlayingCard';
 	import { CardIdentity } from '$lib/backend/entities/poker_rules/deck/card/identity/CardIdentity';
-	import { browser } from '$app/env';
 	import type { Match } from '$lib/logic/frontend/components/match/Match';
 	import { GameState } from '$lib/logic/frontend/components/match/GameState';
 	import NotificationMatch from '../../../components/match/NotificationMatch.svelte';

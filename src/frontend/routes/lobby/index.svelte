@@ -19,7 +19,7 @@
 	import { onMount } from 'svelte';
 	import { get, writable, type Writable } from 'svelte/store';
 	import { fade } from 'svelte/transition';
-	import Table from './Table.svelte';
+	import Table from '../../components/Table.svelte';
 
 	let matchName;
 	let matches: Writable<Array<string>> = writable([]);
@@ -139,7 +139,7 @@
 		<div class="poker-table nes-pointer">
 			<div class="header">
 				<div class="game-details" on:click={popup}>
-					<img class="match" src={assetsPath + '/table/table_0.png'} />
+					<img class="match" alt="poker table" src={assetsPath + '/table/table_0.png'} />
 					<span class="details">+ create new table</span>
 				</div>
 			</div>
@@ -213,7 +213,6 @@
 				}
 				.details {
 					padding-top: 25px;
-					// color: white;
 					z-index: 2;
 				}
 				.player-count {
