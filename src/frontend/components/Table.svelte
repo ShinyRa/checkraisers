@@ -2,7 +2,7 @@
 	import { assets as assetsPath } from '$app/paths';
 	import { fade } from 'svelte/transition';
 
-	export let match;
+	export let match = null;
 	export let click;
 	let hover = false;
 	const isHovering = () => (hover = true);
@@ -16,44 +16,55 @@
 	};
 </script>
 
-<div class="poker-table nes-pointer">
-	{#if hover}
-		<div class="nes-balloon from-left hover" in:fade>
-			{#if match['players'].length > 0}
-				{#each match['players'] as player}
-					<div class="player">
-						<img src={assetsPath + '/avatars/' + player.profilePicture} class="picture" />
-						<span>{player.username}</span>
-					</div>
-				{/each}
-			{:else}
-				<span>Be the first to join...</span>
-			{/if}
-		</div>
-	{/if}
-	<div class="header" on:mouseenter={isHovering} on:mouseleave={isNotHovering}>
-		<div class="game-details">
-			<img
-				class="rug"
-				src={assetsPath + '/table/rug/rug_' + Math.floor(Math.random() * 14 + 1) + '.png'}
-			/>
-			<img
-				class="match"
-				src={assetsPath +
-					'/table/' +
-					getTableAssetForPlayers(Object.keys(match['players']).length, match['maxPlayers'])}
-			/>
-			<span class="details">{match['name']} </span>
-			<span class="player-count">
-				{Object.keys(match['players']).length}/{match['maxPlayers']}
-			</span>
+{#if match == null}
+	<div class="poker-table nes-pointer">
+		<div class="header">
+			<div class="game-details" on:click={click}>
+				<img class="match" alt="poker table" src={assetsPath + '/table/table_0.png'} />
+				<span class="details">+ create new table</span>
+			</div>
 		</div>
 	</div>
+{:else}
+	<div class="poker-table nes-pointer">
+		{#if hover}
+			<div class="nes-balloon from-left hover" in:fade>
+				{#if match['players'].length > 0}
+					{#each match['players'] as player}
+						<div class="player">
+							<img src={assetsPath + '/avatars/' + player.profilePicture} class="picture" />
+							<span>{player.username}</span>
+						</div>
+					{/each}
+				{:else}
+					<span>Be the first to join...</span>
+				{/if}
+			</div>
+		{/if}
+		<div class="header" on:mouseenter={isHovering} on:mouseleave={isNotHovering}>
+			<div class="game-details">
+				<img
+					class="rug"
+					src={assetsPath + '/table/rug/rug_' + Math.floor(Math.random() * 14 + 1) + '.png'}
+				/>
+				<img
+					class="match"
+					src={assetsPath +
+						'/table/' +
+						getTableAssetForPlayers(Object.keys(match['players']).length, match['maxPlayers'])}
+				/>
+				<span class="details">{match['name']} </span>
+				<span class="player-count">
+					{Object.keys(match['players']).length}/{match['maxPlayers']}
+				</span>
+			</div>
+		</div>
 
-	{#if Object.keys(match['players']).length < match['maxPlayers']}
-		<button class="nes-btn is-primary" on:click={click}>join</button>
-	{/if}
-</div>
+		{#if Object.keys(match['players']).length < match['maxPlayers']}
+			<button class="nes-btn is-primary" on:click={click}>join</button>
+		{/if}
+	</div>
+{/if}
 
 <style lang="scss">
 	.poker-table {
