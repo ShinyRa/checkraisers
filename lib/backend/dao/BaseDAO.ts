@@ -34,7 +34,7 @@ class BaseDAO {
 
 	protected openDbConnection = async (): Promise<void> => {
 		try {
-			this.client = await MongoClient.connect('mongodb://127.0.0.1:27017/');
+			this.client = await MongoClient.connect('mongodb://mongodb:27017/');
 		} catch (err) {
 			console.log(err);
 		}

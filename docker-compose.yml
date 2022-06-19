@@ -9,3 +9,17 @@ services:
       - "80:3000"
     image: bruhgaming/poker-app:latest
     container_name: poker-app
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27018:27017"
+    restart: unless-stopped
+  socketserver:
+    build:
+      context: ./lib/backend/socketServer
+      dockerfile: Dockerfile
+    ports:
+      - 3001:3001
+    image: bruhgaming/poker-app-backend:latest
+    container_name: poker-app-backend

@@ -16,7 +16,7 @@
 		"depcheck": "depcheck",
 		"test:client": "jest --detectOpenHandles Client.test.ts",
 		"test:gameData": "jest --maxWorkers=1 --watch GameData.test.ts",
-		"docker:build": "docker-compose rm -f && docker-compose up --detach --force-recreate",
+		"docker:build": "docker-compose up && docker-compose up --detach --force-recreate",
 		"docker:launch": "docker run bruhgaming/poker-app:latest",
 		"docker:push": "yarn docker:build && docker commit poker-app && docker push bruhgaming/poker-app"
 	},

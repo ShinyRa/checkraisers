@@ -12,7 +12,7 @@
 
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { assets, assets as assetsPath } from '$app/paths';
+	import { assets as assetsPath } from '$app/paths';
 	import { session } from '$app/stores';
 	import { socketStore } from '$lib/logic/frontend/entities/stores';
 	import { onMount } from 'svelte';
@@ -60,7 +60,7 @@
 	<MatchPopup onSubmit={createGame} {overlay} />
 
 	<div class="poker-tables">
-		<Table match={null} on:click={popup} />
+		<Table match={null} click={popup} />
 		{#each $matches as match}
 			<Table
 				{match}
